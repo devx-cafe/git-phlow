@@ -11,4 +11,4 @@ jobs:
       - get: git-phlow-repo
         trigger: true
       - task: go-test
-        file: tasks/go_test.yml
+        file: git-phlow-repo/ci/tasks/go_test.yml

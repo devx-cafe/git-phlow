@@ -11,4 +11,4 @@ inputs:
     - name: git-phlow-repo
 
 run:
-    path: git-phlow/ci/tasks/test.sh
+    path: git-phlow-repo/ci/tasks/test.sh
