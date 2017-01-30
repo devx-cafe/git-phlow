@@ -6,9 +6,9 @@ resources:
         branch: master
 
 jobs:
-    - name: integration
-      plan:
-      - get: git-phlow-repo
-        trigger: true
-      - task: go-test
-        file: git-phlow-repo/ci/tasks/go_test.yml
+- name: integration
+    plan:
+    - get: git-phlow-repo
+      trigger: true
+    - task: go-test
+      file: git-phlow-repo/ci/tasks/go_test.yml
