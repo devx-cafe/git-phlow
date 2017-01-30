@@ -3,7 +3,7 @@ resources:
       type: git
       source:
         uri: https://github.com/Praqma/git-phlow.git
-        branch: master
+        branch: develop
 
 jobs:
   - name: integration
