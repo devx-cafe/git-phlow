@@ -3,5 +3,5 @@ set -e -u -x
 
 cd git-phlow-repo/
 
-go get -d -t
+go get -d ./...
 go test -v ./...
