@@ -6,7 +6,7 @@ resources:
         branch: master
 
 jobs:
-- name: integration
+  - name: integration
     plan:
     - get: git-phlow-repo
       trigger: true
