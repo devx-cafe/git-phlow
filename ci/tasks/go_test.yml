@@ -8,4 +8,12 @@ inputs:
   - name: git-phlow-repo
 
 run:
-  path: git-phlow-repo/ci/tasks/test.sh
+  path: sh
+  args:
+  - -exc
+  - |
+    pwd
+    ls
+    cd git-phlow-repo
+    ls
+    cd ci
