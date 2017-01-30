@@ -3,6 +3,8 @@ package gitwrapper
 import (
 	"os"
 	"path/filepath"
+
+	"github.com/libgit2/git2go"
 )
 
 //GetCurrentDirectory gets the absolute path of the current directory
@@ -16,7 +18,8 @@ func GetCurrentDirectory() (string, error) {
 }
 
 //IsRepository checks if current dir is a git repository
-// @return error, bool
 func IsRepository(path string) bool {
-	return true
+	_, error := git.OpenRepository(path)
+
+	return error == nil
 }

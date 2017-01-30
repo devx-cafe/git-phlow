@@ -3,22 +3,40 @@ package gitwrapper
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
+	 testConstant "github.com/praqma/git-phlow/testfixture"
+	. "github.com/smartystreets/goconvey/convey"
+
 )
 
-func TestGetPath(t *testing.T) {
 
-	path, err := GetCurrentDirectory()
+//Tests rely on $GOPATH, it uses gopath to find the project directory and
+//having a place where the fixture can create a test folder
+func TestGetCurrentDirectory(t *testing.T) {
 
-	assert.Nil(t, err, "is nill")
-	assert.Contains(t, path, "git-phlow", "project folder is a part of the path")
+	Convey("Test method GetCurrentDirectory",t, func() {
+
+		Convey("Directory Should contain root folder", func() {
+			path, err := GetCurrentDirectory()
+
+			So(err, ShouldBeNil)
+			So(path, ShouldContainSubstring, "git-phlow")
+		})
+	})
 }
 
-func TestInit(t *testing.T) {
-	var path = "git-phlow/"
+func TestIsRepository(t *testing.T) {
 
-	repo := IsRepository(path)
+	Convey("Test method IsRepoInitialized on project directory", t, func() {
 
-	assert.True(t, repo, true, "Repository is initialized")
+		Convey("git-phlow should be initialized", func() {
 
+			var path string
+			var isRepo bool
+
+			path = testConstant.ProjectDirectory
+			isRepo = IsRepository(path)
+
+			So(isRepo, ShouldBeTrue)
+		})
+	})
 }
