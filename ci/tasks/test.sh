@@ -3,13 +3,12 @@ set -e -u -x
 
 #RESOLVE OWN PROJECT AS DEPENDENCY
 buildpath=$(pwd)
-deppath= $GOPATH/src/github.com/praqma
 
-mkdir -p $deppath
-cp -R git-phlow/ $deppath
+mkdir -p $GOPATH/src/github.com/praqma
+cp -R git-phlow/ $GOPATH/src/github.com/praqma
 
 # RESOLVE EXTERNAL DEPENDENCIES
-cd $deppath/git-phlow
+cd $GOPATH/src/github.com/praqma/git-phlow
 go get -d
 go get github.com/stretchr/testify
 go get github.com/smartystreets/goconvey
