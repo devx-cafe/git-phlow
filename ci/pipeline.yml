@@ -1,5 +1,5 @@
 resources:
-    - name: git-phlow-repo
+    - name: git-phlow
       type: git
       source:
         uri: https://github.com/Praqma/git-phlow.git
@@ -8,7 +8,7 @@ resources:
 jobs:
   - name: integration
     plan:
-    - get: git-phlow-repo
+    - get: git-phlow
       trigger: true
     - task: go-test
-      file: git-phlow-repo/ci/tasks/go_test.yml
+      file: git-phlow/ci/tasks/go_test.yml

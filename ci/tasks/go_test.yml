@@ -5,7 +5,7 @@ image_resource:
   source: {repository: golang, tag: 1.7.5}
 
 inputs:
-  - name: git-phlow-repo
+  - name: git-phlow
 
 run:
-  path: git-phlow-repo/ci/tasks/test.sh
+  path: git-phlow/ci/tasks/test.sh
