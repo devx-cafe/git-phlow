@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e -u -x
 
+#ADD LIBGIT2 TO BUILD
+apt-get install libgit2-dev -y
 #RESOLVE OWN PROJECT AS DEPENDENCY
 buildpath=$(pwd)
 
@@ -9,7 +11,7 @@ cp -R git-phlow/ $GOPATH/src/github.com/praqma
 
 # RESOLVE EXTERNAL DEPENDENCIES
 cd $GOPATH/src/github.com/praqma/git-phlow
-go get -d
+go get -d -v
 go get github.com/stretchr/testify
 go get github.com/smartystreets/goconvey
 

@@ -3,7 +3,6 @@ package gitwrapper
 import (
 	"os"
 	"path/filepath"
-
 	"github.com/libgit2/git2go"
 )
 
