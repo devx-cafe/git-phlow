@@ -2,7 +2,7 @@
 set -e -u -x
 
 #RESOLVE OWN PROJECT AS DEPENDENCY
-buildpath=$pwd
+buildpath=$(pwd)
 deppath= $GOPATH/src/github.com/praqma
 
 mkdir -p $deppath
