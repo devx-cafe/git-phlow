@@ -4,34 +4,33 @@ import (
 	"errors"
 	"strconv"
 	"github.com/praqma/git-phlow/gitwrapper"
-	"fmt"
 )
 
-func Workon(args []string) (message string, err error) {
+var (
+	name string = "issue-feature-branch"
+	empty string = ""
+)
 
-	var (
-		parseError error
-		issue int64
-		name string = "sd"
-	)
+func WorkOn(args []string) (string, error) {
 
-
-	if len(args) != 0  {
-
-		issue, parseError = strconv.ParseInt(args[0], 0, 64)
-
-		if parseError != nil {
-			return "", errors.New("argument must be of type [number]")
-		}
-
-
-	fmt.Println(issue)
-
-		gitwrapper.CheckoutNewBranch(name)
-
+	if len(args) == 0 {
+		return empty, errors.New("argument must be of type [number]")
 	}
 
-	return "", errors.New("missing workon [number]")
+	issue, parseError := strconv.ParseInt(args[0], 0, 32)
+
+	if parseError != nil {
+		return empty, errors.New("argument must be of type [number]")
+	}
+
+	name = ConvertToBranchName(strconv.Itoa(int(issue)) + "-" + name)
+	err := gitwrapper.CheckoutNewBranch(name)
+
+	if err != nil {
+		return empty, err
+	}
+
+	return "Switched to a new branch " + "'" + name + "'", nil
 }
 
 

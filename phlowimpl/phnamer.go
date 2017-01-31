@@ -5,7 +5,6 @@ import (
 	"regexp"
 )
 
-
 //ConvertToBranchName
 func ConvertToBranchName(name string) string {
 	var result string

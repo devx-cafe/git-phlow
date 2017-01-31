@@ -10,18 +10,13 @@ import (
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
 	Use:   "work-on [issue number]",
-	Short: "create a branch annotated with issue",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "create a branch from an issue",
+	Long: `creates a new branch named from a issue on a selected plugin`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		message, err := phlowimpl.Workon(args)
+		message, err := phlowimpl.WorkOn(args)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, err.Error())
+			fmt.Fprintf(os.Stdout, err.Error())
 			os.Exit(1)
 		}
 
@@ -31,7 +26,6 @@ to quickly create a Cobra application.`,
 
 func init() {
 	RootCmd.AddCommand(workonCmd)
-
 
 
 	// Here you will define your flags and configuration settings.

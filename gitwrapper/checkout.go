@@ -1,10 +1,7 @@
 package gitwrapper
 
 import (
-	"os"
-
 	"github.com/libgit2/git2go"
-	"fmt"
 )
 
 type WrapperCommand interface {
@@ -12,11 +9,10 @@ type WrapperCommand interface {
 }
 
 
+//CheckoutNewBranch
+func CheckoutNewBranch(name string) (err error) {
 
-//CheckoutNewBranch creates a new branch and checks it out
-func CheckoutNewBranch(name string) {
-
-	var err error
+	err = nil
 
 	path, err := GetCurrentDirectory()
 
@@ -38,11 +34,24 @@ func CheckoutNewBranch(name string) {
 	}
 
 	//Creates branch no-force
-	 br, err := repo.CreateBranch(name, headCommit, false)
+	_, err = repo.CreateBranch(name, headCommit, false)
 
-	fmt.Println(br)
 	if err != nil {
-		os.Exit(1)
+		return
 	}
 
+	_, err = repo.References.CreateSymbolic("HEAD", "refs/heads/" + name, true, "headOne")
+
+	if err != nil {
+		return
+
+	}
+	opts := &git.CheckoutOpts{
+		Strategy: git.CheckoutSafe | git.CheckoutRecreateMissing,
+	}
+
+	if err = repo.CheckoutHead(opts); err != nil {
+		return
+	}
+	return
 }
