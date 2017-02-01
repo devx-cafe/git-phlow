@@ -3,7 +3,7 @@ package gitwrapper
 import (
 	"os"
 	"path/filepath"
-	"github.com/libgit2/git2go"
+	"github.com/praqma/git-phlow/subprocess"
 )
 
 //GetCurrentDirectory gets the absolute path of the current directory
@@ -18,7 +18,6 @@ func GetCurrentDirectory() (string, error) {
 
 //IsRepository checks if current dir is a git repository
 func IsRepository(path string) bool {
-	_, error := git.OpenRepository(path)
-
-	return error == nil
+	_, err := subprocess.ValidateGitInstallation()
+	return err == nil
 }
