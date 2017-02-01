@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e -u -x
 
-#ADD LIBGIT2 TO BUILD
-apt-get update
-apt-get install libgit2-dev -y
 #RESOLVE OWN PROJECT AS DEPENDENCY
 buildpath=$(pwd)
 

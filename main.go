@@ -1,7 +1,11 @@
 package main
 
-import "github.com/praqma/git-phlow/cmd"
+import (
+	"github.com/praqma/git-phlow/subprocess"
+)
 
 func main() {
-	cmd.Execute()
+	//cmd.Execute()
+
+	subprocess.SimpleExec("./test.sh")
 }
