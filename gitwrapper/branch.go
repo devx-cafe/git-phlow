@@ -51,7 +51,7 @@ func (b *Branch)CreateBranch(name string) (string, error) {
 }
 
 
-z
+
 func efficientConcatString(args ...string) string {
 	buffer := bytes.Buffer{}
 	for _, str := range args {
