@@ -1,44 +1,91 @@
 package subprocess
 
 import (
-	"os"
-	"fmt"
 	"os/exec"
-	"syscall"
+	"bytes"
+	"errors"
 )
 
-func SimpleExec(name string, args ...string) {
+const (
+	EmptyReturnString string = ""
+)
 
-	var waitStatus syscall.WaitStatus
+
+//SimpleExec
+//needs to also take care of stdin
+//needs to take care og std error
+func SimpleExec(name string, args ...string) (string, error) {
+
+	if err := IsInPath(name); err != nil {
+		return EmptyReturnString, err
+	}
+
 	cmd := exec.Command(name, args...)
 
-	//Up for change
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
+	cmdOutput := &bytes.Buffer{}
+	cmd.Stdout = cmdOutput
 
-	err := cmd.Run()
-
-	if err != nil {
-
-		if exitError, ok := err.(*exec.ExitError); ok {
-			waitStatus = exitError.Sys().(syscall.WaitStatus)
-			fmt.Sprintf("%d", waitStatus.ExitStatus())
-		}
-	} else {
-
-		//Command executed successfully
-		waitStatus = cmd.ProcessState.Sys().(syscall.WaitStatus)
-		fmt.Sprintf("%d", waitStatus.ExitStatus())
+	if err := cmd.Start(); err != nil {
+		return EmptyReturnString, err
 	}
 
+	if err := cmd.Wait(); err != nil {
+		return EmptyReturnString, err
+	}
+
+	return cmdOutput.String(), nil
 }
 
-func ValidateGitInstallation() (string, error) {
-	path, err := exec.LookPath("git")
+/*
+func SimpleExec(name string, args ...string) (error, string) {
+
+	if _, e := Discover(name); e != nil {
+		return e, ""
+	}
+
+	command := exec.Command(name, args...)
+	var buffer = &bytes.Buffer{}
+
+	_, err := command.StdoutPipe()
+	command.Stdout = buffer
 
 	if err != nil {
-		return "", err
+		fmt.Fprintln(os.Stderr, "Error creating StdoutPipe for Cmd", err)
+		os.Exit(1)
+	}
+
+
+		fmt.Printf("==> Output: %s\n", string(buffer))
+
+	/*
+	scanner := bufio.NewScanner(cmdReader)
+	go func() {
+		for scanner.Scan() {
+			fmt.Printf("%s\n", scanner.Text())
+		}
+	}()
+
+	err = command.Start()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error starting Cmd", err)
+	}
+
+	err = command.Wait()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error waiting for Cmd", err, )
+	}
+
+	return nil, buffer.String()
+}
+
+*/
+
+func IsInPath(application string) (error) {
+	_, err := exec.LookPath(application)
+
+	if err != nil {
+		return errors.New(application + " is not in $PATH")
 
 	}
-	return path, nil
+	return nil
 }

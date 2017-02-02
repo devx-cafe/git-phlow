@@ -1,11 +1,25 @@
 package main
 
 import (
-	"github.com/praqma/git-phlow/subprocess"
-	"github.com/spf13/cobra/cobra/cmd"
+	"github.com/praqma/git-phlow/gitwrapper"
+	"fmt"
+	"strconv"
 )
 
 func main() {
-	cmd.Execute()
-	subprocess.SimpleExec("./test.sh")
+	//cmd.Execute()
+
+	var branch *gitwrapper.Branch
+	branch = &gitwrapper.Branch{}
+	_, err := branch.Branch()
+
+	if err != nil{
+		fmt.Println(err)
+	}
+
+
+	for i, val := range branch.Branches {
+		fmt.Println(strconv.Itoa(i) + " bbbb " + val)
+	}
+
 }
