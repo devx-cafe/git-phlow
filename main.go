@@ -4,10 +4,11 @@ import (
 	"github.com/praqma/git-phlow/gitwrapper"
 	"fmt"
 	"strconv"
+	"github.com/spf13/cobra/cobra/cmd"
 )
 
 func main() {
-	//cmd.Execute()
+	cmd.Execute()
 
 	var branch *gitwrapper.Branch
 	branch = &gitwrapper.Branch{}
