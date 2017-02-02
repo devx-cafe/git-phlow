@@ -3,6 +3,7 @@ package gitwrapper
 import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
+	"bytes"
 )
 
 
@@ -43,9 +44,18 @@ func (b *Branch)CreateBranch(name string) (string, error) {
 	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)
 
 	if err != nil {
-		return err
+		return "", err
 	}
-	return "Branch '" + name + "' created"
+
+	return efficientConcatString("branch '", name, "' created"), nil
 }
 
 
+z
+func efficientConcatString(args ...string) string {
+	buffer := bytes.Buffer{}
+	for _, str := range args {
+		buffer.WriteString(str)
+	}
+	return buffer.String()
+}
