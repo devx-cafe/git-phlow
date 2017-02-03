@@ -33,7 +33,7 @@ func (f *fetch) Fetch(fromOrigin bool) (string, error) {
 	var err error
 
 	if fromOrigin {
-		message, err = subprocess.SimpleExec(GitCommand, f.gitFetchCommand, origin)
+		message, err = subprocess.SimpleExec(GitCommand, f.gitFetchCommand, all)
 	} else {
 		message, err = subprocess.SimpleExec(GitCommand, f.gitFetchCommand)
 	}

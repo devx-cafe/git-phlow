@@ -35,8 +35,6 @@ func SimpleExec(name string, args ...string) (string, error) {
 		return EmptyReturnString, err
 	}
 
-	
-
 	return outBuffer.String(), nil
 }
 

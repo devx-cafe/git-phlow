@@ -16,11 +16,20 @@ func main() {
 
 	if err != nil {
 
-		fmt.Println(err)
+		fmt.Println("Branchy err: " + err.Error())
 	}
 
 	for _, name := range branches {
-		fmt.Println(name)
+		fmt.Println("branch message: " + name)
 	}
 
+	fetchCommand := git.Fetch()
+	msg, err := fetchCommand.Fetch(true)
+
+	if err != nil {
+
+		fmt.Println("Fetch err: " + err.Error())
+	}
+
+	fmt.Println("Fetch messsage: " + msg)
 }
