@@ -23,13 +23,13 @@ func main() {
 		fmt.Println("branch message: " + name)
 	}
 
-	fetchCommand := git.Fetch()
-	msg, err := fetchCommand.Fetch(false)
-
-	if err != nil {
-
-		fmt.Println("Fetch err: " + err.Error())
-	}
-
-	fmt.Println("Fetch messsage: " + msg)
+	//fetchCommand := git.Checkout()
+	//msg, err := fetchCommand.Checkout("master")
+	//
+	//if err != nil {
+	//
+	//	fmt.Println("Fetch err: " + err.Error())
+	//}
+    //
+	//fmt.Println("Fetch messsage: " + msg)
 }

@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"bytes"
 	"errors"
+	"fmt"
 )
 
 const (
@@ -28,12 +29,15 @@ func SimpleExec(name string, args ...string) (string, error) {
 	cmd.Stdout = &outBuffer
 
 	if err := cmd.Start(); err != nil {
+		fmt.Println(errBuffer.String())
 		return EmptyReturnString, err
 	}
 
 	if err := cmd.Wait(); err != nil {
+		fmt.Println(errBuffer.String())
 		return EmptyReturnString, err
 	}
+
 
 	return outBuffer.String(), nil
 }
