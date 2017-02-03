@@ -22,8 +22,10 @@ func SimpleExec(name string, args ...string) (string, error) {
 
 	cmd := exec.Command(name, args...)
 
-	cmdOutput := &bytes.Buffer{}
-	cmd.Stdout = cmdOutput
+	var outBuffer, errBuffer bytes.Buffer
+
+	cmd.Stderr = &errBuffer
+	cmd.Stdout = &outBuffer
 
 	if err := cmd.Start(); err != nil {
 		return EmptyReturnString, err
@@ -33,7 +35,9 @@ func SimpleExec(name string, args ...string) (string, error) {
 		return EmptyReturnString, err
 	}
 
-	return cmdOutput.String(), nil
+	
+
+	return outBuffer.String(), nil
 }
 
 /*

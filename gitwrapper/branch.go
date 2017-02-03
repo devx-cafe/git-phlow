@@ -6,6 +6,9 @@ import (
 	"bytes"
 )
 
+type GitBranch interface {
+	Branch() ([]string, error)
+}
 
 //Branch
 type Branch struct {
@@ -33,7 +36,6 @@ func (b *Branch) Branch() ([]string, error) {
 			b.Branches = append(b.Branches, branch)
 		}
 	}
-
 	return b.Branches, nil
 }
 
@@ -49,8 +51,6 @@ func (b *Branch)CreateBranch(name string) (string, error) {
 
 	return efficientConcatString("branch '", name, "' created"), nil
 }
-
-
 
 func efficientConcatString(args ...string) string {
 	buffer := bytes.Buffer{}
