@@ -7,14 +7,16 @@ import "github.com/praqma/git-phlow/subprocess"
 //GitCheckout interface
 //Interface for all methods a git checkout command should poses
 type GitCheckout interface {
-	Checkout()
+	Checkout(ref string) (string, error)
 }
 
 type checkout struct {
 	gitCheckoutCommand string
 }
 
-func NewCheckout() *GitCheckout {
+//NewCheckout
+//Creates a new checkout command
+func NewCheckout() *checkout {
 	return &checkout{gitCheckoutCommand:"checkout"}
 }
 

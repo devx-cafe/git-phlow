@@ -24,7 +24,7 @@ func main() {
 	}
 
 	fetchCommand := git.Fetch()
-	msg, err := fetchCommand.Fetch(true)
+	msg, err := fetchCommand.Fetch(false)
 
 	if err != nil {
 

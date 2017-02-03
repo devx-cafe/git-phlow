@@ -12,6 +12,7 @@ const (
 type GitInterface interface {
 	branch() GitBranch
 	Fetch() GitFetch
+	Checkout() GitCheckout
 }
 
 //Git
@@ -28,5 +29,7 @@ func (g *Git) Fetch() GitFetch {
 	return NewFetch()
 }
 
-
+func (g *Git) Checkout() GitCheckout {
+	return NewCheckout()
+}
 
