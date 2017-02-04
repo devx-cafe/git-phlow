@@ -1,9 +1,9 @@
 # git-phlow - the release train extension
 
+| Job | Status  |
+| ------------- | ----------------- |
+| `integration` | ![build status](https://elementsx.me/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)       |
 
-
-![build status](https://elementsx.me/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)
- 
 git-phlow (pronounced _"git flow"_), is a CLI extension for git, which is designed to provide an extra set of commands to easily create, wrapup, and deliver tasks/issues created on [github](https://github.com) and [waffle](https://waffle.io/). 
 
 git-phlow is the extension build for [the phlow](http://www.praqma.com/stories/a-pragmatic-workflow/), a praqmatic workflow, simplifying your software delivery. 
@@ -23,13 +23,12 @@ Some of git-phlow' core features will include:
 This is the official repository for the git-phlow extension. As of now it is currently under heavy development. The foundation of the application still changes daily and test procedures are still a work on. 
 
 ### Get started with the-phlow and waffle
-To follow the the-phlow, please read this great article about how the-phlow works and how to get going
+To get started using the-phlow, read [praqmas](http://www.praqma.com/stories/a-pragmatic-workflow/) article about how the-phlow and the pragmatic workflow works, and how to configure waffle for your projects. 
 
 ### Contribution
 To contribute to the project, fork it on GitHub. The project is written in go and follow go's own official style and commenting guidelines.  
 
 coding guidelines [effective go](https://golang.org/doc/effective_go.html) 
-
 contributing guidelines: [go official contribute guide](https://golang.org/doc/contribute.html) 
 
 ---
