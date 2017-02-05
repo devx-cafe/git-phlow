@@ -4,7 +4,6 @@ import (
 	"os/exec"
 	"bytes"
 	"errors"
-	"fmt"
 	"syscall"
 	"log"
 )
@@ -13,13 +12,19 @@ const (
 	EmptyReturnString string = ""
 )
 
-type execError struct {
-	Error    error
+type ExecError struct {
+	err    error
 	StdErr   string
 	ExitCode int
 }
 
+func (e ExecError) Error() string {
+	return e.StdErr
+}
+
+
 //SimpleExec
+//Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
 	if err := IsInPath(name); err != nil {
@@ -44,8 +49,10 @@ func SimpleExec(name string, args ...string) (string, error) {
 			//Program exited with exit code != 0
 
 			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
+				//Trying to obtain exit error from failed command
+
 				log.Printf("Exit Status: %d", status.ExitStatus())
-				return execError{err, errBuffer.String(), status.ExitStatus()}
+				return EmptyReturnString, ExecError{err, errBuffer.String(), status.ExitStatus()}
 			}
 		}
 		return EmptyReturnString, err
@@ -54,6 +61,8 @@ func SimpleExec(name string, args ...string) (string, error) {
 	return outBuffer.String(), nil
 }
 
+//IsInPath
+//Checks if an app has been added to $PATH
 func IsInPath(application string) (error) {
 	_, err := exec.LookPath(application)
 

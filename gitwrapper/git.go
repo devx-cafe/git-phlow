@@ -10,9 +10,9 @@ const (
 //GitInterface
 //interface for git commands
 type GitInterface interface {
-	branch() GitBranch
-	Fetch() GitFetch
-	Checkout() GitCheckout
+	branch() Branch
+	Fetch() Fetch
+	Checkout() Checkout
 }
 
 //Git
@@ -21,15 +21,15 @@ type Git struct {
 
 }
 
-func (g *Git)Branch() GitBranch {
+func (g *Git)Branch() Branch {
 	return NewBranch()
 }
 
-func (g *Git) Fetch() GitFetch {
+func (g *Git) Fetch() Fetch {
 	return NewFetch()
 }
 
-func (g *Git) Checkout() GitCheckout {
+func (g *Git) Checkout() Checkout {
 	return NewCheckout()
 }
 

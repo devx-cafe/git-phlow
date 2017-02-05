@@ -10,12 +10,15 @@ func main() {
 	//cmd.Execute()
 
 
-	str, err := subprocess.SimpleExec("git", "sts")
+	_, err := subprocess.SimpleExec("git", "sts")
 
-	fmt.Println(str)
+
 	if err != nil {
 
-	fmt.Println(err)
+		str := err.(subprocess.ExecError)
+
+		fmt.Println("ARGH" + str.StdErr)
+		fmt.Println("exit code: " + str.ExitCode)
 
 	}
 

@@ -6,26 +6,26 @@ import (
 	"bytes"
 )
 
-type GitBranch interface {
+type Branch interface {
 	Branch() ([]string, error)
 }
 
 //Branch
-type Branch struct {
+type branch struct {
 	gitBranchCommand string
 	Branches         []string
 }
 
 //NewBranch
 //initializes a branch struct
-func NewBranch() *Branch {
-	return &Branch{gitBranchCommand:"branch"}
+func NewBranch() *branch {
+	return &branch{gitBranchCommand:"branch"}
 }
 
 
 //Branch
 //Get list of all branches
-func (b *Branch) Branch() ([]string, error) {
+func (b *branch) Branch() ([]string, error) {
 	output, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func (b *Branch) Branch() ([]string, error) {
 
 //CreateBranch
 //Create a new branch
-func (b *Branch)CreateBranch(name string) (string, error) {
+func (b *branch)CreateBranch(name string) (string, error) {
 
 	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)
 

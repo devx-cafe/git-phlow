@@ -9,7 +9,7 @@ const (
 
 //GitFetch
 //wrapper interface for gitcommands
-type GitFetch interface {
+type Fetch interface {
 	Fetch(origin bool) (string, error)
 }
 
