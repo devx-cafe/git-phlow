@@ -5,16 +5,21 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"syscall"
+	"log"
 )
 
 const (
 	EmptyReturnString string = ""
 )
 
+type execError struct {
+	Error    error
+	StdErr   string
+	ExitCode int
+}
 
 //SimpleExec
-//needs to also take care of stdin
-//needs to take care og std error
 func SimpleExec(name string, args ...string) (string, error) {
 
 	if err := IsInPath(name); err != nil {
@@ -29,62 +34,25 @@ func SimpleExec(name string, args ...string) (string, error) {
 	cmd.Stdout = &outBuffer
 
 	if err := cmd.Start(); err != nil {
-		fmt.Println(errBuffer.String())
+		log.Fatalf("cmd.Start: %d", err)
 		return EmptyReturnString, err
 	}
 
 	if err := cmd.Wait(); err != nil {
-		fmt.Println(errBuffer.String())
+
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			//Program exited with exit code != 0
+
+			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
+				log.Printf("Exit Status: %d", status.ExitStatus())
+				return execError{err, errBuffer.String(), status.ExitStatus()}
+			}
+		}
 		return EmptyReturnString, err
 	}
 
-
 	return outBuffer.String(), nil
 }
-
-/*
-func SimpleExec(name string, args ...string) (error, string) {
-
-	if _, e := Discover(name); e != nil {
-		return e, ""
-	}
-
-	command := exec.Command(name, args...)
-	var buffer = &bytes.Buffer{}
-
-	_, err := command.StdoutPipe()
-	command.Stdout = buffer
-
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error creating StdoutPipe for Cmd", err)
-		os.Exit(1)
-	}
-
-
-		fmt.Printf("==> Output: %s\n", string(buffer))
-
-	/*
-	scanner := bufio.NewScanner(cmdReader)
-	go func() {
-		for scanner.Scan() {
-			fmt.Printf("%s\n", scanner.Text())
-		}
-	}()
-
-	err = command.Start()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error starting Cmd", err)
-	}
-
-	err = command.Wait()
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error waiting for Cmd", err, )
-	}
-
-	return nil, buffer.String()
-}
-
-*/
 
 func IsInPath(application string) (error) {
 	_, err := exec.LookPath(application)
