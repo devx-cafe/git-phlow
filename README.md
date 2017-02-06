@@ -6,7 +6,7 @@ maintainer: groenborg
 
 | Job | Status  |
 | ------------- | ----------------- |
-| `integration` | ![build status](https://elementsx.me/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)       |
+| `integration` | ![build status](https://concourse.code.praqma.com/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)       |
 
 git-phlow (pronounced _"git flow"_), is a CLI extension for git, which is designed to provide an extra set of commands to easily create, wrapup, and deliver tasks/issues created on [github](https://github.com) and [waffle](https://waffle.io/). 
 
