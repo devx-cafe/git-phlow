@@ -9,6 +9,26 @@ func TestSimpleExec(t *testing.T) {
 
 	Convey("Test function SimpleExec", t, func() {
 
+		Convey("run: 'ls' - should return no errors ", func() {
+
+			output, err := SimpleExec("ls", "-lah")
+
+			So(output, ShouldNotBeBlank)
+			So(err, ShouldBeNil)
+		})
+
+
+
+		Convey("run: 'git sts' - should return ExitCode, stderr and err", func() {
+
+			output, err := SimpleExec("git","sts")
+
+			str  := err.(*ExecError)
+
+			So(err, ShouldNotBeNil)
+			So()
+
+		})
 	})
 
 }

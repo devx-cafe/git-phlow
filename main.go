@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/praqma/git-phlow/subprocess"
+	"strconv"
+	"os"
 )
 
 func main() {
@@ -18,8 +20,8 @@ func main() {
 		str := err.(subprocess.ExecError)
 
 		fmt.Println("ARGH" + str.StdErr)
-		fmt.Println("exit code: " + str.ExitCode)
-
+		fmt.Println("exit code: " + strconv.Itoa(str.ExitCode))
+		os.Exit(str.ExitCode)
 	}
 
 	//git := gitwrapper.Git{}

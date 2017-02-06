@@ -13,13 +13,13 @@ const (
 )
 
 type ExecError struct {
-	err    error
-	StdErr   string
-	ExitCode int
+	err      error
+	stdErr   string
+	exitCode int
 }
 
 func (e ExecError) Error() string {
-	return e.StdErr
+	return e.stdErr
 }
 
 
@@ -27,20 +27,18 @@ func (e ExecError) Error() string {
 //Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
-	if err := IsInPath(name); err != nil {
-		return EmptyReturnString, err
-	}
-
 	cmd := exec.Command(name, args...)
 
-	var outBuffer, errBuffer bytes.Buffer
+	var stdOutBuffer, stdErrBuffer bytes.Buffer
 
-	cmd.Stderr = &errBuffer
-	cmd.Stdout = &outBuffer
+	cmd.Stderr = &stdErrBuffer
+	cmd.Stdout = &stdOutBuffer
 
 	if err := cmd.Start(); err != nil {
 		log.Fatalf("cmd.Start: %d", err)
-		return EmptyReturnString, err
+
+		//Return Error with stderr, error - and exit status 1
+		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -52,13 +50,16 @@ func SimpleExec(name string, args ...string) (string, error) {
 				//Trying to obtain exit error from failed command
 
 				log.Printf("Exit Status: %d", status.ExitStatus())
-				return EmptyReturnString, ExecError{err, errBuffer.String(), status.ExitStatus()}
+				return EmptyReturnString, ExecError{err, stdErrBuffer.String(), status.ExitStatus()}
 			}
 		}
-		return EmptyReturnString, err
+
+		//Return Error with stderr, error - and exit status 1
+		return EmptyReturnString, ExecError{err, stdErrBuffer, 1}
 	}
 
-	return outBuffer.String(), nil
+	//If no errors are returned, return stdout
+	return stdOutBuffer.String(), nil
 }
 
 //IsInPath
