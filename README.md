@@ -1,3 +1,7 @@
+---
+maintainer: groenborg
+---
+
 # git-phlow - the release train extension
 
 | Job | Status  |
@@ -123,6 +127,4 @@ To contribute to the project, fork it on GitHub. The project is written in go an
 coding guidelines [effective go](https://golang.org/doc/effective_go.html) 
 contributing guidelines: [go official contribute guide](https://golang.org/doc/contribute.html) 
 
----
-Maintainer: groenborg
----
+
