@@ -122,9 +122,6 @@ IntelliJ has a [plugin](http://go-ide.com) for go development - I personally use
 
 
 ### Contribution
-To contribute to the project, fork it on GitHub. The project is written in go and follow go's own official style and commenting guidelines.  
-
-coding guidelines [effective go](https://golang.org/doc/effective_go.html) 
-contributing guidelines: [go official contribute guide](https://golang.org/doc/contribute.html) 
+To contribute to the project, I refer to reading our [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
 
 
