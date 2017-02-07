@@ -21,12 +21,6 @@ func TestSimpleExec(t *testing.T) {
 
 		Convey("run: 'git sts' - should return ExitCode, stderr and err", func() {
 
-			output, err := SimpleExec("git","sts")
-
-			str  := err.(*ExecError)
-
-			So(err, ShouldNotBeNil)
-			So()
 
 		})
 	})
@@ -43,13 +37,13 @@ func TestIsInPath(t *testing.T) {
 
 		Convey("Test app" + cd + "is in path", func() {
 			actual := IsInPath(cd)
-			So(actual, ShouldBeTrue)
+			So(actual, ShouldBeNil)
 		})
 
 		Convey("Test program " + notAnApp + "is not in path", func() {
 
 			actual := IsInPath(notAnApp)
-			So(actual, ShouldBeTrue)
+			So(actual, ShouldNotBeNil)
 		})
 
 	})

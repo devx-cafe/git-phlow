@@ -17,14 +17,14 @@ type branch struct {
 }
 
 //NewBranch
-//initializes a branch struct
+//Constructor for branch struct
 func NewBranch() *branch {
 	return &branch{gitBranchCommand:"branch"}
 }
 
 
 //Branch
-//Get list of all branches
+//Get list of all branches: equals "git branch"
 func (b *branch) Branch() ([]string, error) {
 	output, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand)
 	if err != nil {
@@ -40,7 +40,7 @@ func (b *branch) Branch() ([]string, error) {
 }
 
 //CreateBranch
-//Create a new branch
+//Create a new branch: equals "git branch [name]"
 func (b *branch)CreateBranch(name string) (string, error) {
 
 	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)

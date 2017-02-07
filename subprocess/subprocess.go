@@ -27,7 +27,7 @@ func (e ExecError) Error() string {
 //Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
-	cmd := exec.Command(name, args...)
+	cmd := exec.Command("git", "branch")
 
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
 
@@ -55,7 +55,7 @@ func SimpleExec(name string, args ...string) (string, error) {
 		}
 
 		//Return Error with stderr, error - and exit status 1
-		return EmptyReturnString, ExecError{err, stdErrBuffer, 1}
+		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	//If no errors are returned, return stdout

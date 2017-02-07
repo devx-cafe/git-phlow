@@ -3,12 +3,11 @@ package gitwrapper
 import "github.com/praqma/git-phlow/subprocess"
 
 const (
-	origin string = "origin"
 	all string = "--all"
 )
 
 //GitFetch
-//wrapper interface for gitcommands
+//interface for git fetch commands
 type Fetch interface {
 	Fetch(origin bool) (string, error)
 }
@@ -19,7 +18,7 @@ type fetch struct {
 
 
 //NewFetch
-//Gives a new fetch command
+//Constructor for fetch struct
 func NewFetch() *fetch {
 	return &fetch{gitFetchCommand:"fetch"}
 

@@ -9,7 +9,7 @@ const (
 
 //GitInterface
 //interface for git commands
-type GitInterface interface {
+type Git interface {
 	branch() Branch
 	Fetch() Fetch
 	Checkout() Checkout
@@ -17,19 +17,19 @@ type GitInterface interface {
 
 //Git
 //Struct for implementation
-type Git struct {
+type gitImpl struct {
 
 }
 
-func (g *Git)Branch() Branch {
+func (g *gitImpl)Branch() Branch {
 	return NewBranch()
 }
 
-func (g *Git) Fetch() Fetch {
+func (g *gitImpl) Fetch() Fetch {
 	return NewFetch()
 }
 
-func (g *Git) Checkout() Checkout {
+func (g *gitImpl) Checkout() Checkout {
 	return NewCheckout()
 }
 

@@ -5,7 +5,7 @@ import "github.com/praqma/git-phlow/subprocess"
 
 
 //GitCheckout interface
-//Interface for all methods a git checkout command should poses
+//Interface for git checkout
 type Checkout interface {
 	Checkout(ref string) (string, error)
 }

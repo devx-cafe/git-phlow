@@ -11,12 +11,13 @@ var workonCmd = &cobra.Command{
 	Long: `creates a new branch named from a issue on a selected plugin`,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		//Calls phlowimpl.workon(falgs, args)
+
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(workonCmd)
-
 
 	// Here you will define your flags and configuration settings.
 
