@@ -83,6 +83,9 @@ export PATH=$PATH:$GOBIN
 Next up is getting our project. Use go's own tool `go get` or clone the repository into your GOPATH under, src/github.com/praqma/
 ```bash
 go get -v github.com/praqma/git-phlow   #downloads the project to you gopath
+
+#go to the project folder /src/github.com/praqma/git-phlow and enter following commands
+
 go get -d                               #resolve dependencies
 go get -t                               #should resolve test dependencies
 ```
