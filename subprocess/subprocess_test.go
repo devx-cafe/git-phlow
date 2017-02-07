@@ -31,12 +31,12 @@ func TestIsInPath(t *testing.T) {
 
 	Convey("Test function IsInPath", t, func() {
 
-		var cd string = "cd"                    //Unix, Darwin, windows should all have 'cd'
+		var ls string = "ls"                    //Unix, Darwin, windows should all have 'ls'
 		var notAnApp string = "libblobdibdab" //Random string which s unlikely to be an app
 
 
-		Convey("Test app" + cd + "is in path", func() {
-			actual := IsInPath(cd)
+		Convey("Test app" + ls + "is in path", func() {
+			actual := IsInPath(ls)
 			So(actual, ShouldBeNil)
 		})
 

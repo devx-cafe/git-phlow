@@ -1,6 +1,8 @@
 package main
 
-import "github.com/spf13/cobra/cobra/cmd"
+import (
+	"github.com/praqma/git-phlow/cmd"
+)
 
 func main() {
 
