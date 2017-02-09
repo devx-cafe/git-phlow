@@ -12,7 +12,7 @@ import (
 const (
 	target   string = "./"
 	archive  string = "./testfixture/phlow-test-pkg.zip"
-	testPath string = ""
+	testPath string = "./phlow-test-pkg"
 )
 
 var (
@@ -70,6 +70,7 @@ func unzip(archive, target string) error {
 }
 
 //SetupTestRepo
+//Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 	err := unzip(archive, target)
 
@@ -81,8 +82,15 @@ func SetupTestRepo() {
 }
 
 //TearDownTestRepo
+//removes the unzipped test repository is it exists
 func TearDownTestRepo() {
 
+	err := os.RemoveAll(testPath)
+	if err != nil {
+		fmt.Fprintln(os.Stdout, err.Error())
+		os.Exit(1)
+	}
+	fmt.Fprintln(os.Stdout, "Deleted local test repository")
 }
 
 func main() {
