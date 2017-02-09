@@ -94,6 +94,6 @@ func TearDownTestRepo() {
 }
 
 func main() {
-	//SetupTestRepo()
-	TearDownTestRepo()
+	SetupTestRepo()
+	//	TearDownTestRepo()
 }

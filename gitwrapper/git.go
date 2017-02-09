@@ -1,27 +1,34 @@
 package gitwrapper
 
-
-//Git constants 
-const (
-	GitCommand string = "git"
+import (
+	"github.com/praqma/git-phlow/subprocess"
+	"fmt"
 )
 
+const (
+	gitCommand string = ""
+	flag_C     string = ""
+)
 
 //GitInterface
 //interface for git commands
 type Git interface {
-	branch() Branch
+	Branch() Branch
 	Fetch() Fetch
 	Checkout() Checkout
+	NewConfig(git gitConfig) *gitImpl
 }
 
 //Git
 //Struct for implementation
 type gitImpl struct {
-
 }
 
-func (g *gitImpl)Branch() Branch {
+type gitConfig struct {
+	directory string
+}
+
+func (g *gitImpl) Branch() Branch {
 	return NewBranch()
 }
 
@@ -33,3 +40,11 @@ func (g *gitImpl) Checkout() Checkout {
 	return NewCheckout()
 }
 
+func (g *gitImpl) NewConfig(config gitConfig) *gitImpl {
+	return g
+}
+
+
+func someone(git Git) {
+
+}

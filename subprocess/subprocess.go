@@ -22,12 +22,11 @@ func (e ExecError) Error() string {
 	return e.stdErr
 }
 
-
 //SimpleExec
 //Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
-	cmd := exec.Command("git", "branch")
+	cmd := exec.Command(name, args...)
 
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
 

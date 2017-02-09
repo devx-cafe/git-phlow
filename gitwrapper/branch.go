@@ -10,7 +10,12 @@ type Branch interface {
 	Branch() ([]string, error)
 }
 
-//Branch
+
+const (
+	gitBranch string = "branch"
+
+)
+
 type branch struct {
 	gitBranchCommand string
 	Branches         []string

@@ -36,6 +36,7 @@ func TestBranch(t *testing.T) {
 	Convey("Test function NewBranch and Branch", t, func() {
 
 		Convey("Test function 'Branch' should contain master branch", func() {
+			
 			branch := NewBranch()
 			branch.Branch()
 
