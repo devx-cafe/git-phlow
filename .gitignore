@@ -33,3 +33,6 @@ _testmain.go
 ### EDITORS ###
 .vscode/
 .idea/
+
+### TEST ###
+/phlow-test-pkg
