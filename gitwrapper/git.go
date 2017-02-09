@@ -1,50 +1,40 @@
 package gitwrapper
 
-import (
-	"github.com/praqma/git-phlow/subprocess"
-	"fmt"
-)
+import ()
 
 const (
-	gitCommand string = ""
-	flag_C     string = ""
+	gitCommand  string = "git"
+	gitFromPath string = "-C"
 )
 
-//GitInterface
-//interface for git commands
 type Git interface {
 	Branch() Branch
 	Fetch() Fetch
 	Checkout() Checkout
-	NewConfig(git gitConfig) *gitImpl
 }
 
-//Git
-//Struct for implementation
-type gitImpl struct {
+type localGit struct {
+	command  string
+	baseArgs string
 }
 
-type gitConfig struct {
-	directory string
-}
-
-func (g *gitImpl) Branch() Branch {
+func (g *localGit) Branch() Branch {
 	return NewBranch()
 }
 
-func (g *gitImpl) Fetch() Fetch {
+func (g *localGit) Fetch() Fetch {
 	return NewFetch()
 }
 
-func (g *gitImpl) Checkout() Checkout {
+func (g *localGit) Checkout() Checkout {
 	return NewCheckout()
 }
 
-func (g *gitImpl) NewConfig(config gitConfig) *gitImpl {
-	return g
+func (l localGit) GitFromPath(path string) *localGit {
+	args := gitFromPath + " " + path
+	return &localGit{command: gitCommand, baseArgs: args}
 }
 
-
-func someone(git Git) {
-
+func (l localGit) DefaultGit() *localGit {
+	return &localGit{command: "git"}
 }

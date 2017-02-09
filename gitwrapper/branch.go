@@ -10,28 +10,26 @@ type Branch interface {
 	Branch() ([]string, error)
 }
 
-
 const (
-	gitBranch string = "branch"
-
+	baseBranch string = "branch"
 )
 
 type branch struct {
-	gitBranchCommand string
-	Branches         []string
+	cmd      string
+	cmdFlags string
+	Branches []string
 }
 
 //NewBranch
 //Constructor for branch struct
-func NewBranch() *branch {
-	return &branch{gitBranchCommand:"branch"}
+func NewBranch(cmd, cmdFlags string) *branch {
+	return &branch{cmd: cmd, cmdFlags: cmdFlags}
 }
-
 
 //Branch
 //Get list of all branches: equals "git branch"
 func (b *branch) Branch() ([]string, error) {
-	output, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand)
+	output, err := subprocess.SimpleExec(b.cmd, b.cmdFlags, baseBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +44,7 @@ func (b *branch) Branch() ([]string, error) {
 
 //CreateBranch
 //Create a new branch: equals "git branch [name]"
-func (b *branch)CreateBranch(name string) (string, error) {
+func (b *branch) CreateBranch(name string) (string, error) {
 
 	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)
 
