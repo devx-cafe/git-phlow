@@ -33,7 +33,6 @@ func unzip(archive, target string) error {
 		fmt.Println(archive)
 		return err
 	}
-
 	if err := os.MkdirAll(target, 0755); err != nil {
 		return err
 	}
@@ -69,24 +68,24 @@ func unzip(archive, target string) error {
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 
-	zipPath := "/testfixture/phlow-test-pkg.zip"
-	target := "/build"
-
 	pwd, err := os.Getwd()
-
-	if err != nil {
-		fmt.Fprintln(os.Stdout, err.Error())
-		os.Exit(1)
-	}
 	phlowPath = pwd
-	err = unzip(pwd+zipPath, target)
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
 
-	os.Chdir(pwd + target)
+	target := phlowPath + "/build"
+	archive := phlowPath + "/testfixture/phlow-test-pkg.zip"
+	err = unzip(archive, target)
+
+	if err != nil {
+		fmt.Fprintln(os.Stdout, err.Error())
+		os.Exit(1)
+	}
+
+	os.Chdir(target)
 
 	fmt.Fprintln(os.Stdout, "Local test repository created from 'zip'")
 }

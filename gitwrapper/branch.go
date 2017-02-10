@@ -4,6 +4,7 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
 	"bytes"
+	"github.com/praqma/git-phlow/testfixture"
 )
 
 type Brancher interface {
@@ -61,4 +62,11 @@ func efficientConcatString(args ...string) string {
 		buffer.WriteString(str)
 	}
 	return buffer.String()
+}
+
+func Lalal()  {
+	textfixture.SetupTestRepo()
+
+
+
 }

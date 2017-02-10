@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/praqma/git-phlow/cmd"
+
+	"github.com/praqma/git-phlow/gitwrapper"
 )
 
 func main() {
 
-	cmd.Execute()
+	gitwrapper.Lalal()
 
 }
