@@ -4,8 +4,8 @@ const (
 	gitCommand string = "git"
 )
 
-type Git interface {
-	Branch() Branch
+type Giter interface {
+	Branch() Brancher
 	Fetch() Fetch
 	Checkout() Checkout
 }
@@ -15,7 +15,7 @@ type localGit struct {
 	baseArgs string
 }
 
-func (g *localGit) Branch() Branch {
+func (g *localGit) Branch() Brancher {
 	return NewBranch()
 }
 
@@ -27,6 +27,6 @@ func (g *localGit) Checkout() Checkout {
 	return NewCheckout()
 }
 
-func (l *localGit) DefaultGit() *localGit {
+func InitGit() *localGit {
 	return &localGit{command: "git"}
 }

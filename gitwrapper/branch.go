@@ -4,10 +4,12 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
 	"bytes"
+	"golang.org/x/tools/go/gcimporter15/testdata"
 )
 
-type Branch interface {
-	Branch() ([]string, error)
+type Brancher interface {
+	ListBranches() ([]string, error)
+	CreateBranch(name string) (string, error)
 }
 
 const (
@@ -16,37 +18,36 @@ const (
 
 type branch struct {
 	cmd      string
-	cmdFlags string
-	Branches []string
 }
 
 //NewBranch
 //Constructor for branch struct
-func NewBranch(cmd, cmdFlags string) *branch {
-	return &branch{cmd: cmd, cmdFlags: cmdFlags}
+func NewBranch(baseCMD string) *branch {
+	return &branch{cmd: baseCMD}
 }
 
 //Branch
 //Get list of all branches: equals "git branch"
-func (b *branch) Branch() ([]string, error) {
-	output, err := subprocess.SimpleExec(b.cmd, b.cmdFlags, baseBranch)
+func (b *branch) ListBranches() ([]string, error) {
+	output, err := subprocess.SimpleExec(b.cmd, baseBranch)
 	if err != nil {
 		return nil, err
 	}
 
+	var branches []string
 	for _, branch := range strings.Split(output, "\n") {
 		if branch != "" {
-			b.Branches = append(b.Branches, branch)
+			branches = append(branches, branch)
 		}
 	}
-	return b.Branches, nil
+	return branches, nil
 }
 
 //CreateBranch
 //Create a new branch: equals "git branch [name]"
 func (b *branch) CreateBranch(name string) (string, error) {
 
-	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)
+	_, err := subprocess.SimpleExec(b.cmd, baseBranch, name)
 
 	if err != nil {
 		return "", err

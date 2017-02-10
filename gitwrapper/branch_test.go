@@ -7,6 +7,10 @@ import (
 	"testing"
 	. "github.com/smartystreets/goconvey/convey"
 	"strings"
+	"github.com/praqma/git-phlow/testfixture"
+	"github.com/praqma/git-phlow/gitwrapper"
+	"fmt"
+	"os"
 )
 
 func TestStringConcat(t *testing.T) {
@@ -34,22 +38,23 @@ func TestStringConcat(t *testing.T) {
 
 func TestBranch(t *testing.T) {
 	Convey("Test function NewBranch and Branch", t, func() {
-
+		textfixture.SetupTestRepo()
 		Convey("Test function 'Branch' should contain master branch", func() {
 
-
-
-
-			branch := NewBranch()
-			branch.CreateBranch()
+			git := gitwrapper.InitGit()
+			branch, err := git.Branch().ListBranches()
+			if err != nil {
+				fmt.Println(err)
+			}
 
 			var master = false
-			for _, br := range branch.Branches {
+			for _, br := range branch {
 				if strings.Contains(br, "master") {
 					master = true
 				}
 			}
 			So(master, ShouldBeTrue)
 		})
+		textfixture.TearDownTestRepo()
 	})
 }
