@@ -12,7 +12,7 @@ import (
 var (
 	GoPathNotSet error = errors.New("GOPATH is empty")
 	goPath       string
-	phlowPath    = goPath + "/src/github.com/praqma/git-phlow"
+	phlowPath    string
 )
 
 //init
@@ -23,6 +23,8 @@ func init() {
 		fmt.Fprintln(os.Stdout, GoPathNotSet)
 		os.Exit(1)
 	}
+
+	phlowPath = goPath + "/src/github.com/praqma/git-phlow"
 }
 
 //unzip
