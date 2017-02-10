@@ -37,10 +37,11 @@ func TestBranch(t *testing.T) {
 
 		Convey("Test function 'Branch' should contain master branch", func() {
 
-			git :=
+
+
 
 			branch := NewBranch()
-			branch.Branch()
+			branch.CreateBranch()
 
 			var master = false
 			for _, br := range branch.Branches {

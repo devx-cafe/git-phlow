@@ -1,10 +1,7 @@
 package gitwrapper
 
-import ()
-
 const (
-	gitCommand  string = "git"
-	gitFromPath string = "-C"
+	gitCommand string = "git"
 )
 
 type Git interface {
@@ -14,7 +11,7 @@ type Git interface {
 }
 
 type localGit struct {
-	command  string
+	command  string //git
 	baseArgs string
 }
 
@@ -30,11 +27,6 @@ func (g *localGit) Checkout() Checkout {
 	return NewCheckout()
 }
 
-func (l localGit) GitFromPath(path string) *localGit {
-	args := gitFromPath + " " + path
-	return &localGit{command: gitCommand, baseArgs: args}
-}
-
-func (l localGit) DefaultGit() *localGit {
+func (l *localGit) DefaultGit() *localGit {
 	return &localGit{command: "git"}
 }

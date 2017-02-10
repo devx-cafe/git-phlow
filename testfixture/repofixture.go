@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	target   string = "./"
+	target   string = "./build"
 	archive  string = "./testfixture/phlow-test-pkg.zip"
-	testPath string = "./phlow-test-pkg"
+	testPath string = "./build/phlow-test-pkg"
 )
 
 var (
@@ -78,6 +78,8 @@ func SetupTestRepo() {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
+
+	os.Chdir(testPath)
 	fmt.Fprintln(os.Stdout, "Local test repository created from 'zip'")
 }
 
@@ -85,7 +87,7 @@ func SetupTestRepo() {
 //removes the unzipped test repository is it exists
 func TearDownTestRepo() {
 
-	err := os.RemoveAll(testPath)
+	err := os.RemoveAll(target)
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
@@ -94,6 +96,6 @@ func TearDownTestRepo() {
 }
 
 func main() {
-	SetupTestRepo()
-	//	TearDownTestRepo()
+	//SetupTestRepo()
+	TearDownTestRepo()
 }
