@@ -79,7 +79,7 @@ func SetupTestRepo() {
 		os.Exit(1)
 	}
 
-	os.Chdir(target)
+	os.Chdir(target + "/phlow-test-pkg")
 
 	fmt.Fprintln(os.Stdout, "Local test repository created from 'zip'")
 }

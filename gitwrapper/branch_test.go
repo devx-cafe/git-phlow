@@ -44,19 +44,25 @@ func TestBranch(t *testing.T) {
 
 			branch, err := InitGit().Branch().ListBranches()
 
+
 			if err != nil {
 				fmt.Println(err)
 			}
 
-			var master = false
+			master, foo := false, false
+
 			for _, br := range branch {
 				if strings.Contains(br, "master") {
 					master = true
 				}
+				if strings.Contains(br, "foo") {
+					foo = true
+				}
 			}
 			So(master, ShouldBeTrue)
+			So(foo, ShouldBeTrue)
 		})
-		
+
 		textfixture.TearDownTestRepo()
 	})
 }
