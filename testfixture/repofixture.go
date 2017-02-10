@@ -80,8 +80,6 @@ func SetupTestRepo() {
 	}
 
 	os.Chdir(target + "/phlow-test-pkg")
-
-	fmt.Fprintln(os.Stdout, "Local test repository created from 'zip'")
 }
 
 //TearDownTestRepo
@@ -96,6 +94,5 @@ func TearDownTestRepo() {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
-	fmt.Fprintln(os.Stdout, "Deleted local test repository")
 
 }

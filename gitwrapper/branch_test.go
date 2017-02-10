@@ -9,7 +9,6 @@ import (
 	"testing"
 	"strings"
 	"github.com/praqma/git-phlow/testfixture"
-	"fmt"
 )
 
 func TestStringConcat(t *testing.T) {
@@ -44,11 +43,6 @@ func TestBranch(t *testing.T) {
 
 			branch, err := InitGit().Branch().ListBranches()
 
-
-			if err != nil {
-				fmt.Println(err)
-			}
-
 			master, foo := false, false
 
 			for _, br := range branch {
@@ -61,8 +55,33 @@ func TestBranch(t *testing.T) {
 			}
 			So(master, ShouldBeTrue)
 			So(foo, ShouldBeTrue)
+			So(err, ShouldBeNil)
 		})
 
 		textfixture.TearDownTestRepo()
 	})
+}
+
+func CreateBranch(t *testing.T) {
+	Convey("Test creation of branch", t, func() {
+		textfixture.SetupTestRepo()
+		Convey("Create branch testphlow", func() {
+			accessBranch := InitGit().Branch()
+			branch, err := accessBranch.CreateBranch("testphlow")
+			list, errList := accessBranch.ListBranches()
+
+			newBranch := false
+			for _, br := range list {
+				if strings.Contains(br, branch) {
+					newBranch = true
+				}
+			}
+
+			So(newBranch, ShouldBeTrue)
+			So(err, ShouldBeNil)
+			So(errList, ShouldBeNil)
+		})
+		textfixture.TearDownTestRepo()
+	})
+
 }
