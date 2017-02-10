@@ -12,7 +12,7 @@ import (
 var (
 	GoPathNotSet error = errors.New("GOPATH is empty")
 	goPath       string
-	phlowPath    string
+	phlowPath    = goPath + "/src/github.com/praqma/git-phlow"
 )
 
 //init
@@ -68,17 +68,9 @@ func unzip(archive, target string) error {
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 
-	pwd, err := os.Getwd()
-	phlowPath = pwd
-
-	if err != nil {
-		fmt.Fprintln(os.Stdout, err.Error())
-		os.Exit(1)
-	}
-
 	target := phlowPath + "/build"
 	archive := phlowPath + "/testfixture/phlow-test-pkg.zip"
-	err = unzip(archive, target)
+	err := unzip(archive, target)
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
