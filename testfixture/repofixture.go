@@ -18,6 +18,7 @@ const (
 var (
 	GoPathNotSet error = errors.New("GOPATH is empty")
 	goPath       string
+	phlowPath    string
 )
 
 //init
@@ -72,7 +73,14 @@ func unzip(archive, target string) error {
 //SetupTestRepo
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
-	err := unzip(archive, target)
+
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintln(os.Stdout, err.Error())
+		os.Exit(1)
+	}
+	phlowPath = pwd
+	err = unzip(archive, target)
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
@@ -86,16 +94,12 @@ func SetupTestRepo() {
 //TearDownTestRepo
 //removes the unzipped test repository is it exists
 func TearDownTestRepo() {
-
+	os.Chdir(phlowPath)
 	err := os.RemoveAll(target)
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
 	fmt.Fprintln(os.Stdout, "Deleted local test repository")
-}
 
-func main() {
-	//SetupTestRepo()
-	TearDownTestRepo()
 }
