@@ -9,12 +9,6 @@ import (
 	"errors"
 )
 
-const (
-	target   string = "./build"
-	archive  string = "./testfixture/phlow-test-pkg.zip"
-	testPath string = "./build/phlow-test-pkg"
-)
-
 var (
 	GoPathNotSet error = errors.New("GOPATH is empty")
 	goPath       string
@@ -36,6 +30,7 @@ func init() {
 func unzip(archive, target string) error {
 	reader, err := zip.OpenReader(archive)
 	if err != nil {
+		fmt.Println(archive)
 		return err
 	}
 
@@ -74,26 +69,34 @@ func unzip(archive, target string) error {
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 
+	zipPath := "/testfixture/phlow-test-pkg.zip"
+	target := "/build"
+
 	pwd, err := os.Getwd()
+
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
 	phlowPath = pwd
-	err = unzip(archive, target)
+	err = unzip(pwd+zipPath, target)
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
 
-	os.Chdir(testPath)
+	os.Chdir(pwd + target)
+
 	fmt.Fprintln(os.Stdout, "Local test repository created from 'zip'")
 }
 
 //TearDownTestRepo
 //removes the unzipped test repository is it exists
 func TearDownTestRepo() {
+
+	var target = phlowPath + "/build"
+
 	os.Chdir(phlowPath)
 	err := os.RemoveAll(target)
 	if err != nil {

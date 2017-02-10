@@ -4,12 +4,12 @@ Test package for gitwrapper Branch
 package gitwrapper
 
 import (
-	"testing"
 	. "github.com/smartystreets/goconvey/convey"
+
+	"testing"
 	"strings"
 	"github.com/praqma/git-phlow/testfixture"
 	"fmt"
-	"gopkg.in/libgit2/git2go.v25"
 )
 
 func TestStringConcat(t *testing.T) {
@@ -37,11 +37,13 @@ func TestStringConcat(t *testing.T) {
 
 func TestBranch(t *testing.T) {
 	Convey("Test function NewBranch and Branch", t, func() {
+
 		textfixture.SetupTestRepo()
+
 		Convey("Test function 'Branch' should contain master branch", func() {
 
-			
-			branch, err := git.Branch().ListBranches()
+			branch, err := InitGit().Branch().ListBranches()
+
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -54,6 +56,7 @@ func TestBranch(t *testing.T) {
 			}
 			So(master, ShouldBeTrue)
 		})
+		
 		textfixture.TearDownTestRepo()
 	})
 }

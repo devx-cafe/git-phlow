@@ -15,7 +15,7 @@ type checkout struct {
 }
 
 //NewCheckout
-//Creates a new checkout command
+//Creates a new checkout baseGit
 func NewCheckout(baseCMD string) *checkout {
 	return &checkout{baseCmd: baseCMD}
 }

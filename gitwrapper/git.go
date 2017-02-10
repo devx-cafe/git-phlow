@@ -1,32 +1,27 @@
 package gitwrapper
 
-const (
-	gitCommand string = "git"
-)
-
 type Giter interface {
 	Branch() Brancher
-	Fetch() Fetch
-	Checkout() Checkout
+	Fetch() Fetcher
+	Checkout() Checkouter
 }
 
 type localGit struct {
-	command  string
-	baseArgs string
+	baseGit string
 }
 
 func (g *localGit) Branch() Brancher {
-	return NewBranch(gitCommand)
+	return NewBranch(g.baseGit)
 }
 
-func (g *localGit) Fetch() Fetch {
-	return NewFetch()
+func (g *localGit) Fetch() Fetcher {
+	return NewFetch(g.baseGit)
 }
 
-func (g *localGit) Checkout() Checkout {
-	return NewCheckout()
+func (g *localGit) Checkout() Checkouter {
+	return NewCheckout(g.baseGit)
 }
 
 func InitGit() *localGit {
-	return &localGit{command: "git"}
+	return &localGit{baseGit: "git"}
 }
