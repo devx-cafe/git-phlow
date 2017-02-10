@@ -8,9 +8,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 	"strings"
 	"github.com/praqma/git-phlow/testfixture"
-	"github.com/praqma/git-phlow/gitwrapper"
 	"fmt"
-	"os"
+	"gopkg.in/libgit2/git2go.v25"
 )
 
 func TestStringConcat(t *testing.T) {
@@ -41,7 +40,7 @@ func TestBranch(t *testing.T) {
 		textfixture.SetupTestRepo()
 		Convey("Test function 'Branch' should contain master branch", func() {
 
-			git := gitwrapper.InitGit()
+			
 			branch, err := git.Branch().ListBranches()
 			if err != nil {
 				fmt.Println(err)

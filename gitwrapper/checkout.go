@@ -2,27 +2,27 @@ package gitwrapper
 
 import "github.com/praqma/git-phlow/subprocess"
 
-
+const baseCheckout string = "checkout"
 
 //GitCheckout interface
 //Interface for git checkout
-type Checkout interface {
+type Checkouter interface {
 	Checkout(ref string) (string, error)
 }
 
 type checkout struct {
-	gitCheckoutCommand string
+	baseCmd string
 }
 
 //NewCheckout
 //Creates a new checkout command
-func NewCheckout() *checkout {
-	return &checkout{gitCheckoutCommand:"checkout"}
+func NewCheckout(baseCMD string) *checkout {
+	return &checkout{baseCmd: baseCMD}
 }
 
 func (c *checkout) Checkout(ref string) (string, error) {
 
-	coMessage, err := subprocess.SimpleExec(GitCommand, c.gitCheckoutCommand, ref)
+	coMessage, err := subprocess.SimpleExec(c.baseCmd, baseCheckout, ref)
 
 	if err != nil {
 		return "", err

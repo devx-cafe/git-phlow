@@ -4,7 +4,6 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
 	"bytes"
-	"golang.org/x/tools/go/gcimporter15/testdata"
 )
 
 type Brancher interface {
@@ -17,19 +16,19 @@ const (
 )
 
 type branch struct {
-	cmd      string
+	baseCMD string
 }
 
 //NewBranch
 //Constructor for branch struct
 func NewBranch(baseCMD string) *branch {
-	return &branch{cmd: baseCMD}
+	return &branch{baseCMD: baseCMD}
 }
 
 //Branch
 //Get list of all branches: equals "git branch"
 func (b *branch) ListBranches() ([]string, error) {
-	output, err := subprocess.SimpleExec(b.cmd, baseBranch)
+	output, err := subprocess.SimpleExec(b.baseCMD, baseBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +46,7 @@ func (b *branch) ListBranches() ([]string, error) {
 //Create a new branch: equals "git branch [name]"
 func (b *branch) CreateBranch(name string) (string, error) {
 
-	_, err := subprocess.SimpleExec(b.cmd, baseBranch, name)
+	_, err := subprocess.SimpleExec(b.baseCMD, baseBranch, name)
 
 	if err != nil {
 		return "", err

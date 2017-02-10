@@ -11,12 +11,12 @@ type Giter interface {
 }
 
 type localGit struct {
-	command  string //git
+	command  string
 	baseArgs string
 }
 
 func (g *localGit) Branch() Brancher {
-	return NewBranch()
+	return NewBranch(gitCommand)
 }
 
 func (g *localGit) Fetch() Fetch {
