@@ -1,5 +1,7 @@
 package gitwrapper
 
+//Giter
+// interface for git
 type Giter interface {
 	Branch() Brancher
 	Fetch() Fetcher
