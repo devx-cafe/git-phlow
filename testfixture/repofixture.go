@@ -7,6 +7,7 @@ import (
 	"io"
 	"fmt"
 	"errors"
+	"os/exec"
 )
 
 var (
@@ -70,16 +71,17 @@ func unzip(archive, target string) error {
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 
-	target := phlowPath + "/build"
-	archive := phlowPath + "/testfixture/phlow-test-pkg.zip"
-	err := unzip(archive, target)
+	script := phlowPath + "/testfixture/gen_test_repo.sh"
+	repo := phlowPath + "/build/phlow-test-pkg"
+
+	cmd := exec.Command(script)
+	err := cmd.Run()
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())
 		os.Exit(1)
 	}
-
-	os.Chdir(target + "/phlow-test-pkg")
+	os.Chdir(repo)
 }
 
 //TearDownTestRepo

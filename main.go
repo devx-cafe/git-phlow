@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/praqma/git-phlow/cmd"
+
 )
+import "github.com/praqma/git-phlow/testfixture"
 
 func main() {
-	cmd.Execute()
+	testfixture.SetupTestRepo()
 }
