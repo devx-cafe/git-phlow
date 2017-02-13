@@ -11,12 +11,12 @@ cd $DIR_NAME
 
 #CREATE TEST FILES
 touch README.md file1.txt file2.txt
-git config user.email "john@doe.com"
-git config user.name "johndoe"
 
 #DECLARE GIT FUNCTIONS
 create_inital_commit () {
     git init
+    git config user.email "john@doe.com"
+    git config user.name "johndoe"
     git add .
     git commit -m "initial commit"
 }
