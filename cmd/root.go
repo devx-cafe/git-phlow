@@ -12,10 +12,11 @@ var cfgFile string
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "git-phlow",
-	Short: "git extension for phlow-workflow",
-	Long: `git-phlow is an extension to git that expands the git command set
-	with commands that enables you to use the phlow workflow. This application
-	extends both to clientside and serverside`,
+	Short: "git extension for phlow workflow",
+	Long: `
+	git-phlow is a git extension that provides an extra set of commands, enabling you to:
+	workon, deliver and create new tasks. 
+	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
