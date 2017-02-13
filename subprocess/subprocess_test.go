@@ -17,12 +17,6 @@ func TestSimpleExec(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 
-
-
-		Convey("run: 'git sts' - should return ExitCode, stderr and err", func() {
-
-
-		})
 	})
 
 }

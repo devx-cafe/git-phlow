@@ -13,13 +13,13 @@ const (
 )
 
 type ExecError struct {
-	err      error
-	stdErr   string
-	exitCode int
+	error
+	StdErr   string
+	ExitCode int
 }
 
 func (e ExecError) Error() string {
-	return e.stdErr
+	return e.StdErr
 }
 
 //SimpleExec

@@ -4,11 +4,13 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
 	"bytes"
+	"errors"
 )
 
 type Brancher interface {
 	ListBranches() ([]string, error)
 	CreateBranch(name string) (string, error)
+	CurrentBranch() (string, error)
 }
 
 type branch struct {
@@ -50,6 +52,24 @@ func (b *branch) CreateBranch(name string) (string, error) {
 	}
 
 	return name, nil
+}
+
+//CurrentBranch
+//Get the currently selected branch
+func (b *branch) CurrentBranch() (string, error) {
+	var symbolic, short, head string = "symbolic-ref", "--short", "HEAD"
+
+	branch, err := subprocess.SimpleExec(b.baseCMD, symbolic, short, head)
+
+	if err != nil {
+		return "", err
+	}
+
+	if len(branch) == 0 {
+		return "", errors.New("error disconnected from branch")
+	}
+
+	return strings.TrimSpace(branch), nil
 }
 
 func efficientConcatString(args ...string) string {

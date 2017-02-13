@@ -90,5 +90,21 @@ func TestCreateBranch(t *testing.T) {
 
 		testfixture.TearDownTestRepo()
 	})
+}
 
+func TestCurrentBranch(t *testing.T) {
+
+	Convey("Test GetCurrent branch", t, func() {
+		testfixture.SetupTestRepo()
+
+		Convey("current branch should be master", func() {
+			brancher := InitGit().Branch()
+			branch, err := brancher.CurrentBranch()
+
+			So(branch, ShouldEqual, "master")
+			So(err, ShouldBeNil)
+		})
+
+		testfixture.TearDownTestRepo()
+	})
 }
