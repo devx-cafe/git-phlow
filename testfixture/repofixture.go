@@ -33,7 +33,8 @@ func SetupTestRepo() {
 	repo := phlowPath + "/build/phlow-test-pkg"
 
 	cmd := exec.Command(script)
-	err := cmd.Run()
+	cmd.Start()
+	err := cmd.Wait()
 
 	if err != nil {
 		fmt.Fprintln(os.Stdout, err.Error())

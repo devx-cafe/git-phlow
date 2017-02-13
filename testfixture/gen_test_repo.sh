@@ -5,6 +5,7 @@ DIR_NAME=build/phlow-test-pkg
 
 
 #CREATE TEST DIRECTORY
+cd $GOPATH/src/github.com/praqma/git-phlow
 mkdir -p -m 0755 $DIR_NAME
 cd $DIR_NAME
 
@@ -65,4 +66,5 @@ two_commits_on_master
 branch_foo_additions
 branch_master_additions
 branch_issue_additions
+return_to_master
 echo "WRAPPING UP JOB"
