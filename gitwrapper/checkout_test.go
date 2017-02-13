@@ -4,8 +4,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"github.com/praqma/git-phlow/testfixture"
-
 	"testing"
+	"io/ioutil"
 )
 
 func TestCheckout(t *testing.T) {
@@ -36,6 +36,17 @@ func TestCheckout(t *testing.T) {
 			_, err := git.Checkout().Checkout("non-existing-branch")
 
 			So(err, ShouldNotBeNil)
+		})
+
+		Convey("Checkout whith uncomitted changes", func() {
+			git := InitGit()
+			ioutil.WriteFile("./README.md", []byte("I AM A CONFLICTIONG CHANGE"), 0755)
+
+			str, err := git.Checkout().Checkout("foo")
+
+			t.Log(str)
+			So(err, ShouldNotBeNil)
+
 		})
 
 		testfixture.TearDownTestRepo()
