@@ -42,11 +42,9 @@ func TestCheckout(t *testing.T) {
 			git := InitGit()
 			ioutil.WriteFile("./README.md", []byte("I AM A CONFLICTIONG CHANGE"), 0755)
 
-			str, err := git.Checkout().Checkout("foo")
+			_, err := git.Checkout().Checkout("foo")
 
-			t.Log(str)
 			So(err, ShouldNotBeNil)
-
 		})
 
 		testfixture.TearDownTestRepo()
