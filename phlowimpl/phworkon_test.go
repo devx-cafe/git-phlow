@@ -20,7 +20,6 @@ func TestGetIssues(t *testing.T) {
 			So(branches[0], ShouldEqual, branchMap[1])
 			So(branches[1], ShouldEqual, branchMap[22])
 			So(branchMap[3], ShouldBeBlank)
-
 		})
 	})
 }

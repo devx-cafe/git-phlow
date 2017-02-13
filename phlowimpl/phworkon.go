@@ -10,17 +10,14 @@ import (
 
 //WorkOn
 func WorkOn(issueNumber int) {
-
 	git := gitwrapper.InitGit()
 	branchMappings := make(map[int]string)
+
+	updateOriginAndContinue(git)
+
 	branches, err := git.Branch().ListBranches()
-
 	if err != nil {
-
-		//Check if repo
-		//check if git is in path
-
-		fmt.Fprintln(os.Stdout, "")
+		fmt.Fprintln(os.Stdout, err)
 		return
 	}
 
@@ -28,20 +25,44 @@ func WorkOn(issueNumber int) {
 
 	if branchMappings[issueNumber] != "" {
 		//Branch is already created - do checkout
-		git.Checkout().Checkout(branchMappings[issueNumber])
-		fmt.Fprintln(os.Stdout, "branch %s already created from issue %s", branchMappings[issueNumber])
-		fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
+		_, err := git.Checkout().Checkout(branchMappings[issueNumber])
+
+		if err == nil {
+			//No file conflicts at checkout
+			fmt.Fprintln(os.Stdout, "branch %s already created from issue %s", branchMappings[issueNumber])
+			fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
+		} else {
+			fmt.Fprint(os.Stdout, err)
+		}
+
+	} else {
+		//Creating new issue-branch
+		str, err := git.Branch().CreateBranch(strconv.Itoa(issueNumber) + "issue-default")
+
+		if err == nil {
+			//issue branch successfully created
+			fmt.Fprint(os.Stdout, "Branch %s successfully created", str)
+			_, err := git.Checkout().Checkout(str)
+
+			if err == nil {
+				fmt.Fprint(os.Stdout, "Switched to branch "+str)
+			} else {
+				fmt.Fprintln(os.Stdout, "Could not checkout branch")
+			}
+		} else {
+			fmt.Fprintln(os.Stdout, "Could not create branch "+str)
+
+		}
 	}
+}
+func updateOriginAndContinue(git gitwrapper.Giter) {
 
-	//issues getIssues
-
-	//br, err := git.Branch().CreateBranch("name")
-
-	if err != nil {
-		//cannot create branch
-
+	if fetch := git.Fetch(); fetch.HasRemote() {
+		fetch.FetchFromOrigin()
+		fmt.Fprintln(os.Stdout, "Fetching remote branches")
+	} else {
+		fmt.Fprint(os.Stdout, "No remote found, working on local copy")
 	}
-
 }
 
 func getIssues(branches []string, mappings map[int]string) {
