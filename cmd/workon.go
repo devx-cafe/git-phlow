@@ -2,17 +2,27 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"strconv"
+	"fmt"
+	"os"
+	"github.com/praqma/git-phlow/phlowimpl"
 )
 
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
 	Use:   "work-on [issue number]",
-	Short: "create a branch from an issue",
-	Long: `creates a new branch named from a issue on a selected plugin`,
+	Short: "Create or change branch from an issue number",
+	Long:  `creates a new branch named from a issue on a selected plugin`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		//Calls phlowimpl.workon(falgs, args)
-
+		if len(args) > 0 {
+			issueNum, err := strconv.Atoi(args[0])
+			if err != nil {
+				fmt.Fprintf(os.Stdout, "Whoops\n your argument: %s, is not a 'number' i only feast on numbers \n", args[0])
+				os.Exit(0)
+			}
+			phlowimpl.WorkOn(issueNum)
+		}
 	},
 }
 

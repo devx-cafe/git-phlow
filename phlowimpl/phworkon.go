@@ -29,7 +29,7 @@ func WorkOn(issueNumber int) {
 
 		if err == nil {
 			//No file conflicts at checkout
-			fmt.Fprintln(os.Stdout, "branch %s already created from issue %s", branchMappings[issueNumber])
+			fmt.Fprintln(os.Stdout, "branch "+branchMappings[issueNumber]+" already created from issue ", )
 			fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
 		} else {
 			fmt.Fprint(os.Stdout, err)
@@ -37,20 +37,20 @@ func WorkOn(issueNumber int) {
 
 	} else {
 		//Creating new issue-branch
-		str, err := git.Branch().CreateBranch(strconv.Itoa(issueNumber) + "issue-default")
+		branch, err := git.Branch().CreateBranch(strconv.Itoa(issueNumber) + "-issue-default")
 
 		if err == nil {
 			//issue branch successfully created
-			fmt.Fprint(os.Stdout, "Branch %s successfully created", str)
-			_, err := git.Checkout().Checkout(str)
+			fmt.Fprintln(os.Stdout, "Branch "+branch+" successfully created")
+			_, err := git.Checkout().Checkout(branch)
 
 			if err == nil {
-				fmt.Fprint(os.Stdout, "Switched to branch "+str)
+				fmt.Fprintln(os.Stdout, "Switched to branch: "+branch)
 			} else {
 				fmt.Fprintln(os.Stdout, "Could not checkout branch")
 			}
 		} else {
-			fmt.Fprintln(os.Stdout, "Could not create branch "+str)
+			fmt.Fprintln(os.Stdout, "Could not create branch "+branch)
 
 		}
 	}
@@ -61,7 +61,7 @@ func updateOriginAndContinue(git gitwrapper.Giter) {
 		fetch.FetchFromOrigin()
 		fmt.Fprintln(os.Stdout, "Fetching remote branches")
 	} else {
-		fmt.Fprint(os.Stdout, "No remote found, working on local copy")
+		fmt.Fprintln(os.Stderr, "Working on local copy")
 	}
 }
 

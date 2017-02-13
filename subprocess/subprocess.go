@@ -5,11 +5,10 @@ import (
 	"bytes"
 	"errors"
 	"syscall"
-	"log"
 )
 
 const (
-	EmptyReturnString string = ""
+	emptyReturnString string = ""
 )
 
 type ExecError struct {
@@ -34,10 +33,9 @@ func SimpleExec(name string, args ...string) (string, error) {
 	cmd.Stdout = &stdOutBuffer
 
 	if err := cmd.Start(); err != nil {
-		log.Fatalf("cmd.Start: %d", err)
 
 		//Return Error with stderr, error - and exit status 1
-		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
+		return emptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -48,13 +46,12 @@ func SimpleExec(name string, args ...string) (string, error) {
 			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
 				//Trying to obtain exit error from failed command
 
-				log.Printf("Exit Status: %d", status.ExitStatus())
-				return EmptyReturnString, ExecError{err, stdErrBuffer.String(), status.ExitStatus()}
+				return emptyReturnString, ExecError{err, stdErrBuffer.String(), status.ExitStatus()}
 			}
 		}
 
 		//Return Error with stderr, error - and exit status 1
-		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
+		return emptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	//If no errors are returned, return stdout
