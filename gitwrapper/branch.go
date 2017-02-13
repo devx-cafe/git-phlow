@@ -4,7 +4,6 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 	"strings"
 	"bytes"
-	"github.com/praqma/git-phlow/testfixture"
 )
 
 type Brancher interface {
@@ -12,24 +11,21 @@ type Brancher interface {
 	CreateBranch(name string) (string, error)
 }
 
-const (
-	baseBranch string = "branch"
-)
-
 type branch struct {
-	baseCMD string
+	baseCMD    string
+	baseBranch string
 }
 
 //NewBranch
 //Constructor for branch struct
 func NewBranch(baseCMD string) *branch {
-	return &branch{baseCMD: baseCMD}
+	return &branch{baseCMD: baseCMD, baseBranch: "branch"}
 }
 
 //Branch
 //Get list of all branches: equals "git branch"
 func (b *branch) ListBranches() ([]string, error) {
-	output, err := subprocess.SimpleExec(b.baseCMD, baseBranch)
+	output, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch)
 	if err != nil {
 		return nil, err
 	}
@@ -47,13 +43,13 @@ func (b *branch) ListBranches() ([]string, error) {
 //Create a new branch: equals "git branch [name]"
 func (b *branch) CreateBranch(name string) (string, error) {
 
-	_, err := subprocess.SimpleExec(b.baseCMD, baseBranch, name)
+	_, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch, name)
 
 	if err != nil {
 		return "", err
 	}
 
-	return efficientConcatString("branch '", name, "' created"), nil
+	return name, nil
 }
 
 func efficientConcatString(args ...string) string {
@@ -62,11 +58,4 @@ func efficientConcatString(args ...string) string {
 		buffer.WriteString(str)
 	}
 	return buffer.String()
-}
-
-func Lalal()  {
-	textfixture.SetupTestRepo()
-
-
-
 }

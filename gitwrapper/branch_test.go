@@ -37,7 +37,7 @@ func TestStringConcat(t *testing.T) {
 func TestBranch(t *testing.T) {
 	Convey("Test function NewBranch and Branch", t, func() {
 
-		textfixture.SetupTestRepo()
+		testfixture.SetupTestRepo()
 
 		Convey("Test function 'Branch' should contain master branch", func() {
 
@@ -58,13 +58,13 @@ func TestBranch(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 
-		textfixture.TearDownTestRepo()
+		testfixture.TearDownTestRepo()
 	})
 }
 
-func CreateBranch(t *testing.T) {
+func TestCreateBranch(t *testing.T) {
 	Convey("Test creation of branch", t, func() {
-		textfixture.SetupTestRepo()
+		testfixture.SetupTestRepo()
 		Convey("Create branch testphlow", func() {
 			accessBranch := InitGit().Branch()
 			branch, err := accessBranch.CreateBranch("testphlow")
@@ -81,7 +81,14 @@ func CreateBranch(t *testing.T) {
 			So(err, ShouldBeNil)
 			So(errList, ShouldBeNil)
 		})
-		textfixture.TearDownTestRepo()
+
+		Convey("Fail to create already existing branch foo", func() {
+			foofail, err := InitGit().Branch().CreateBranch("foo")
+			So(foofail, ShouldBeEmpty)
+			So(err, ShouldNotBeNil)
+		})
+
+		testfixture.TearDownTestRepo()
 	})
 
 }

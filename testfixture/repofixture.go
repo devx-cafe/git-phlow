@@ -1,4 +1,4 @@
-package textfixture
+package testfixture
 
 import (
 	"os"
