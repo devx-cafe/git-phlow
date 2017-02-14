@@ -8,26 +8,29 @@ maintainer: groenborg
 | ------------- | ----------------- |
 | `integration` | ![build status](https://concourse.code.praqma.com/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)       |
 
-git-phlow (pronounced _"git flow"_), is a CLI extension for git, which is designed to provide an extra set of commands to easily create, wrapup, and deliver tasks/issues created on [github](https://github.com) and [waffle](https://waffle.io/). 
 
-git-phlow is the extension build for [the phlow](http://www.praqma.com/stories/a-pragmatic-workflow/), a praqmatic workflow, simplifying your software delivery. 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow)
 
-Some of git-phlow' core features will include: 
+git-phlow (pronounced _"git flow"_), is a CLI extension for git, which is designed to provide an extra set of commands to easily create, wrapup, and deliver tasks/issues created on [github](https://github.com) and [waffle](https://waffle.io/).
+
+git-phlow is the extension build for [the phlow](http://www.praqma.com/stories/a-pragmatic-workflow/), a praqmatic workflow, simplifying your software delivery.
+
+Some of git-phlow' core features will include:
 
 - *works with GitHub and waffle*: git-phlow assigns labels to move around user stories on waffle boards, and managing your github issues.
 
 - *branches based on issues*:  work-on will create a branch from a GitHub issues and move it to "wip"
 
-- *issue tracking*: having all your user stories as waffle cards or GitHub issues, git-phlow will mark them appropriately to their status. 
+- *issue tracking*: having all your user stories as waffle cards or GitHub issues, git-phlow will mark them appropriately to their status.
 
-- *build for pretest integration*: deliver will push your branch to GitHub, ready for your pipeline to pull, integrate, test and merge back in. 
+- *build for pretest integration*: deliver will push your branch to GitHub, ready for your pipeline to pull, integrate, test and merge back in.
 
 
 ## Project status
-This is the official repository for the git-phlow extension. As of now it is currently under heavy development. The foundation of the application still changes daily and test procedures are still a work on. 
+This is the official repository for the git-phlow extension. As of now it is currently under heavy development. The foundation of the application still changes daily and test procedures are still a work on.
 
 ## the-phlow and waffle
-To get started using the-phlow, read [praqmas](http://www.praqma.com/stories/a-pragmatic-workflow/) article about how the-phlow and the pragmatic workflow works, and how to configure waffle for your projects. 
+To get started using the-phlow, read [praqmas](http://www.praqma.com/stories/a-pragmatic-workflow/) article about how the-phlow and the pragmatic workflow works, and how to configure waffle for your projects.
 
 ##Getting started
 **Know the phlow, know go**
@@ -40,7 +43,7 @@ If you haven't written go code before, I recommend to take the [go tour](https:/
 
 **Project dependencies**
 
-The project uses other frameworks and libraries, it is recommend to read about them to get an understanding of what they do, provide and how to use them. 
+The project uses other frameworks and libraries, it is recommend to read about them to get an understanding of what they do, provide and how to use them.
 
 [Cobra](https://github.com/spf13/cobra) is both a library and a CLI, and is the library we use in our CLI. Cobra itself has a CLI, which sets up boiler plate cmd's in the cmd folder. use it by typing `cobra add <name of cmd>`
 
@@ -50,14 +53,14 @@ The project uses other frameworks and libraries, it is recommend to read about t
 
 **Get the alias's**
 
-Clone this repository or just copy the alias' in the .gitconfig file and add it to your own. This will give you 
+Clone this repository or just copy the alias' in the .gitconfig file and add it to your own. This will give you
 the necessary git commands to use the-phlow
 
 `git clone git@github.com:Praqma/the-phlow.git`
 
 The needed alias's from the-phlow
 ```git
-git work-on 
+git work-on
 git wrapup
 git deliver
 git local-deliver
@@ -68,14 +71,14 @@ You also need to have `ghi` installed on your machine, it is a CLI for managing 
 
 ###Get the project set up on your machine
 
-Go to [get golang](https://golang.org/doc/install) and get the latest version and install it on your machine. 
+Go to [get golang](https://golang.org/doc/install) and get the latest version and install it on your machine.
 it should be available on `brew` aswell.
 
-Next you need to setup your shell for go development, this is also documented on go' website. Export GOPATH and GOBIN, in your shell config, 
+Next you need to setup your shell for go development, this is also documented on go' website. Export GOPATH and GOBIN, in your shell config,
 eg. `zshrc`if you are using zsh.
 
 ```bash
-export GOPATH=$HOME/<chooseyourfolder> 
+export GOPATH=$HOME/<chooseyourfolder>
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 ```
@@ -94,7 +97,7 @@ Go has a great toolset for running rests. As a standard go runs the test from th
 
 `go test ./...`
 
-For specific directories, run: 
+For specific directories, run:
 
 `go test /folder`
 
@@ -126,5 +129,3 @@ IntelliJ has a [plugin](http://go-ide.com) for go development - I personally use
 
 ### Contribution
 To contribute to the project, I refer to reading our [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
-
-

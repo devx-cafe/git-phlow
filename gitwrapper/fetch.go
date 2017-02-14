@@ -2,44 +2,43 @@ package gitwrapper
 
 import "github.com/praqma/git-phlow/subprocess"
 
-const (
-	all string = "--all"
-)
-
-//GitFetch
-//interface for git fetch commands
-type Fetch interface {
-	Fetch(origin bool) (string, error)
+//Fetcher ...
+type Fetcher interface {
+	FetchFromOrigin() (string, error)
+	HasRemote() bool
 }
 
-type fetch struct {
-	gitFetchCommand string
+//Fetch ...
+type Fetch struct {
+	baseCMD    string
+	baseFetch  string
+	originFlag string
 }
 
-
-//NewFetch
+//NewFetch ...
 //Constructor for fetch struct
-func NewFetch() *fetch {
-	return &fetch{gitFetchCommand:"fetch"}
+func NewFetch(baseCMD string) *Fetch {
+	return &Fetch{baseCMD: baseCMD, baseFetch: "fetch", originFlag: "origin"}
 
 }
 
-//Fetch
+//FetchFromOrigin ...
 //Doing a normal git fetch
-func (f *fetch) Fetch(fromOrigin bool) (string, error) {
+func (f *Fetch) FetchFromOrigin() (string, error) {
 
-	var message string
-	var err error
-
-	if fromOrigin {
-		message, err = subprocess.SimpleExec(GitCommand, f.gitFetchCommand, all)
-	} else {
-		message, err = subprocess.SimpleExec(GitCommand, f.gitFetchCommand)
-	}
-
+	_, err := subprocess.SimpleExec(f.baseCMD, f.baseFetch, f.originFlag)
 	if err != nil {
 		return "", err
 	}
 
-	return message, nil
+	return "Fetcing from origin", nil
+}
+
+//HasRemote ...
+//Verifies if repository has a remote
+func (f *Fetch) HasRemote() bool {
+	if _, err := subprocess.SimpleExec(f.baseCMD, "ls-remote"); err != nil {
+		return false
+	}
+	return true
 }

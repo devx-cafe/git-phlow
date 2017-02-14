@@ -1,35 +1,34 @@
 package gitwrapper
 
-
-//Git constants 
-const (
-	GitCommand string = "git"
-)
-
-
-//GitInterface
-//interface for git commands
-type Git interface {
-	branch() Branch
-	Fetch() Fetch
-	Checkout() Checkout
+//Giter ...
+// interface for git
+type Giter interface {
+	Branch() Brancher
+	Fetch() Fetcher
+	Checkout() Checkouter
 }
 
-//Git
-//Struct for implementation
-type gitImpl struct {
-
+//LocalGit ...
+type LocalGit struct {
+	baseGit string
 }
 
-func (g *gitImpl)Branch() Branch {
-	return NewBranch()
+//Branch ...
+func (g *LocalGit) Branch() Brancher {
+	return NewBranch(g.baseGit)
 }
 
-func (g *gitImpl) Fetch() Fetch {
-	return NewFetch()
+//Fetch ...
+func (g *LocalGit) Fetch() Fetcher {
+	return NewFetch(g.baseGit)
 }
 
-func (g *gitImpl) Checkout() Checkout {
-	return NewCheckout()
+// Checkout ...
+func (g *LocalGit) Checkout() Checkouter {
+	return NewCheckout(g.baseGit)
 }
 
+//InitGit ...
+func InitGit() *LocalGit {
+	return &LocalGit{baseGit: "git"}
+}

@@ -1,55 +1,79 @@
 package gitwrapper
 
 import (
-	"github.com/praqma/git-phlow/subprocess"
-	"strings"
 	"bytes"
+	"errors"
+	"strings"
+
+	"github.com/praqma/git-phlow/subprocess"
 )
 
-type Branch interface {
-	Branch() ([]string, error)
+//Brancher ...
+//interface for branch methods
+type Brancher interface {
+	ListBranches() ([]string, error)
+	CreateBranch(name string) (string, error)
+	CurrentBranch() (string, error)
 }
 
-//Branch
-type branch struct {
-	gitBranchCommand string
-	Branches         []string
+//Branch ...
+type Branch struct {
+	baseCMD    string
+	baseBranch string
 }
 
-//NewBranch
+//NewBranch ...
 //Constructor for branch struct
-func NewBranch() *branch {
-	return &branch{gitBranchCommand:"branch"}
+func NewBranch(baseCMD string) *Branch {
+	return &Branch{baseCMD: baseCMD, baseBranch: "branch"}
 }
 
-
-//Branch
+//ListBranches ...
 //Get list of all branches: equals "git branch"
-func (b *branch) Branch() ([]string, error) {
-	output, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand)
+func (b *Branch) ListBranches() ([]string, error) {
+	output, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch)
 	if err != nil {
 		return nil, err
 	}
 
+	var branches []string
 	for _, branch := range strings.Split(output, "\n") {
 		if branch != "" {
-			b.Branches = append(b.Branches, branch)
+			branches = append(branches, branch)
 		}
 	}
-	return b.Branches, nil
+	return branches, nil
 }
 
-//CreateBranch
+//CreateBranch ...
 //Create a new branch: equals "git branch [name]"
-func (b *branch)CreateBranch(name string) (string, error) {
+func (b *Branch) CreateBranch(name string) (string, error) {
 
-	_, err := subprocess.SimpleExec(GitCommand, b.gitBranchCommand, name)
+	_, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch, name)
 
 	if err != nil {
 		return "", err
 	}
 
-	return efficientConcatString("branch '", name, "' created"), nil
+	return name, nil
+}
+
+//CurrentBranch ...
+//Get the currently selected branch
+func (b *Branch) CurrentBranch() (string, error) {
+	var symbolic, short, head string = "symbolic-ref", "--short", "HEAD"
+
+	branch, err := subprocess.SimpleExec(b.baseCMD, symbolic, short, head)
+
+	if err != nil {
+		return "", err
+	}
+
+	if len(branch) == 0 {
+		return "", errors.New("error disconnected from branch")
+	}
+
+	return strings.TrimSpace(branch), nil
 }
 
 func efficientConcatString(args ...string) string {

@@ -1,33 +1,32 @@
 package subprocess
 
 import (
-	"os/exec"
 	"bytes"
 	"errors"
+	"os/exec"
 	"syscall"
-	"log"
 )
 
 const (
-	EmptyReturnString string = ""
+	emptyReturnString string = ""
 )
 
+//ExecError ...
 type ExecError struct {
-	err      error
-	stdErr   string
-	exitCode int
+	error
+	StdErr   string
+	ExitCode int
 }
 
 func (e ExecError) Error() string {
-	return e.stdErr
+	return e.StdErr
 }
 
-
-//SimpleExec
+//SimpleExec ...
 //Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
-	cmd := exec.Command("git", "branch")
+	cmd := exec.Command(name, args...)
 
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
 
@@ -35,10 +34,9 @@ func SimpleExec(name string, args ...string) (string, error) {
 	cmd.Stdout = &stdOutBuffer
 
 	if err := cmd.Start(); err != nil {
-		log.Fatalf("cmd.Start: %d", err)
 
 		//Return Error with stderr, error - and exit status 1
-		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
+		return emptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -49,22 +47,21 @@ func SimpleExec(name string, args ...string) (string, error) {
 			if status, ok := exitErr.Sys().(syscall.WaitStatus); ok {
 				//Trying to obtain exit error from failed command
 
-				log.Printf("Exit Status: %d", status.ExitStatus())
-				return EmptyReturnString, ExecError{err, stdErrBuffer.String(), status.ExitStatus()}
+				return emptyReturnString, ExecError{err, stdErrBuffer.String(), status.ExitStatus()}
 			}
 		}
 
 		//Return Error with stderr, error - and exit status 1
-		return EmptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
+		return emptyReturnString, ExecError{err, stdErrBuffer.String(), 1}
 	}
 
 	//If no errors are returned, return stdout
 	return stdOutBuffer.String(), nil
 }
 
-//IsInPath
+//IsInPath ...
 //Checks if an app has been added to $PATH
-func IsInPath(application string) (error) {
+func IsInPath(application string) error {
 	_, err := exec.LookPath(application)
 
 	if err != nil {
