@@ -1,6 +1,6 @@
 package gitwrapper
 
-//Giter
+//Giter ...
 // interface for git
 type Giter interface {
 	Branch() Brancher
@@ -8,22 +8,27 @@ type Giter interface {
 	Checkout() Checkouter
 }
 
-type localGit struct {
+//LocalGit ...
+type LocalGit struct {
 	baseGit string
 }
 
-func (g *localGit) Branch() Brancher {
+//Branch ...
+func (g *LocalGit) Branch() Brancher {
 	return NewBranch(g.baseGit)
 }
 
-func (g *localGit) Fetch() Fetcher {
+//Fetch ...
+func (g *LocalGit) Fetch() Fetcher {
 	return NewFetch(g.baseGit)
 }
 
-func (g *localGit) Checkout() Checkouter {
+// Checkout ...
+func (g *LocalGit) Checkout() Checkouter {
 	return NewCheckout(g.baseGit)
 }
 
-func InitGit() *localGit {
-	return &localGit{baseGit: "git"}
+//InitGit ...
+func InitGit() *LocalGit {
+	return &LocalGit{baseGit: "git"}
 }

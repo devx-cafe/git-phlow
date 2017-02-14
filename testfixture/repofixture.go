@@ -1,16 +1,16 @@
 package testfixture
 
 import (
-	"os"
-	"fmt"
 	"errors"
+	"fmt"
+	"os"
 	"os/exec"
 )
 
 var (
-	GoPathNotSet error = errors.New("GOPATH is empty")
-	goPath       string
-	phlowPath    string
+	errGoPathNotSet = errors.New("GOPATH is empty")
+	goPath          string
+	phlowPath       string
 )
 
 //init
@@ -18,14 +18,14 @@ var (
 func init() {
 	goPath = os.Getenv("GOPATH")
 	if len(goPath) == 0 {
-		fmt.Fprintln(os.Stdout, GoPathNotSet)
+		fmt.Fprintln(os.Stdout, errGoPathNotSet)
 		os.Exit(1)
 	}
 
 	phlowPath = goPath + "/src/github.com/praqma/git-phlow"
 }
 
-//SetupTestRepo
+//SetupTestRepo ...
 //Creates git test repository from a zip file in /testfixture
 func SetupTestRepo() {
 
@@ -43,7 +43,7 @@ func SetupTestRepo() {
 	os.Chdir(repo)
 }
 
-//TearDownTestRepo
+//TearDownTestRepo ...
 //removes the unzipped test repository is it exists
 func TearDownTestRepo() {
 

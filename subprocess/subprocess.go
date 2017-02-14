@@ -1,9 +1,9 @@
 package subprocess
 
 import (
-	"os/exec"
 	"bytes"
 	"errors"
+	"os/exec"
 	"syscall"
 )
 
@@ -11,6 +11,7 @@ const (
 	emptyReturnString string = ""
 )
 
+//ExecError ...
 type ExecError struct {
 	error
 	StdErr   string
@@ -21,7 +22,7 @@ func (e ExecError) Error() string {
 	return e.StdErr
 }
 
-//SimpleExec
+//SimpleExec ...
 //Executes a cmd on your operating system
 func SimpleExec(name string, args ...string) (string, error) {
 
@@ -58,9 +59,9 @@ func SimpleExec(name string, args ...string) (string, error) {
 	return stdOutBuffer.String(), nil
 }
 
-//IsInPath
+//IsInPath ...
 //Checks if an app has been added to $PATH
-func IsInPath(application string) (error) {
+func IsInPath(application string) error {
 	_, err := exec.LookPath(application)
 
 	if err != nil {

@@ -1,9 +1,10 @@
 package gitwrapper
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
 	"github.com/praqma/git-phlow/testfixture"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestFetch_Fetch(t *testing.T) {

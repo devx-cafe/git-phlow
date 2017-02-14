@@ -1,11 +1,11 @@
 package phlowimpl
 
 import (
-	"strings"
 	"regexp"
+	"strings"
 )
 
-//ConvertToBranchName
+//ConvertToBranchName ...
 func ConvertToBranchName(name string) string {
 	var result string
 
@@ -16,7 +16,7 @@ func ConvertToBranchName(name string) string {
 		result = result[1:]
 	}
 
-	if strings.HasSuffix(result, "/"){
+	if strings.HasSuffix(result, "/") {
 		result = result[:len(result)-1]
 
 	}

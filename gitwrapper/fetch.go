@@ -2,29 +2,29 @@ package gitwrapper
 
 import "github.com/praqma/git-phlow/subprocess"
 
-//GitFetch
-//interface for git fetch commands
+//Fetcher ...
 type Fetcher interface {
 	FetchFromOrigin() (string, error)
 	HasRemote() bool
 }
 
-type fetch struct {
+//Fetch ...
+type Fetch struct {
 	baseCMD    string
 	baseFetch  string
 	originFlag string
 }
 
-//NewFetch
+//NewFetch ...
 //Constructor for fetch struct
-func NewFetch(baseCMD string) *fetch {
-	return &fetch{baseCMD: baseCMD, baseFetch: "fetch", originFlag: "origin"}
+func NewFetch(baseCMD string) *Fetch {
+	return &Fetch{baseCMD: baseCMD, baseFetch: "fetch", originFlag: "origin"}
 
 }
 
-//Fetch
+//FetchFromOrigin ...
 //Doing a normal git fetch
-func (f *fetch) FetchFromOrigin() (string, error) {
+func (f *Fetch) FetchFromOrigin() (string, error) {
 
 	_, err := subprocess.SimpleExec(f.baseCMD, f.baseFetch, f.originFlag)
 	if err != nil {
@@ -34,9 +34,9 @@ func (f *fetch) FetchFromOrigin() (string, error) {
 	return "Fetcing from origin", nil
 }
 
-//HasRemote
-//Verifies if repository has a remote 
-func (f *fetch) HasRemote() bool {
+//HasRemote ...
+//Verifies if repository has a remote
+func (f *Fetch) HasRemote() bool {
 	if _, err := subprocess.SimpleExec(f.baseCMD, "ls-remote"); err != nil {
 		return false
 	}

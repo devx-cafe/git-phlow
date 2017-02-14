@@ -12,7 +12,6 @@ type testCase struct {
 	casedesc string
 }
 
-
 /* Branch naming conventions
  * - cant begin with '.'
  * - cant have double dot '..'

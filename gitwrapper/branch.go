@@ -1,32 +1,36 @@
 package gitwrapper
 
 import (
-	"github.com/praqma/git-phlow/subprocess"
-	"strings"
 	"bytes"
 	"errors"
+	"strings"
+
+	"github.com/praqma/git-phlow/subprocess"
 )
 
+//Brancher ...
+//interface for branch methods
 type Brancher interface {
 	ListBranches() ([]string, error)
 	CreateBranch(name string) (string, error)
 	CurrentBranch() (string, error)
 }
 
-type branch struct {
+//Branch ...
+type Branch struct {
 	baseCMD    string
 	baseBranch string
 }
 
-//NewBranch
+//NewBranch ...
 //Constructor for branch struct
-func NewBranch(baseCMD string) *branch {
-	return &branch{baseCMD: baseCMD, baseBranch: "branch"}
+func NewBranch(baseCMD string) *Branch {
+	return &Branch{baseCMD: baseCMD, baseBranch: "branch"}
 }
 
-//Branch
+//ListBranches ...
 //Get list of all branches: equals "git branch"
-func (b *branch) ListBranches() ([]string, error) {
+func (b *Branch) ListBranches() ([]string, error) {
 	output, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch)
 	if err != nil {
 		return nil, err
@@ -41,9 +45,9 @@ func (b *branch) ListBranches() ([]string, error) {
 	return branches, nil
 }
 
-//CreateBranch
+//CreateBranch ...
 //Create a new branch: equals "git branch [name]"
-func (b *branch) CreateBranch(name string) (string, error) {
+func (b *Branch) CreateBranch(name string) (string, error) {
 
 	_, err := subprocess.SimpleExec(b.baseCMD, b.baseBranch, name)
 
@@ -54,9 +58,9 @@ func (b *branch) CreateBranch(name string) (string, error) {
 	return name, nil
 }
 
-//CurrentBranch
+//CurrentBranch ...
 //Get the currently selected branch
-func (b *branch) CurrentBranch() (string, error) {
+func (b *Branch) CurrentBranch() (string, error) {
 	var symbolic, short, head string = "symbolic-ref", "--short", "HEAD"
 
 	branch, err := subprocess.SimpleExec(b.baseCMD, symbolic, short, head)

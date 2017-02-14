@@ -6,8 +6,9 @@ package gitwrapper
 import (
 	. "github.com/smartystreets/goconvey/convey"
 
-	"testing"
 	"strings"
+	"testing"
+
 	"github.com/praqma/git-phlow/testfixture"
 )
 

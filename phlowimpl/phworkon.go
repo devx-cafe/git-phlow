@@ -1,14 +1,16 @@
 package phlowimpl
 
 import (
-	"github.com/praqma/git-phlow/gitwrapper"
-	"strings"
-	"strconv"
-	"os"
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/praqma/git-phlow/gitwrapper"
 )
 
-//WorkOn
+//WorkOn ...
+//Workon function
 func WorkOn(issueNumber int) {
 	git := gitwrapper.InitGit()
 	branchMappings := make(map[int]string)
@@ -29,7 +31,7 @@ func WorkOn(issueNumber int) {
 
 		if err == nil {
 			//No file conflicts at checkout
-			fmt.Fprintln(os.Stdout, "branch "+branchMappings[issueNumber]+" already created from issue ", )
+			fmt.Fprintln(os.Stdout, "branch "+branchMappings[issueNumber]+" already created from issue ")
 			fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
 		} else {
 			fmt.Fprint(os.Stdout, err)
@@ -55,6 +57,7 @@ func WorkOn(issueNumber int) {
 		}
 	}
 }
+
 func updateOriginAndContinue(git gitwrapper.Giter) {
 
 	if fetch := git.Fetch(); fetch.HasRemote() {

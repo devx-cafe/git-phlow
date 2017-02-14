@@ -1,11 +1,12 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"strconv"
 	"fmt"
 	"os"
+	"strconv"
+
 	"github.com/praqma/git-phlow/phlowimpl"
+	"github.com/spf13/cobra"
 )
 
 // workonCmd represents the workon command
@@ -22,7 +23,7 @@ var workonCmd = &cobra.Command{
 		if len(args) > 0 {
 			issueNum, err := strconv.Atoi(args[0])
 			if err != nil {
-				fmt.Fprintf(os.Stdout, "Whoops\n your argument: %s, is not a 'number' i only feast on numbers \n", args[0])
+				fmt.Fprintf(os.Stdout, "Whoops\n your argument: %s, is not a 'number' I only feast on numbers \n", args[0])
 				os.Exit(0)
 			}
 			phlowimpl.WorkOn(issueNum)

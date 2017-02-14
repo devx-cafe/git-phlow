@@ -3,9 +3,10 @@ package gitwrapper
 import (
 	. "github.com/smartystreets/goconvey/convey"
 
-	"github.com/praqma/git-phlow/testfixture"
-	"testing"
 	"io/ioutil"
+	"testing"
+
+	"github.com/praqma/git-phlow/testfixture"
 )
 
 func TestCheckout(t *testing.T) {

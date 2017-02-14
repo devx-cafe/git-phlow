@@ -4,34 +4,32 @@ import (
 	"github.com/praqma/git-phlow/subprocess"
 )
 
-//GitCheckout interface
-//Interface for git checkout
+//Checkouter ...
 type Checkouter interface {
 	Checkout(ref string) (string, error)
 }
 
-type checkout struct {
+//Checkout ...
+//Struct for checkout
+type Checkout struct {
 	baseCmd      string
 	baseCheckout string
 }
 
-//NewCheckout
-//Creates a new checkout baseGit
-func NewCheckout(baseCMD string) *checkout {
-	return &checkout{baseCmd: baseCMD, baseCheckout: "checkout"}
+//NewCheckout ...
+func NewCheckout(baseCMD string) *Checkout {
+	return &Checkout{baseCmd: baseCMD, baseCheckout: "checkout"}
 }
 
-func (c *checkout) Checkout(ref string) (string, error) {
-
+//Checkout ...
+func (c *Checkout) Checkout(ref string) (string, error) {
 	coMessage, err := subprocess.SimpleExec(c.baseCmd, c.baseCheckout, ref)
-
 	if err != nil {
 		return "", err
 	}
 
 	if len(coMessage) == 0 {
-		coMessage = ref
+		return ref, nil
 	}
-	return ref, nil
-
+	return coMessage, nil
 }

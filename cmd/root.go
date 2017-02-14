@@ -15,7 +15,7 @@ var RootCmd = &cobra.Command{
 	Short: "git extension for phlow workflow",
 	Long: `
 	git-phlow is a git extension that provides an extra set of commands, enabling you to:
-	workon, deliver and create new tasks. 
+	workon, deliver and create new tasks.
 	`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
