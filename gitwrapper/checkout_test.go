@@ -15,21 +15,25 @@ func TestCheckout(t *testing.T) {
 
 		testfixture.SetupTestRepo()
 
-		Convey("Checkout other branch should be possible", func() {
-			str, err := InitGit().Checkout().Checkout("foo")
+		Convey("Checkout branch bar should return branch name on success", func() {
+			str, err := InitGit().Checkout().Checkout("bar")
 
-			So(str, ShouldEqual, "foo")
+			So(str, ShouldEqual, "bar")
 			So(err, ShouldBeNil)
 		})
 
-		Convey("Checkout current branch should not result in error", func() {
+		Convey("Checkout current branch should not return error", func() {
 			git := InitGit()
 			current, _ := git.Branch().CurrentBranch()
-			checkout, err := git.Checkout().Checkout(current)
+			_, err := git.Checkout().Checkout(current)
 
 			So(err, ShouldBeNil)
-			So(checkout, ShouldEqual, current)
+		})
 
+		Convey("checkout from origin branch should be return message", func() {
+			str, err := InitGit().Checkout().Checkout("foo")
+			So(str, ShouldNotBeEmpty)
+			So(err, ShouldBeNil)
 		})
 
 		Convey("Checkout nonexisting branch should fail", func() {
@@ -45,6 +49,14 @@ func TestCheckout(t *testing.T) {
 
 			_, err := git.Checkout().Checkout("foo")
 
+			So(err, ShouldNotBeNil)
+		})
+
+		Convey("Checkout new branch should from origin should fail", func() {
+			git := InitGit()
+			output, err := git.Checkout().CheckoutNewBranchFromOrigin("some-branch-name", "origin/master")
+			t.Log(err)
+			t.Log("asjhdkjsahdjksahdkjshkjd" + output)
 			So(err, ShouldNotBeNil)
 		})
 

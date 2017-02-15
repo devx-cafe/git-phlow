@@ -43,19 +43,14 @@ func TestBranch(t *testing.T) {
 		Convey("Test function 'Branch' should contain master branch", func() {
 
 			branch, err := InitGit().Branch().ListBranches()
-
-			master, foo := false, false
+			master := false
 
 			for _, br := range branch {
 				if strings.Contains(br, "master") {
 					master = true
 				}
-				if strings.Contains(br, "foo") {
-					foo = true
-				}
 			}
 			So(master, ShouldBeTrue)
-			So(foo, ShouldBeTrue)
 			So(err, ShouldBeNil)
 		})
 
@@ -83,8 +78,8 @@ func TestCreateBranch(t *testing.T) {
 			So(errList, ShouldBeNil)
 		})
 
-		Convey("Fail to create already existing branch foo", func() {
-			foofail, err := InitGit().Branch().CreateBranch("foo")
+		Convey("Fail to create already existing branch bar", func() {
+			foofail, err := InitGit().Branch().CreateBranch("bar")
 			So(foofail, ShouldBeEmpty)
 			So(err, ShouldNotBeNil)
 		})

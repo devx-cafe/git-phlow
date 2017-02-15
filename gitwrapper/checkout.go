@@ -7,6 +7,7 @@ import (
 //Checkouter ...
 type Checkouter interface {
 	Checkout(ref string) (string, error)
+	CheckoutNewBranchFromOrigin(string, string) (string, error)
 }
 
 //Checkout ...
@@ -23,13 +24,26 @@ func NewCheckout(baseCMD string) *Checkout {
 
 //Checkout ...
 func (c *Checkout) Checkout(ref string) (string, error) {
-	coMessage, err := subprocess.SimpleExec(c.baseCmd, c.baseCheckout, ref)
+	outPut, err := subprocess.SimpleExec(c.baseCmd, c.baseCheckout, ref)
 	if err != nil {
 		return "", err
 	}
 
-	if len(coMessage) == 0 {
+	if len(outPut) == 0 {
+		//checks out from tracking origin branch
 		return ref, nil
 	}
-	return coMessage, nil
+	return outPut, nil
+}
+
+//CheckoutNewBranchFromOrigin
+func (c *Checkout) CheckoutNewBranchFromOrigin(branchName, defaultOrigin string) (string, error) {
+
+	message, err := subprocess.SimpleExec(c.baseCmd, c.baseCheckout, "-b", branchName, "origin/"+defaultOrigin)
+
+	if err != nil {
+		return "", err
+	}
+
+	return message, nil
 }

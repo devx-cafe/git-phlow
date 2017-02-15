@@ -1,8 +1,8 @@
 #!/bin/sh
 
 
-DIR_NAME=build/phlow-test-pkg
-
+DIR_NAME=build/github
+GITHUB_FAKE=$GOPATH/src/github.com/praqma/git-phlow/build
 
 #CREATE TEST DIRECTORY
 cd $GOPATH/src/github.com/praqma/git-phlow
@@ -59,6 +59,12 @@ add_all_and_commit (){
     git commit -m "$1"
 }
 
+create_origin () {
+    git clone $GITHUB_FAKE/github $GITHUB_FAKE/phlow-test-pkg
+    cd $GITHUB_FAKE/phlow-test-pkg
+    git branch bar
+}
+
 
 #ACTUAL SCRIPT
 echo "CREATING TEST REPOSITORY"
@@ -68,4 +74,5 @@ branch_foo_additions
 branch_master_additions
 branch_issue_additions
 return_to_master
+create_origin
 echo "WRAPPING UP JOB"

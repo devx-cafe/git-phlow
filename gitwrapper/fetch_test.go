@@ -16,7 +16,8 @@ func TestFetch_Fetch(t *testing.T) {
 		Convey("fetch all should fail", func() {
 			git := InitGit()
 			_, err := git.Fetch().FetchFromOrigin()
-			So(err, ShouldNotBeNil)
+
+			So(err, ShouldBeNil)
 		})
 
 		testfixture.TearDownTestRepo()
@@ -32,7 +33,7 @@ func TestFetch_HasRemote(t *testing.T) {
 		Convey("fetch shold return false for no origin", func() {
 			hasRemote := InitGit().Fetch().HasRemote()
 
-			So(hasRemote, ShouldBeFalse)
+			So(hasRemote, ShouldBeTrue)
 		})
 
 		testfixture.TearDownTestRepo()
