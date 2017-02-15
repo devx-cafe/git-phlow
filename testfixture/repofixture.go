@@ -34,6 +34,7 @@ func SetupTestRepo() {
 
 	cmd := exec.Command(script)
 	cmd.Start()
+
 	err := cmd.Wait()
 
 	if err != nil {
