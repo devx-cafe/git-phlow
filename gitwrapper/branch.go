@@ -1,7 +1,6 @@
 package gitwrapper
 
 import (
-	"bytes"
 	"errors"
 	"strings"
 
@@ -76,10 +75,8 @@ func (b *Branch) CurrentBranch() (string, error) {
 	return strings.TrimSpace(branch), nil
 }
 
-func efficientConcatString(args ...string) string {
-	buffer := bytes.Buffer{}
-	for _, str := range args {
-		buffer.WriteString(str)
-	}
-	return buffer.String()
+//RenameBranch ...
+//Renames a branch
+func (b *Branch) RenameBranch(newName string) {
+
 }

@@ -29,7 +29,7 @@ func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 	}
 
 	//Verify token is generated and we are signed into plugin
-	if plugin.IsSignedIn() {
+	if plugins.IsSignedIn() {
 		fmt.Fprintln(os.Stdout, "You have not generated a token, or signed in to your repo, run gen cmd ")
 	}
 
@@ -39,7 +39,7 @@ func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 		fmt.Fprintln(os.Stdout, fetchOutput)
 	}
 
-	//Get local branches and map key:issue number, value: branchname
+	//Get local branches and map key:issue number, value: branchName
 	branches, _ := git.Branch().ListBranches()
 	mappedBranches := getBranchesAsMap(branches)
 
@@ -56,13 +56,13 @@ func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 //Checkout a new branch from a plugin issue if the issue exists
 func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) error {
 
-	pluginIssues := plugin.ListIssues()     //GetIssues
-	defaultBranch := plugin.DefaultBranch() //Get default branch
+	pluginIssues := plugin.ListIssues()               //GetIssues
+	defaultBranchFromRemote := plugin.DefaultBranch() //Get default branch
 
 	if pluginIssues[issueFromUser] != "" {
 		//Issue matches with issueNumberInput
 		newBranchName := SanitizeIssueToBranchName(issueFromUser, pluginIssues[issueFromUser])
-		output, err := git.Checkout().CheckoutNewBranchFromOrigin(newBranchName, defaultBranch)
+		output, err := git.Checkout().CheckoutNewBranchFromOrigin(newBranchName, defaultBranchFromRemote)
 		if err != nil {
 			fmt.Fprintln(os.Stdout, err)
 			return err
@@ -85,9 +85,8 @@ func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) error
 
 	if err == nil {
 		//No file conflicts at checkout
-		fmt.Fprintln(os.Stdout, "branch "+branchName+" already created from issue ")
-		fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
-
+		fmt.Fprintf(os.Stdout, "branch: '%s' already created \n", branchName)
+		fmt.Fprintf(os.Stdout, "Switching to branch: '%s' and resuming phlow work \n", branchName)
 	} else {
 		fmt.Fprint(os.Stdout, err)
 		return err

@@ -29,7 +29,7 @@ var workonCmd = &cobra.Command{
 				os.Exit(0)
 			}
 			git := gitwrapper.InitGit()
-			plugin := plugins.SupportedPLugin("github")
+			plugin := plugins.SupportedPlugin("github")
 			phlow.WorkOn(issueNum, plugin, git)
 		}
 		fmt.Fprintln(os.Stdout, cmd.UsageString())

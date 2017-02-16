@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"bytes"
 )
 
 //SanitizeIssueToBranchName ...
@@ -30,4 +31,12 @@ func SanitizeIssueToBranchName(issue int, name string) string {
 	result = r.ReplaceAllString(result, "")
 	result = strconv.Itoa(issue) + "-" + result
 	return result
+}
+
+func efficientConcatString(args ...string) string {
+	buffer := bytes.Buffer{}
+	for _, str := range args {
+		buffer.WriteString(str)
+	}
+	return buffer.String()
 }

@@ -35,7 +35,7 @@ var (
 	labelStatusUpNext     = "Status - up next"
 )
 
-func SupportedPLugin(key string) Plugin {
+func SupportedPlugin(key string) Plugin {
 	return nil
 }
 
@@ -47,5 +47,8 @@ type Plugin interface {
 	SetAssignee(string)
 	SetLabelsOnIssue(...string)
 	InitializeRepo()
-	IsSignedIn() bool
+}
+
+func IsSignedIn() bool {
+	return false
 }
