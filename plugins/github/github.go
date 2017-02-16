@@ -82,6 +82,8 @@ func GetRepoInfo(repoName string) (out Repo) {
 	return re
 }
 
+
+//GetRepoAndUser ...
 func GetRepoAndUser(remote string) (user, repo string) {
 
 	var repoInfo []string
