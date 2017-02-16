@@ -44,7 +44,7 @@ echo SQUASH
 git merge --squash $readybranch
 
 # RESOLVE DEPENDENCIES - TEST AND PRODUCTION
-go get -d -v ./...
+go get -p 1  ./... -v
 go get github.com/stretchr/testify
 go get github.com/smartystreets/goconvey
 go get github.com/spf13/cobra
