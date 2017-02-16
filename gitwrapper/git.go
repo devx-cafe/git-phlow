@@ -24,11 +24,12 @@ func (g *LocalGit) Fetch() Fetcher {
 	return NewFetch(g.baseGit)
 }
 
-// Checkout ...
+//Checkout ...
 func (g *LocalGit) Checkout() Checkouter {
 	return NewCheckout(g.baseGit)
 }
 
+//Status ...
 func (g *LocalGit) Status() Statuses {
 	return NewStatus(g.baseGit)
 }

@@ -35,6 +35,10 @@ var (
 	labelStatusUpNext     = "Status - up next"
 )
 
+func SupportedPLugin(key string) Plugin {
+	return nil
+}
+
 //Plugin ...
 //Interface for all plugins
 type Plugin interface {

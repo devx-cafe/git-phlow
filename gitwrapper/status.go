@@ -15,6 +15,8 @@ type Status struct {
 	baseStatus string
 }
 
+//NewStatus ...
+//Creates a new git status
 func NewStatus(baseCMD string) *Status {
 	return &Status{baseCmd: baseCMD, baseStatus: "status"}
 

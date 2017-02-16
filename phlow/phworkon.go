@@ -8,11 +8,11 @@ import (
 
 	"github.com/praqma/git-phlow/gitwrapper"
 	"github.com/praqma/git-phlow/plugins"
-	"gopkg.in/libgit2/git2go.v25"
 )
 
 //WorkOn ...
-//Workon function
+//Creates a branch from origin/defaultbranch named after an issue
+// from the plugin and does a Checkout on that branch
 func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 
 	//Verify is located in initialized repository
@@ -51,6 +51,8 @@ func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 	}
 }
 
+//CheckoutNewBranchFromPluginIssue ...
+//Checkout a new branch from a plugin issue if the issue exists
 func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 
 	pluginIssues := plugin.ListIssues()     //GetIssues
@@ -70,6 +72,8 @@ func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, 
 	}
 }
 
+//SwitchOrReworkExistingBranch ...
+//Switches to an already existing branch if working on same issue
 func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) {
 	//Branch is already created - do checkout
 	_, err := git.Checkout().Checkout(branchName)
@@ -82,7 +86,6 @@ func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) {
 		fmt.Fprint(os.Stdout, err)
 	}
 }
-
 
 //Helper methods
 func getBranchesAsMap(branches []string) map[int]string {
