@@ -19,11 +19,9 @@ type Repo struct {
 }
 
 func DefaultBranch() string {
-
-	GetDefaultBranch(Req)
-
+	str, _ := GetDefaultBranch(RequestRepositoriesUri)
+	return str
 }
-
 
 func GetDefaultBranch(RequestRepositoriesUri string) (string, error) {
 
@@ -84,7 +82,8 @@ func GetRepoInfo(repoName string) (out Repo) {
 	return re
 }
 
-func getRepoNameAndOrg(remote string) (name, org string) {
+func GetRepoAndUser(remote string) (user, repo string) {
+
 	var repoInfo []string
 
 	tmp := strings.Split(remote, ":")[1]
@@ -92,7 +91,8 @@ func getRepoNameAndOrg(remote string) (name, org string) {
 
 	repoInfo = strings.Split(tmp, "/")
 
-	org = repoInfo[0]
-	name = repoInfo[1]
+	repo = repoInfo[0]
+	user = repoInfo[1]
 	return
+
 }

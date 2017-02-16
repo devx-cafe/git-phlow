@@ -1,6 +1,3 @@
-/*
-Test package for githubwrapper Branch
-*/
 package github
 
 import (
@@ -10,6 +7,20 @@ import (
 	"net/http/httptest"
 	"net/http"
 )
+
+func TestGetRepoNameAndOrg(t *testing.T) {
+	Convey("Test Function GetRepoNameAndOrg", t, func() {
+
+		Convey("Organization/name and Repo Name should be extracted", func() {
+			var fetchUrl = "origin	git@github.com:Praqma/git-phlow.git (fetch)"
+
+			name, org := GetRepoAndUser(fetchUrl)
+
+			So(org, ShouldEqual, "Praqma")
+			So(name, ShouldEqual, "git-phlow")
+		})
+	})
+}
 
 func TestMakeRequest(t *testing.T) {
 
@@ -31,7 +42,7 @@ func TestMakeRequest(t *testing.T) {
 
 		defer ts.Close()
 
-		name, err := GetMainBranch(ts.URL + "/repos")
+		name, err := GetDefaultBranch(ts.URL + "/repos")
 		So(name, ShouldEqual, "master")
 		So(err, ShouldBeNil)
 	})
