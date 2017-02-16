@@ -44,3 +44,26 @@ func TestSanitizeIssueToBranchName(t *testing.T) {
 		}
 	})
 }
+
+func TestStringConcat(t *testing.T) {
+
+	Convey("Test function effecientStringConcat", t, func() {
+
+		Convey("Test variable inputs get concatenated correctly", func() {
+			var expectedLong = "created 'something' new"
+			var actualLong = efficientConcatString("created '", "something", "' new")
+
+			So(actualLong, ShouldEqual, expectedLong)
+
+		})
+
+		Convey("Test funny signs gets concatenated as well", func() {
+
+			var expectedShort = "j$¢‰¿≈¯¯¯"
+			var actualShort = efficientConcatString("j$¢‰¿≈", "¯¯¯")
+
+			So(expectedShort, ShouldEqual, actualShort)
+
+		})
+	})
+}
