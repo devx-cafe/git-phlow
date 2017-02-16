@@ -36,7 +36,7 @@ func (c *Checkout) Checkout(ref string) (string, error) {
 	return outPut, nil
 }
 
-//CheckoutNewBranchFromOrigin
+//CheckoutNewBranchFromOrigin ...
 func (c *Checkout) CheckoutNewBranchFromOrigin(branchName, defaultOrigin string) (string, error) {
 
 	message, err := subprocess.SimpleExec(c.baseCmd, c.baseCheckout, "-b", branchName, "origin/"+defaultOrigin)

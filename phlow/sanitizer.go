@@ -1,12 +1,13 @@
-package phlowimpl
+package phlow
 
 import (
 	"regexp"
 	"strings"
+	"strconv"
 )
 
-//ConvertToBranchName ...
-func ConvertToBranchName(name string) string {
+//SanitizeIssueToBranchName ...
+func SanitizeIssueToBranchName(issue int, name string) string {
 	var result string
 
 	result = strings.ToLower(name)
@@ -25,6 +26,6 @@ func ConvertToBranchName(name string) string {
 	result = strings.Replace(result, "\"", "", -1)
 	r := regexp.MustCompile("[\040\177 ~^:?*[]+")
 	result = r.ReplaceAllString(result, "")
-
+	result = strconv.Itoa(issue) + "-" + result
 	return result
 }

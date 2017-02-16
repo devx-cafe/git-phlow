@@ -6,6 +6,7 @@ type Giter interface {
 	Branch() Brancher
 	Fetch() Fetcher
 	Checkout() Checkouter
+	Status() Statuses
 }
 
 //LocalGit ...
@@ -26,6 +27,10 @@ func (g *LocalGit) Fetch() Fetcher {
 // Checkout ...
 func (g *LocalGit) Checkout() Checkouter {
 	return NewCheckout(g.baseGit)
+}
+
+func (g *LocalGit) Status() Statuses {
+	return NewStatus(g.baseGit)
 }
 
 //InitGit ...
