@@ -56,7 +56,7 @@ func TestCheckout(t *testing.T) {
 			git := InitGit()
 			output, err := git.Checkout().CheckoutNewBranchFromOrigin("some-branch-name", "origin/master")
 			t.Log(err)
-			t.Log("asjhdkjsahdjksahdkjshkjd" + output)
+			t.Log(output)
 			So(err, ShouldNotBeNil)
 		})
 

@@ -18,7 +18,14 @@ type Repo struct {
 	DefaultBranch string `json:"default_branch"`
 }
 
-func GetMainBranch(RequestRepositoriesUri string) (string, error) {
+func DefaultBranch() string {
+
+	GetDefaultBranch(Req)
+
+}
+
+
+func GetDefaultBranch(RequestRepositoriesUri string) (string, error) {
 
 	res, err := http.Get(RequestRepositoriesUri)
 
@@ -46,6 +53,14 @@ func GetMainBranch(RequestRepositoriesUri string) (string, error) {
 
 	return re.DefaultBranch, nil
 }
+
+//type Plugin interface {
+//	DefaultBranch() string
+//	ListIssues() map[int]string
+//	SetAssignee(string)
+//	SetLabelsOnIssue(...string)
+//	InitializeRepo()
+//}
 
 //GetRepoInfo ...  gets repo info from name
 func GetRepoInfo(repoName string) (out Repo) {

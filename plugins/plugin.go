@@ -49,6 +49,13 @@ type Plugin interface {
 	InitializeRepo()
 }
 
+func GetRepoAndUser() (repo, user string) {
+
+
+
+
+}
+
 func IsSignedIn() bool {
 	return false
 }

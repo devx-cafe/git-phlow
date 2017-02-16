@@ -38,7 +38,9 @@ func TestBranch(t *testing.T) {
 
 func TestCreateBranch(t *testing.T) {
 	Convey("Test creation of branch", t, func() {
+
 		testfixture.SetupTestRepo()
+
 		Convey("Create branch testphlow", func() {
 			accessBranch := InitGit().Branch()
 			branch, err := accessBranch.CreateBranch("testphlow")
@@ -69,6 +71,7 @@ func TestCreateBranch(t *testing.T) {
 func TestCurrentBranch(t *testing.T) {
 
 	Convey("Test GetCurrent branch", t, func() {
+
 		testfixture.SetupTestRepo()
 
 		Convey("current branch should be master", func() {
