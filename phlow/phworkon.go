@@ -8,6 +8,7 @@ import (
 
 	"github.com/praqma/git-phlow/gitwrapper"
 	"github.com/praqma/git-phlow/plugins"
+	"errors"
 )
 
 //WorkOn ...
@@ -53,7 +54,7 @@ func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 
 //CheckoutNewBranchFromPluginIssue ...
 //Checkout a new branch from a plugin issue if the issue exists
-func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
+func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) error {
 
 	pluginIssues := plugin.ListIssues()     //GetIssues
 	defaultBranch := plugin.DefaultBranch() //Get default branch
@@ -64,17 +65,21 @@ func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, 
 		output, err := git.Checkout().CheckoutNewBranchFromOrigin(newBranchName, defaultBranch)
 		if err != nil {
 			fmt.Fprintln(os.Stdout, err)
-		} else {
-			fmt.Fprintln(os.Stdout, output)
+			return err
 		}
+		fmt.Fprintln(os.Stdout, output)
+
 	} else {
-		fmt.Fprintln(os.Stdout, "Issue does not exist in your repository")
+		err := errors.New("Issue does not exist in your repository")
+		fmt.Fprintln(os.Stdout, err)
+		return err
 	}
+	return nil
 }
 
 //SwitchOrReworkExistingBranch ...
 //Switches to an already existing branch if working on same issue
-func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) {
+func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) error {
 	//Branch is already created - do checkout
 	_, err := git.Checkout().Checkout(branchName)
 
@@ -82,9 +87,12 @@ func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) {
 		//No file conflicts at checkout
 		fmt.Fprintln(os.Stdout, "branch "+branchName+" already created from issue ")
 		fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
+
 	} else {
 		fmt.Fprint(os.Stdout, err)
+		return err
 	}
+	return nil
 }
 
 //Helper methods

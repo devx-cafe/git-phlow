@@ -4,6 +4,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 
 	"testing"
+	"github.com/praqma/git-phlow/testfixture"
+	"github.com/praqma/git-phlow/gitwrapper"
 )
 
 func TestGetIssues(t *testing.T) {
@@ -19,5 +21,25 @@ func TestGetIssues(t *testing.T) {
 			So(branches[1], ShouldEqual, branchMap[22])
 			So(branchMap[3], ShouldBeBlank)
 		})
+	})
+}
+
+func TestSwitchOrReworkExistingBranch(t *testing.T) {
+
+	Convey("Test SwitchOrReworkBranch function", t, func() {
+
+		testfixture.SetupTestRepo()
+
+		Convey("Checkout branch from exisitng issue", func() {
+
+			var branchFromFixture = "11-issue-bar"
+			git := gitwrapper.InitGit()
+			err := SwitchOrReworkExistingBranch(branchFromFixture, git)
+
+			t.Log(err)
+			So(err, ShouldBeNil)
+		})
+
+		testfixture.TearDownTestRepo()
 	})
 }
