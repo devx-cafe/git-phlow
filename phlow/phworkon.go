@@ -8,11 +8,12 @@ import (
 
 	"github.com/praqma/git-phlow/gitwrapper"
 	"github.com/praqma/git-phlow/plugins"
+	"gopkg.in/libgit2/git2go.v25"
 )
 
 //WorkOn ...
 //Workon function
-func WorkOn(issueNumber int, plugin plugins.Plugin, git gitwrapper.Giter) {
+func WorkOn(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
 
 	//Verify is located in initialized repository
 	if err := git.Status().Status() != nil; err {
@@ -27,9 +28,9 @@ func WorkOn(issueNumber int, plugin plugins.Plugin, git gitwrapper.Giter) {
 	}
 
 	//Verify token is generated and we are signed into plugin
-	//if plugin.IsSignedIn(){
-	//	fmt.Fprintln(os.Stdout, "You have not generated a token, or signed in to your repo, run gen cmd ")
-	//}
+	if plugin.IsSignedIn() {
+		fmt.Fprintln(os.Stdout, "You have not generated a token, or signed in to your repo, run gen cmd ")
+	}
 
 	if fetchOutput, err := git.Fetch().FetchFromOrigin(); err != nil {
 		fmt.Fprintln(os.Stdout, err)
@@ -39,48 +40,56 @@ func WorkOn(issueNumber int, plugin plugins.Plugin, git gitwrapper.Giter) {
 
 	//Get local branches and map key:issue number, value: branchname
 	branches, _ := git.Branch().ListBranches()
-	mappedBranches := getBranchIssues(branches)
+	mappedBranches := getBranchesAsMap(branches)
 
 	//Add option to rework on already delivered branches
 
-	if mappedBranches[issueNumber] != "" {
-		//Branch is already created - do checkout
-		_, err := git.Checkout().Checkout(mappedBranches[issueNumber])
+	if mappedBranches[issueFromUser] != "" {
+		SwitchOrReworkExistingBranch(mappedBranches[issueFromUser], git)
+	} else {
+		CheckoutNewBranchFromPluginIssue(issueFromUser, plugin, git)
+	}
+}
 
-		if err == nil {
-			//No file conflicts at checkout
-			fmt.Fprintln(os.Stdout, "branch "+mappedBranches[issueNumber]+" already created from issue ")
-			fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
+func CheckoutNewBranchFromPluginIssue(issueFromUser int, plugin plugins.Plugin, git gitwrapper.Giter) {
+
+	pluginIssues := plugin.ListIssues()     //GetIssues
+	defaultBranch := plugin.DefaultBranch() //Get default branch
+
+	if pluginIssues[issueFromUser] != "" {
+		//Issue matches with issueNumberInput
+		newBranchName := SanitizeIssueToBranchName(issueFromUser, pluginIssues[issueFromUser])
+		output, err := git.Checkout().CheckoutNewBranchFromOrigin(newBranchName, defaultBranch)
+		if err != nil {
+			fmt.Fprintln(os.Stdout, err)
 		} else {
-			fmt.Fprint(os.Stdout, err)
+			fmt.Fprintln(os.Stdout, output)
 		}
 	} else {
-		pluginIssues := plugin.ListIssues()
-
-		if pluginIssues[issueNumber] != "" {
-			//newBranchName := SanitizeIssueToBranchName(issueNumber, pluginIssues[issueNumber])
-			//branch, err := git.Branch().CreateBranch(newBranchName)
-
-		}
+		fmt.Fprintln(os.Stdout, "Issue does not exist in your repository")
 	}
 }
 
-func updateOriginAndContinue(git gitwrapper.Giter) {
+func SwitchOrReworkExistingBranch(branchName string, git gitwrapper.Giter) {
+	//Branch is already created - do checkout
+	_, err := git.Checkout().Checkout(branchName)
 
-	if fetch := git.Fetch(); fetch.HasRemote() {
-		fetch.FetchFromOrigin()
-		fmt.Fprintln(os.Stdout, "Fetching remote branches")
+	if err == nil {
+		//No file conflicts at checkout
+		fmt.Fprintln(os.Stdout, "branch "+branchName+" already created from issue ")
+		fmt.Fprintln(os.Stdout, "Switching to branch branchMap[issuenumber]")
 	} else {
-		fmt.Fprintln(os.Stderr, "")
-
+		fmt.Fprint(os.Stdout, err)
 	}
 }
 
-func getBranchIssues(branches []string) map[int]string {
+
+//Helper methods
+func getBranchesAsMap(branches []string) map[int]string {
 	mappings := make(map[int]string)
 	for _, branch := range branches {
 		var tmp = branch
-		num, err := extractIssue(branch)
+		num, err := extractIssueNumber(branch)
 		if err == nil {
 			mappings[num] = tmp
 		}
@@ -88,7 +97,7 @@ func getBranchIssues(branches []string) map[int]string {
 	return mappings
 }
 
-func extractIssue(str string) (int, error) {
+func extractIssueNumber(str string) (int, error) {
 	issueString := strings.Split(str, "-")[0]
 	return strconv.Atoi(issueString)
 }

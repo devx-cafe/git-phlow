@@ -43,5 +43,5 @@ type Plugin interface {
 	SetAssignee(string)
 	SetLabelsOnIssue(...string)
 	InitializeRepo()
-
+	IsSignedIn() bool
 }
