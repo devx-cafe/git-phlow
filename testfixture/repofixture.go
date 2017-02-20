@@ -4,56 +4,53 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
+	"github.com/praqma/git-phlow/executor"
+	"testing"
 )
 
 var (
-	errGoPathNotSet = errors.New("GOPATH is empty")
-	goPath          string
-	phlowPath       string
+	GoPath      string
+	ProjectPath string
+	Script      string
+	Repo        string
+	Target      string
 )
 
 //init
-//Runs before functions to setup variable gopath
+//Set GoPath variable before execution
 func init() {
-	goPath = os.Getenv("GOPATH")
-	if len(goPath) == 0 {
-		fmt.Fprintln(os.Stdout, errGoPathNotSet)
+	GoPath = os.Getenv("GOPATH")
+	if len(GoPath) == 0 {
+		fmt.Fprintln(os.Stdout, errors.New("GOPATH not set"))
 		os.Exit(1)
 	}
-
-	phlowPath = goPath + "/src/github.com/praqma/git-phlow"
+	ProjectPath = GoPath + "/src/github.com/praqma/git-phlow"
+	Script = ProjectPath + "/testfixture/gen_test_repo.sh"
+	Repo = ProjectPath + "/build/phlow-test-pkg"
+	Target = ProjectPath + "/build"
 }
 
-//SetupTestRepo ...
-//Creates git test repository from a zip file in /testfixture
-func SetupTestRepo() {
-
-	script := phlowPath + "/testfixture/gen_test_repo.sh"
-	repo := phlowPath + "/build/phlow-test-pkg"
-
-	cmd := exec.Command(script)
-	cmd.Start()
-
-	err := cmd.Wait()
-
+//CreateTestRepository ...
+//Runs gen_test_repo shell script
+func CreateTestRepository(test *testing.T, verbose bool) {
+	output, err := executor.RunCommand(Script)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, err.Error())
+		test.Log(err)
 		os.Exit(1)
 	}
-	os.Chdir(repo)
+	if verbose {
+		test.Log(output)
+	}
+	os.Chdir(Repo)
 }
 
-//TearDownTestRepo ...
-//removes the unzipped test repository is it exists
-func TearDownTestRepo() {
-
-	var target = phlowPath + "/build"
-	os.Chdir(phlowPath)
-	err := os.RemoveAll(target)
+//RemoveTestRepository ...
+//Deletes the test repository and folders
+func RemoveTestRepository(test *testing.T) {
+	os.Chdir(ProjectPath)
+	err := os.RemoveAll(Target)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, err.Error())
+		test.Log(err.Error())
 		os.Exit(1)
 	}
-
 }

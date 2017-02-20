@@ -25,6 +25,8 @@ func TestRemote(t *testing.T) {
 func TestBranch(t *testing.T) {
 	Convey("Running tests on 'Branch' function", t, func() {
 
+		testfixture.CreateTestRepository(t,true)
+
 		Convey("branch should return list of branches", func() {
 			info, err := Branch("list")
 			So(len(info.list), ShouldEqual, 3)
@@ -89,7 +91,6 @@ func TestFetch(t *testing.T) {
 		})
 	})
 }
-
 
 func TestStatus(t *testing.T) {
 

@@ -22,5 +22,6 @@ func TestRunCommand(t *testing.T) {
 			So(err, ShouldNotBeNil)
 		})
 	})
-
 }
+
+
