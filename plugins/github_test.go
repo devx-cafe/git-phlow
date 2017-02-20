@@ -9,7 +9,7 @@ import (
 )
 
 func TestUnmarshal(t *testing.T) {
-	Convey("Test unmarshal method", t, func() {
+	Convey("Running tests on 'unmarshal' function", t, func() {
 
 		Convey("Unmarshal should return token", func() {
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,6 @@ func TestUnmarshal(t *testing.T) {
 			So(token, ShouldEqual, "abcdefgh12345678")
 			So(err, ShouldBeNil)
 		})
-
 	})
 }
 

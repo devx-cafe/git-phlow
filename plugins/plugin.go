@@ -25,10 +25,10 @@ var (
 )
 
 
-//SanitizeIssueToBranchName ...
-//Removes illigal characters from your issues
-//Git branches can only contain certian characters
-func SanitizeIssueToBranchName(issue int, name string) string {
+//BranchNameFromIssue ...
+
+
+func BranchNameFromIssue(issue int, name string) string {
 	var result string
 
 	result = strings.ToLower(name)

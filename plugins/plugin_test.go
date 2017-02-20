@@ -1,9 +1,9 @@
 package plugins
 
 import (
-"testing"
+	"testing"
 
-. "github.com/smartystreets/goconvey/convey"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 type testCase struct {
@@ -22,7 +22,7 @@ type testCase struct {
  * - contain \
  */
 
-func TestSanitizeIssueToBranchName(t *testing.T) {
+func TestBranchNameFromIssue(t *testing.T) {
 	testsToRun := [6]testCase{
 		{issue: 12, branchName: "work on iss", expected: "12-work-on-iss", casedesc: "Test replaces whitespaces with dash '-'"},
 		{issue: 45, branchName: "Case SENsitivity", expected: "45-case-sensitivity", casedesc: "Test converts charecters to lowercase"},
@@ -32,13 +32,12 @@ func TestSanitizeIssueToBranchName(t *testing.T) {
 		{issue: 234567, branchName: ".NAME.is\"dotted", expected: "234567-name-isdotted", casedesc: "test removes backslash"},
 	}
 
-	Convey("Test Sanitize Function", t, func() {
+	Convey("Running tests on 'BranchNameFromIssue'", t, func() {
 
 		for _, currentTest := range testsToRun {
 
-			Convey(currentTest.casedesc, func() {
-
-				actualName := SanitizeIssueToBranchName(currentTest.issue, currentTest.branchName)
+				Convey(currentTest.casedesc, func() {
+				actualName := BranchNameFromIssue(currentTest.issue, currentTest.branchName)
 				So(actualName, ShouldEqual, currentTest.expected)
 			})
 		}
@@ -47,23 +46,18 @@ func TestSanitizeIssueToBranchName(t *testing.T) {
 
 func TestStringConcat(t *testing.T) {
 
-	Convey("Test function effecientStringConcat", t, func() {
+	Convey("Running tests on 'effecientStringConcat' function ", t, func() {
 
 		Convey("Test variable inputs get concatenated correctly", func() {
 			var expectedLong = "created 'something' new"
 			var actualLong = efficientConcatString("created '", "something", "' new")
-
 			So(actualLong, ShouldEqual, expectedLong)
-
 		})
 
 		Convey("Test funny signs gets concatenated as well", func() {
-
 			var expectedShort = "j$¢‰¿≈¯¯¯"
 			var actualShort = efficientConcatString("j$¢‰¿≈", "¯¯¯")
-
 			So(expectedShort, ShouldEqual, actualShort)
-
 		})
 	})
 }
