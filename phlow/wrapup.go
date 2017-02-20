@@ -1,21 +1,26 @@
 package phlow
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/praqma/git-phlow/githandler"
+	"strings"
+)
 
 //WrapUp ...
 func WrapUp() {
 	//Before check - status
 
-	if err := Add(); err != nil {
-		fmt.Println("project files could not be added" + err.Error())
+	if err := githandler.Add(); err != nil {
+		fmt.Println("project files could not be added: " + err.Error())
 		return
 	}
 
-	info, _ := Branch("current")
+	info, _ := githandler.Branch("current")
 
-	if output, err := Commit("Closes#" + info.current); err == nil {
+
+	commitMessage := strings.Replace(info.Current, "-", " ", -1)
+	if output, err := githandler.Commit("close #" + commitMessage); err == nil {
 		fmt.Println(output)
 		return
 	}
-
 }

@@ -62,21 +62,21 @@ func Merge(branch string) error {
 	return err
 }
 
-//RemoteData ...
-type RemoteData struct {
+//RemoteInfo ...
+type RemoteInfo struct {
 	Organisation string
 	Repository   string
 }
 
 //Remote ...
-func Remote() (*RemoteData, error) {
+func Remote() (*RemoteInfo, error) {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
 	output, err := RunCommand("git", "remote", "-v")
 	if err != nil {
 		return nil, err
 	}
 	match := re.FindStringSubmatch(output)
-	return &RemoteData{match[1], match[2]}, nil
+	return &RemoteInfo{match[1], match[2]}, nil
 }
 
 //Config ...
@@ -93,8 +93,8 @@ func Config(key, value string, get bool) (string, error) {
 
 //BranchInfo ...
 type BranchInfo struct {
-	current string
-	list    []string
+	Current string
+	List    []string
 }
 
 //Branch ...
@@ -104,13 +104,13 @@ func Branch(key string) (*BranchInfo, error) {
 
 	switch key {
 	case "current":
-		info.current, err = RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+		info.Current, err = RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 		return &info, err
 	case "list":
 		if output, err := RunCommand("git", "branch"); err == nil {
 			for _, branch := range strings.Split(output, "\n") {
 				if branch != "" {
-					info.list = append(info.list, branch)
+					info.List = append(info.List, branch)
 				}
 			}
 			return &info, err

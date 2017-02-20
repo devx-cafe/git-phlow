@@ -6,12 +6,13 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"github.com/praqma/git-phlow/githandler"
 )
 
 var (
 	authBody = `{"scopes": ["public_repo"],"note": "admin script"}`
-	authURL  = "https://api.github.com/authorizations"
-	repoUrl  = "https://api.github.com/repos/"
+	AuthURL  = "https://api.github.com/authorizations"
+	RepoUrl  = "https://api.github.com/repos/"
 )
 
 //Auth ...
@@ -22,6 +23,35 @@ type Auth struct {
 //Repo ...
 type Repo struct {
 	DefaultBranch string `json:"default_branch"`
+}
+
+type Issues struct {
+	Title  string `json:"title"`
+	Number int `json:"number"`
+}
+
+func GetOpenIssues(url string) ([]Issues, error) {
+	info, err := githandler.Remote()
+	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
+
+	if res.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("request did not respond 200 OK: %s", res.Status)
+	}
+	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+
+	if err != nil {
+		return nil, err
+	}
+
+	re := []Issues{}
+	err = json.Unmarshal(body, &re)
+
+	if err != nil {
+		return nil, err
+	}
+	return re, nil
+
 }
 
 //Authorize ...
@@ -48,10 +78,10 @@ func Authorize(user, pass, url string) (string, error) {
 }
 
 //GetDefaultBranch ...
-func GetDefaultBranch() (string, error) {
+func GetDefaultBranch(url string) (string, error) {
 
-	res, _ := http.Get(repoUrl)
-
+	info, err := githandler.Remote()
+	res, _ := http.Get(url + info.Organisation + "/" + info.Repository)
 	if res.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("request did not respond 200 OK: %s", res.Status)
 	}

@@ -3,31 +3,32 @@ package phlow
 import (
 	"fmt"
 	"strings"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/plugins"
 )
 
 //Deliver ...
 func Deliver() {
-	//prechecks - status
 
-	branchInfo, _ := Branch("current")
-	dfBranch, _ := GetDefaultBranch()
+	branchInfo, _ := githandler.Branch("current")
+	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoUrl)
 
 	//Is branch master or is branch delivered
-	if strings.HasPrefix(branchInfo.current, "delivered/") || (branchInfo.current == dfBranch) {
-		fmt.Printf("You cannot deliver: %s", branchInfo.current)
+	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == dfBranch) {
+		fmt.Printf("You cannot deliver: %s", branchInfo.Current)
 		return
 	}
 
-	output, err := Push(branchInfo.current, true)
+	output, err := githandler.Push(branchInfo.Current, true)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println(output)
 
-	if err := BranchRename(branchInfo.current); err != nil {
+	if err := githandler.BranchRename(branchInfo.Current); err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Branch '%s' is now delivered", branchInfo.current)
+	fmt.Printf("Branch '%s' is now delivered", branchInfo.Current)
 }

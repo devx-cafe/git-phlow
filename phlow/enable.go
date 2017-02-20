@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/plugins"
 )
 
 /*
@@ -14,8 +16,8 @@ import (
 func Enable() {
 	//Run status before check
 
-	token, tErr := Config("token", "", true)
-	user, uErr := Config("user", "", true)
+	token, tErr := githandler.Config("token", "", true)
+	user, uErr := githandler.Config("user", "", true)
 
 	if (tErr == nil && token != "") || (uErr == nil && user != "") {
 		fmt.Println("you are already signed in")
@@ -28,9 +30,9 @@ func Enable() {
 	//Read user input password
 	password := ReadInput("password: ")
 
-	if token, err := Authorize(username, password, authURL); err != nil {
-		Config("token", token, false)
-		Config("user", username, false)
+	if token, err := plugins.Authorize(username, password, plugins.AuthURL); err != nil {
+		githandler.Config("token", token, false)
+		githandler.Config("user", username, false)
 		fmt.Println("Success fully authorized: 'git do' is now enabled  ")
 	}
 }

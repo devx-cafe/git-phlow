@@ -3,6 +3,8 @@ package phlow
 import (
 	"fmt"
 	"strings"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/plugins"
 )
 
 //FearlessDeliver ...
@@ -10,22 +12,22 @@ func FearlessDeliver() {
 
 	//Prechecks - status
 
-	branchInfo, _ := Branch("current")
-	dfBranch, _ := GetDefaultBranch()
+	branchInfo, _ := githandler.Branch("current")
+	dfBranch, _ := plugins.GetDefaultBranch()
 
 	//Is branch master or is branch delivered
-	if strings.HasPrefix(branchInfo.current, "delivered/") || (branchInfo.current == dfBranch) {
-		fmt.Printf("You cannot deliver: %s", branchInfo.current)
+	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == dfBranch) {
+		fmt.Printf("You cannot deliver: %s", branchInfo.Current)
 		return
 	}
 
 	//Checkout default branch: master
-	if err := CheckOut(dfBranch, false); err != nil {
+	if err := githandler.CheckOut(dfBranch, false); err != nil {
 		fmt.Println(err)
 		return
 	}
 	//Pull rebase latest changes
-	output, err := Pull()
+	output, err := githandler.Pull()
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -33,14 +35,14 @@ func FearlessDeliver() {
 	fmt.Println(output)
 
 	//Merge feature branch into default
-	if err := Merge(branchInfo.current); err != nil {
+	if err := githandler.Merge(branchInfo.Current); err != nil {
 		fmt.Println(err)
 	}
 	//Rename default branch to delivered
-	BranchRename(branchInfo.current)
+	githandler.BranchRename(branchInfo.Current)
 
 	//Push changes to github
-	output, err = Push("", false)
+	output, err = githandler.Push("", false)
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -13,7 +13,7 @@ import (
 
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
-	Use:   "work-on [issue number]",
+	Use:   "workon [issue number]",
 	Short: "Create or change branch from an issue number",
 	Long: `
 	work-on creates a new branch from an issue number, if phlow have been
