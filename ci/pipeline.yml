@@ -1,15 +1,9 @@
 resources:
     - name: git-phlow
-      type: git-branch-heads
+      type: git
       source:
         uri: https://github.com/Praqma/git-phlow.git
-        branch: [ready/*]
-
-resource_types:
-  - name: git-branch-heads
-    type: docker-image
-    source:
-      repository: vito/git-branch-heads-resource
+        branch: master
 
 
 jobs:
@@ -18,6 +12,4 @@ jobs:
     - get: git-phlow
       trigger: true
     - task: go-test
-      params:
-        token: {{github-token}}
       file: git-phlow/ci/tasks/go_test.yml
