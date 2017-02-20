@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/praqma/git-phlow/gitwrapper"
+	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ var workonCmd = &cobra.Command{
 				fmt.Fprintf(os.Stdout, "Whoops\n your argument: %s, is not a 'number' I only feast on numbers \n", args[0])
 				os.Exit(0)
 			}
-			git := gitwrapper.InitGit()
+			git := githandler.InitGit()
 			plugin := plugins.SupportedPlugin("github")
 			phlow.WorkOn(issueNum, plugin, git)
 		}

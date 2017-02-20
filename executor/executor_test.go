@@ -1,4 +1,4 @@
-package subprocess
+package executor
 
 import (
 	"testing"

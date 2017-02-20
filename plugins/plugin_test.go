@@ -1,9 +1,9 @@
-package phlow
+package plugins
 
 import (
-	"testing"
+"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
+. "github.com/smartystreets/goconvey/convey"
 )
 
 type testCase struct {
