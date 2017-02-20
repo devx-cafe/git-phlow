@@ -2,20 +2,22 @@ package githandler
 
 import (
 	"testing"
+	"github.com/praqma/git-phlow/testfixture"
+	"io/ioutil"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"github.com/praqma/git-phlow/testfixture"
-	"strings"
-	"io/ioutil"
-	"gopkg.in/libgit2/git2go.v25"
 )
 
 func TestRemote(t *testing.T) {
-	Convey("Running tests on 'Remote' function", t, func() {
+	Convey("Running tests on 'Remote' function (runs in project)", t, func() {
 
 		Convey("Remote should return organisation and repo name", func() {
 			remote, err := Remote()
 			So(err, ShouldBeNil)
+
+			t.Log(err)
+
+
 			So(remote.Repository, ShouldEqual, "git-phlow")
 			So(remote.Organisation, ShouldEqual, "Praqma")
 		})
@@ -25,7 +27,7 @@ func TestRemote(t *testing.T) {
 func TestBranch(t *testing.T) {
 	Convey("Running tests on 'Branch' function", t, func() {
 
-		testfixture.CreateTestRepository(t,true)
+		testfixture.CreateTestRepository(t, true)
 
 		Convey("branch should return list of branches", func() {
 			info, err := Branch("list")
@@ -39,12 +41,16 @@ func TestBranch(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 
+		testfixture.RemoveTestRepository(t)
+
 	})
 }
 
 func TestCheckout(t *testing.T) {
 
 	Convey("Runnign tests in 'Checkout' function", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
 
 		Convey("Checkout existing branch should not return error", func() {
 			err := CheckOut("bar", false)
@@ -78,6 +84,7 @@ func TestCheckout(t *testing.T) {
 			So(err, ShouldBeNil)
 		})
 
+		testfixture.RemoveTestRepository(t)
 	})
 }
 
@@ -85,10 +92,14 @@ func TestFetch(t *testing.T) {
 
 	Convey("Runnig tests in 'Fetch' function", t, func() {
 
+		testfixture.CreateTestRepository(t, false)
+
 		Convey("Fetch all should not return error", func() {
 			err := Fetch()
 			So(err, ShouldBeNil)
 		})
+
+		testfixture.RemoveTestRepository(t)
 	})
 }
 
@@ -96,9 +107,13 @@ func TestStatus(t *testing.T) {
 
 	Convey("Running test on 'Status' function", t, func() {
 
+		testfixture.CreateTestRepository(t, false)
+
 		Convey("Status should not return error", func() {
 			err := Status()
 			So(err, ShouldBeNil)
 		})
+
+		testfixture.RemoveTestRepository(t)
 	})
 }

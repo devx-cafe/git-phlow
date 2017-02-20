@@ -62,7 +62,7 @@ func Merge(branch string) error {
 	return err
 }
 
-//Remote ...
+//RemoteData ...
 type RemoteData struct {
 	Organisation string
 	Repository   string
@@ -75,10 +75,8 @@ func Remote() (*RemoteData, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	matches := re.FindStringSubmatch(output)
-	fmt.Println(matches)
-	return nil, nil
+	match := re.FindStringSubmatch(output)
+	return &RemoteData{match[1], match[2]}, nil
 }
 
 //Config ...
