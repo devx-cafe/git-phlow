@@ -6,39 +6,21 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestSimpleExec(t *testing.T) {
+func TestRunCommand(t *testing.T) {
 
-	Convey("Test function SimpleExec", t, func() {
+	Convey("Runnig tests on 'RunCommand' function", t, func() {
 
-		Convey("run: 'ls' - should return no errors ", func() {
-
-			output, err := SimpleExec("ls", "-lah")
-
+		Convey("running ls should not return an error and stdout", func() {
+			output, err := RunCommand("ls", "-lah")
 			So(output, ShouldNotBeBlank)
 			So(err, ShouldBeNil)
 		})
 
+		Convey("running lsk should return an error and stderr", func() {
+			output, err := RunCommand("lsk", "-lah")
+			So(output, ShouldBeBlank)
+			So(err, ShouldNotBeNil)
+		})
 	})
 
-}
-
-func TestIsInPath(t *testing.T) {
-
-	Convey("Test function IsInPath", t, func() {
-
-		var ls = "ls"                  //Unix, Darwin, windows should all have 'ls'
-		var notAnApp = "libblobdibdab" //Random string which s unlikely to be an app
-
-		Convey("Test app"+ls+"is in path", func() {
-			actual := IsInPath(ls)
-			So(actual, ShouldBeNil)
-		})
-
-		Convey("Test program "+notAnApp+"is not in path", func() {
-
-			actual := IsInPath(notAnApp)
-			So(actual, ShouldNotBeNil)
-		})
-
-	})
 }
