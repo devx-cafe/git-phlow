@@ -15,12 +15,12 @@ func WorkOn(newBranch string) {
 		return
 	}
 
-	branchinfo, err := githandler.Branch("list")
+	branchInfo, err := githandler.Branch("list")
 	if err != nil {
 		fmt.Println("Could not get branches")
 		return
 	}
-	for _, branch := range branchinfo.List {
+	for _, branch := range branchInfo.List {
 		if branch == newBranch {
 			githandler.CheckOut(branch, false)
 			return

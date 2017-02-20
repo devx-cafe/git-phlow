@@ -13,7 +13,7 @@ func FearlessDeliver() {
 	//Prechecks - status
 
 	branchInfo, _ := githandler.Branch("current")
-	dfBranch, _ := plugins.GetDefaultBranch()
+	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoUrl)
 
 	//Is branch master or is branch delivered
 	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == dfBranch) {
@@ -48,5 +48,5 @@ func FearlessDeliver() {
 		return
 	}
 	fmt.Println(output)
-	fmt.Printf("Branch '%s' fearlessly delivered to '%s' - A small celebration is in order \n", branchInfo.current, dfBranch)
+	fmt.Printf("Branch '%s' fearlessly delivered to '%s' - A small celebration is in order \n", branchInfo.Current, dfBranch)
 }

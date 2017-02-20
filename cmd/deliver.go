@@ -28,7 +28,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// deliverCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	RootCmd.Flags().StringVarP(&Local, "local", "l", "", "Do a local deliver")
+	deliverCmd.Flags().StringVarP(&Local, "local", "l", "", "Do a local deliver")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// deliverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
