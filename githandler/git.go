@@ -104,6 +104,9 @@ func Branch(key string) (*BranchInfo, error) {
 	switch key {
 	case "current":
 		info.Current, err = RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+		if err == nil {
+			info.Current = strings.TrimSpace(info.Current)
+		}
 		return &info, err
 	case "list":
 		if output, err := RunCommand("git", "branch"); err == nil {
