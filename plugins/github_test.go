@@ -442,7 +442,7 @@ var issueResponse = `[
     "html_url": "https://github.com/Praqma/git-phlow/issues/41",
     "id": 207294158,
     "number": 41,
-    "title": "Colored output",
+    "title": "Colored printers",
     "user": {
       "login": "groenborg",
       "id": 5576954,
@@ -573,7 +573,7 @@ var issueResponse = `[
     "created_at": "2017-02-13T18:01:47Z",
     "updated_at": "2017-02-13T18:15:43Z",
     "closed_at": null,
-    "body": "Print colored output in terminal"
+    "body": "Print colored printers in terminal"
   },
   {
     "url": "https://api.github.com/repos/Praqma/git-phlow/issues/40",

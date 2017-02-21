@@ -31,7 +31,7 @@ func Add() error {
 
 //Commit ...
 func Commit(message string) (string, error) {
-	return RunCommand("git", "add", "--all")
+	return RunCommand("git", "commit", "-m", message)
 }
 
 //Fetch ...

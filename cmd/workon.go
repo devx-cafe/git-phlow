@@ -42,7 +42,7 @@ it will create a default name prefixed with your issue number
 func init() {
 	RootCmd.AddCommand(workonCmd)
 
-	//Enable verbose output
-	workonCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
+	//Enable verbose printers
+	workonCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose printers")
 
 }

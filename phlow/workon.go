@@ -1,18 +1,19 @@
 package phlow
 
 import (
-	"fmt"
+	"github.com/praqma/git-phlow/printers"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"strings"
 	"strconv"
 	"os"
+	"fmt"
 )
 
 //WorkOn ...
 func WorkOn(issue int, verbose bool) {
 
-	printVerbose("Fetching changes from remote", verbose)
+	printers.PrintVerbose("Fetching changes from remote", verbose)
 	if err := githandler.Fetch(); err != nil {
 		fmt.Println(err)
 		return
@@ -24,7 +25,7 @@ func WorkOn(issue int, verbose bool) {
 		return
 	}
 
-	printVerbose("Locating existing issue branches", verbose)
+	printers.PrintVerbose("Locating existing issue branches", verbose)
 	if GetIssueFromBranch(branchInfo.Current) == issue {
 		fmt.Fprintf(os.Stdout, "You are already on branch '%s'\n", branchInfo.Current)
 		return
@@ -40,7 +41,7 @@ func WorkOn(issue int, verbose bool) {
 		}
 	}
 
-	printVerbose("No 'local' issue branches found. Searching on github", verbose)
+	printers.PrintVerbose("No 'local' issue branches found. Searching on github", verbose)
 	info, err := plugins.GetOpenIssues(plugins.RepoUrl)
 	if err != nil {
 		fmt.Println(err)
@@ -61,12 +62,7 @@ func WorkOn(issue int, verbose bool) {
 	fmt.Println("No 'remote' issues matches you input")
 }
 
-func printVerbose(message string, verbose bool) {
-	if verbose {
-		fmt.Fprintln(os.Stdout, message)
-	}
-}
-
+//GetIssueFromBranch ...
 func GetIssueFromBranch(branch string) int {
 	iss, err := strconv.Atoi(strings.Split(branch, "-")[0])
 	if err != nil {
