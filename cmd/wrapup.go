@@ -22,7 +22,8 @@ an issue on github
 
 func init() {
 	RootCmd.AddCommand(wrapupCmd)
+
 	//Enable verbose printers
-	wrapupCmd.Flags().BoolVarP(&verboseWrapup, "verbose", "v", false, "verbose printers")
+	wrapupCmd.Flags().BoolVarP(&verboseWrapup, "verbose", "v", false, "print verbose output")
 
 }

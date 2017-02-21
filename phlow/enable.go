@@ -13,7 +13,7 @@ import (
 */
 
 //Enable ...
-func Enable() {
+func Enable(verbose bool) {
 	//Run status before check
 
 	token, tErr := githandler.Config("token", "", true)
@@ -40,6 +40,7 @@ func Enable() {
 //ReadInput ...
 //Reads input from user
 func ReadInput(messageToUser string) string {
+	fmt.Println(messageToUser)
 	scanner := bufio.NewReader(os.Stdin)
 	text, _ := scanner.ReadString('\n')
 
