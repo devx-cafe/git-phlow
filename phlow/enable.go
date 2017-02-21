@@ -5,6 +5,10 @@ import (
 	"fmt"
 	"os"
 	"github.com/praqma/git-phlow/githandler"
+
+	"golang.org/x/crypto/ssh/terminal"
+	"syscall"
+	"strings"
 	"github.com/praqma/git-phlow/plugins"
 )
 
@@ -13,9 +17,7 @@ import (
 */
 
 //Enable ...
-func Enable(verbose bool) {
-	//Run status before check
-
+func Enable() {
 	token, tErr := githandler.Config("token", "", true)
 	user, uErr := githandler.Config("user", "", true)
 
@@ -28,21 +30,33 @@ func Enable(verbose bool) {
 	//Read user input username
 	username := ReadInput("username: ")
 	//Read user input password
-	password := ReadInput("password: ")
 
-	if token, err := plugins.Authorize(username, password, plugins.AuthURL); err != nil {
-		githandler.Config("token", token, false)
-		githandler.Config("user", username, false)
-		fmt.Println("Success fully authorized: 'git do' is now enabled  ")
+	password := ReadPassword("password: ")
+
+	token, err := plugins.Authorize(username, password, plugins.AuthURL)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
+
+	githandler.Config("token", token, false)
+	githandler.Config("user", username, false)
+
+	fmt.Println("Success fully authorized: 'git phlow' is now enabled  ")
 }
 
 //ReadInput ...
 //Reads input from user
 func ReadInput(messageToUser string) string {
-	fmt.Println(messageToUser)
+	fmt.Print(messageToUser)
 	scanner := bufio.NewReader(os.Stdin)
 	text, _ := scanner.ReadString('\n')
 
-	return text
+	return strings.Replace(text, "\n", "", -1)
+}
+
+func ReadPassword(messageToUser string) string {
+	fmt.Print(messageToUser)
+	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))
+	return strings.TrimSpace(string(bytePassword))
 }

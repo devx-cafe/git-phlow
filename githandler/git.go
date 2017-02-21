@@ -79,7 +79,7 @@ func Remote() (*RemoteInfo, error) {
 
 //Config ...
 func Config(key, value string, get bool) (string, error) {
-	pair := fmt.Sprintf("%s.%s", "do", key)
+	pair := fmt.Sprintf("%s.%s", "phlow", key)
 
 	if get {
 		output, err := RunCommand("git", "config", "--global", "--get", pair)

@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	authBody = `{"scopes": ["public_repo"],"note": "admin script"}`
+	authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
 	AuthURL  = "https://api.github.com/authorizations"
 	RepoUrl  = "https://api.github.com/repos/"
 )
@@ -25,11 +25,13 @@ type Repo struct {
 	DefaultBranch string `json:"default_branch"`
 }
 
+//Issues ...
 type Issues struct {
 	Title  string `json:"title"`
 	Number int `json:"number"`
 }
 
+//GetOpenIssues ...
 func GetOpenIssues(url string) ([]Issues, error) {
 	info, err := githandler.Remote()
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
@@ -64,6 +66,9 @@ func Authorize(user, pass, url string) (string, error) {
 	req.SetBasicAuth(user, pass)
 
 	resp, err := client.Do(req)
+	if resp.StatusCode != http.StatusCreated{
+		return "", fmt.Errorf("githup responses with %s", resp.Status)
+	}
 	if err != nil {
 		return "", err
 	}
