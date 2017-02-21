@@ -20,12 +20,12 @@ var workonCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) > 0 {
-			_, err := strconv.Atoi(args[0])
+			issue, err := strconv.Atoi(args[0])
 			if err != nil {
 				fmt.Fprintf(os.Stdout, "Whoops\n your argument: %s, is not a 'number' I only feast on numbers \n", args[0])
 				os.Exit(0)
 			}
-			phlow.WorkOn("")
+			phlow.WorkOn(issue)
 		}
 		fmt.Fprintln(os.Stdout, cmd.UsageString())
 	},

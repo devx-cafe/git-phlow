@@ -7,10 +7,8 @@ import (
 	"github.com/praqma/git-phlow/plugins"
 )
 
-//FearlessDeliver ...
-func FearlessDeliver() {
-
-	//Prechecks - status
+//LocalDeliver ...
+func LocalDeliver() {
 
 	branchInfo, _ := githandler.Branch("current")
 	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoUrl)
