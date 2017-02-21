@@ -1,27 +1,27 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
 )
+
+var mkAliasVerbose bool
 
 // mkaliasCmd represents the mkalias command
 var mkaliasCmd = &cobra.Command{
 	Use:   "mkalias",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "create alias for phlow commands",
+	Long: `
+Create all the alias for your git phlow commands, so you can type 'git workon' in stead of
+'git phlow workon'`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("mkalias called")
+		phlow.MkAlias(mkAliasVerbose)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(mkaliasCmd)
 
+	//Verbose output
+	mkaliasCmd.PersistentFlags().BoolVarP(&mkAliasVerbose, "verbose", "v", false, "verbose printers")
 }

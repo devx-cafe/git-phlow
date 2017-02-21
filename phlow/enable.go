@@ -20,8 +20,8 @@ import (
 
 //Enable ...
 func Enable() {
-	token, tErr := githandler.Config("token", "", true)
-	user, uErr := githandler.Config("user", "", true)
+	token, tErr := githandler.Config("token", "", "phlow", true)
+	user, uErr := githandler.Config("user", "", "phlow", true)
 
 	if (tErr == nil && token != "") || (uErr == nil && user != "") {
 		fmt.Println("you are already signed in")
@@ -41,8 +41,8 @@ func Enable() {
 		return
 	}
 
-	githandler.Config("token", token, false)
-	githandler.Config("user", username, false)
+	githandler.Config("token", token, "phlow", false)
+	githandler.Config("user", username, "phlow", false)
 
 	fmt.Println("Success fully authorized: 'git phlow' is now enabled  ")
 }
