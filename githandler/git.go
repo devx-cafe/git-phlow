@@ -1,7 +1,6 @@
 package githandler
 
 import (
-	"errors"
 	"fmt"
 	"regexp"
 	"strings"
@@ -97,32 +96,27 @@ type BranchInfo struct {
 }
 
 //Branch ...
-func Branch(key string) (*BranchInfo, error) {
+func Branch() (*BranchInfo, error) {
 	var err error
 	info := BranchInfo{}
 
-	switch key {
-	case "current":
-		info.Current, err = RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
-		if err == nil {
-			info.Current = strings.TrimSpace(info.Current)
-		}
-		return &info, err
-	case "list":
-		if output, err := RunCommand("git", "branch"); err == nil {
-
-			for _, branch := range strings.Split(output, "\n") {
-				if branch != "" {
-					info.List = append(info.List, strings.TrimSpace(branch))
-				}
-			}
-
-			return &info, err
-		}
+	current, cErr := RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	if cErr != nil {
 		return nil, err
-	default:
-		return nil, errors.New("function 'Branch' input is wrong")
 	}
+
+	output, lErr := RunCommand("git", "branch")
+	if lErr != nil {
+		return nil, err
+	}
+
+	info.Current = strings.TrimSpace(current)
+	for _, branch := range strings.Split(output, "\n") {
+		if branch != "" {
+			info.List = append(info.List, strings.TrimSpace(branch))
+		}
+	}
+	return &info, err
 }
 
 //BranchRename ...

@@ -18,13 +18,18 @@ func WorkOn(issue int, verbose bool) {
 		return
 	}
 
-	branchInfo, err := githandler.Branch("list")
+	branchInfo, err := githandler.Branch()
 	if err != nil {
 		fmt.Println("Could not get branches")
 		return
 	}
 
 	printVerbose("Locating existing issue branches", verbose)
+	if GetIssueFromBranch(branchInfo.Current) == issue {
+		fmt.Fprintf(os.Stdout, "You are already on branch '%s'\n", branchInfo.Current)
+		return
+	}
+
 	for _, branch := range branchInfo.List {
 		if GetIssueFromBranch(branch) == issue {
 			if err := githandler.CheckOut(branch, false); err != nil {
@@ -52,15 +57,6 @@ func WorkOn(issue int, verbose bool) {
 			return
 		}
 	}
-
-	//Set assignee
-	//if err := plugins.SetAssignee(); err != nil {
-	//	fmt.Println(err)
-	//}
-	////SetLabel
-	//if err := plugins.SetLabel("Status - in progress"); err != nil {
-	//	fmt.Println(err)
-	//}
 
 	fmt.Println("No 'remote' issues matches you input")
 }

@@ -10,7 +10,7 @@ import (
 //Deliver ...
 func Deliver() {
 
-	branchInfo, _ := githandler.Branch("current")
+	branchInfo, _ := githandler.Branch()
 	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoUrl)
 
 	//Is branch master or is branch delivered

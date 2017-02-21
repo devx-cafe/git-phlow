@@ -30,16 +30,17 @@ func TestBranch(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("branch should return List of branches", func() {
-			info, err := Branch("list")
+			info, err := Branch()
 			So(len(info.List), ShouldEqual, 2)
 			So(err, ShouldBeNil)
 		})
 
 		Convey("branch should return Current branch", func() {
-			info, err := Branch("current")
+			info, err := Branch()
 			So(info.Current, ShouldEqual, "master")
 			So(err, ShouldBeNil)
 		})
+
 
 		testfixture.RemoveTestRepository(t)
 
@@ -58,7 +59,7 @@ func TestCheckout(t *testing.T) {
 		})
 
 		Convey("Checkout Current branch should not return error", func() {
-			info, _ := Branch("Current")
+			info, _ := Branch()
 			err := CheckOut(info.Current, false)
 			So(err, ShouldBeNil)
 		})

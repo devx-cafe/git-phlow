@@ -15,8 +15,7 @@ func WrapUp() {
 		return
 	}
 
-	info, _ := githandler.Branch("current")
-
+	info, _ := githandler.Branch()
 
 	commitMessage := strings.Replace(info.Current, "-", " ", -1)
 	if output, err := githandler.Commit("close #" + commitMessage); err == nil {
