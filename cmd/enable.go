@@ -23,5 +23,5 @@ func init() {
 	RootCmd.AddCommand(enableCmd)
 
 	//verbose output flag
-	wrapupCmd.Flags().BoolVarP(&verboseEnable, "verbose", "v", false, "enable verpose print")
+	enableCmd.Flags().BoolVarP(&verboseEnable, "verbose", "v", false, "enable verpose print")
 }
