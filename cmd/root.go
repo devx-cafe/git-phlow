@@ -13,8 +13,8 @@ var RootCmd = &cobra.Command{
 	Use:   "git-phlow",
 	Short: "git extension for phlow workflow",
 	Long: `
-	git-phlow is a git extension that provides an extra set of commands, enabling you to:
-	workon, deliver and create new tasks.
+git-phlow is a git extension that provides an extra set of commands, enabling you to:
+workon, deliver and create new tasks.
 	`,
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		//Move as before check

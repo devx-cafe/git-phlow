@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	."github.com/praqma/git-phlow/executor"
+	. "github.com/praqma/git-phlow/executor"
 )
-
 
 //CheckOut ...
 func CheckOut(branch string, new bool) error {
@@ -108,11 +107,13 @@ func Branch(key string) (*BranchInfo, error) {
 		return &info, err
 	case "list":
 		if output, err := RunCommand("git", "branch"); err == nil {
+
 			for _, branch := range strings.Split(output, "\n") {
 				if branch != "" {
-					info.List = append(info.List, branch)
+					info.List = append(info.List, strings.TrimSpace(branch))
 				}
 			}
+
 			return &info, err
 		}
 		return nil, err

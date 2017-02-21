@@ -26,8 +26,6 @@ var (
 
 
 //BranchNameFromIssue ...
-
-
 func BranchNameFromIssue(issue int, name string) string {
 	var result string
 
