@@ -36,7 +36,7 @@ func TestBranchNameFromIssue(t *testing.T) {
 
 		for _, currentTest := range testsToRun {
 
-				Convey(currentTest.casedesc, func() {
+			Convey(currentTest.casedesc, func() {
 				actualName := BranchNameFromIssue(currentTest.issue, currentTest.branchName)
 				So(actualName, ShouldEqual, currentTest.expected)
 			})

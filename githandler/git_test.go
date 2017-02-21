@@ -1,9 +1,10 @@
 package githandler
 
 import (
-	"testing"
-	"github.com/praqma/git-phlow/testfixture"
 	"io/ioutil"
+	"testing"
+
+	"github.com/praqma/git-phlow/testfixture"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -16,7 +17,6 @@ func TestRemote(t *testing.T) {
 			So(err, ShouldBeNil)
 
 			t.Log(err)
-
 
 			So(remote.Repository, ShouldEqual, "git-phlow")
 			So(remote.Organisation, ShouldEqual, "Praqma")
@@ -40,7 +40,6 @@ func TestBranch(t *testing.T) {
 			So(info.Current, ShouldEqual, "master")
 			So(err, ShouldBeNil)
 		})
-
 
 		testfixture.RemoveTestRepository(t)
 

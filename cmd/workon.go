@@ -3,10 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"os"
-	"github.com/praqma/git-phlow/phlow"
 	"strconv"
+
+	"github.com/praqma/git-phlow/phlow"
+	"github.com/spf13/cobra"
 )
 
 var (

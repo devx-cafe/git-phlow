@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
 	"github.com/praqma/git-phlow/githandler"
 )
 
@@ -28,7 +29,7 @@ type Repo struct {
 //Issues ...
 type Issues struct {
 	Title  string `json:"title"`
-	Number int `json:"number"`
+	Number int    `json:"number"`
 }
 
 //GetOpenIssues ...
@@ -66,7 +67,7 @@ func Authorize(user, pass, url string) (string, error) {
 	req.SetBasicAuth(user, pass)
 
 	resp, err := client.Do(req)
-	if resp.StatusCode != http.StatusCreated{
+	if resp.StatusCode != http.StatusCreated {
 		return "", fmt.Errorf("githup responses with %s", resp.Status)
 	}
 	if err != nil {

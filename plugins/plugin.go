@@ -1,10 +1,10 @@
 package plugins
 
 import (
-	"strings"
-	"regexp"
 	"bytes"
+	"regexp"
 	"strconv"
+	"strings"
 )
 
 var (
@@ -23,7 +23,6 @@ var (
 	labelStatusInProgress = "Status - in progress"
 	labelStatusUpNext     = "Status - up next"
 )
-
 
 //BranchNameFromIssue ...
 func BranchNameFromIssue(issue int, name string) string {

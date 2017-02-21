@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/githandler"
+	"github.com/spf13/cobra"
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -26,6 +26,7 @@ workon, deliver and create new tasks.
 	},
 }
 
+//Execute ...
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -34,14 +35,6 @@ func Execute() {
 }
 
 func init() {
-	//cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
-
-	//RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.git-phlow.yaml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
 	RootCmd.PersistentFlags()
 }

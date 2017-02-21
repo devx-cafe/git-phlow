@@ -1,9 +1,9 @@
 package executor
 
 import (
-	"os/exec"
 	"bytes"
 	"errors"
+	"os/exec"
 )
 
 //RunCommand ...

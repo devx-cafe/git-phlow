@@ -20,7 +20,7 @@ func TestAuthorize(t *testing.T) {
 				if r.URL.EscapedPath() != "/authorizations" {
 					t.Errorf("Expected request to 'repos', got '%s'", r.URL.EscapedPath())
 				}
-				w.WriteHeader(http.StatusOK)
+				w.WriteHeader(http.StatusCreated)
 				w.Write([]byte(authResponse))
 
 			}))

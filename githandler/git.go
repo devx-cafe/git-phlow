@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
 	. "github.com/praqma/git-phlow/executor"
 )
 

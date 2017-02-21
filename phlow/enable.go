@@ -4,12 +4,14 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+
 	"github.com/praqma/git-phlow/githandler"
 
-	"golang.org/x/crypto/ssh/terminal"
-	"syscall"
 	"strings"
+	"syscall"
+
 	"github.com/praqma/git-phlow/plugins"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 /*
@@ -55,6 +57,7 @@ func ReadInput(messageToUser string) string {
 	return strings.Replace(text, "\n", "", -1)
 }
 
+//ReadPassword ...
 func ReadPassword(messageToUser string) string {
 	fmt.Print(messageToUser)
 	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))

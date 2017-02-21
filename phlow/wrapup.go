@@ -2,8 +2,9 @@ package phlow
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/githandler"
 	"strings"
+
+	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/printers"
 )
 

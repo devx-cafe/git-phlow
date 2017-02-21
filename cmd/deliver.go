@@ -6,13 +6,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var Local string
+var local string
 
 // deliverCmd represents the deliver command
 var deliverCmd = &cobra.Command{
 	Use:   "deliver",
 	Short: "push changes to ready/branch",
-	Long: `deliver your work by pushing your branch to your remote, prefixed with ready`,
+	Long:  `deliver your work by pushing your branch to your remote, prefixed with ready`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// TODO: Work your own magic here
 		fmt.Println("deliver called")
@@ -28,7 +28,7 @@ func init() {
 	// and all subcommands, e.g.:
 	// deliverCmd.PersistentFlags().String("foo", "", "A help for foo")
 
-	deliverCmd.Flags().StringVarP(&Local, "local", "l", "", "Do a local deliver")
+	deliverCmd.Flags().StringVarP(&local, "local", "l", "", "Do a local deliver")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// deliverCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

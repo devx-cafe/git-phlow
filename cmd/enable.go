@@ -1,11 +1,9 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/phlow"
+	"github.com/spf13/cobra"
 )
-
-
 
 //enable command
 var enableCmd = &cobra.Command{
