@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/printers"
 )
 
 //MkAlias ...
@@ -20,10 +19,10 @@ func MkAlias(verbose bool) {
 	for key, value := range aliases {
 		str, _ := githandler.Config(key, "", group, true)
 		if str == "" {
-			printers.PrintVerbose(fmt.Sprintf("Creating alias '%s'", key), verbose)
+			fmt.Printf("Creating alias '%s' \n", key)
 			githandler.Config(key, value, group, false)
 		} else {
-			printers.PrintVerbose(fmt.Sprintf("Alias '%s' already exists", key), verbose)
+			fmt.Printf("Alias '%s' already exists \n", key)
 		}
 	}
 

@@ -8,20 +8,20 @@ import (
 )
 
 var (
-	labelActionAwating    = "Action - awaiting feed-back"
-	labelActionGroomig    = "Action - needs grooming"
-	labelPrioOne          = "Prio 1 - must have"
-	labelPrioTwo          = "Prio 2 - should have"
-	labelPrioThree        = "Prio 3 - could have"
-	labelPrioFour         = "Prio 4 - won't have"
-	labelSizeSmall        = "Size 1 - small"
-	labelSizeMedium       = "Size 2 - medium"
-	labelSizeLarge        = "Size 3 - large"
-	labelSizeTooBig       = "Size 4 - too big"
-	labelStatusDublicate  = "Status - duplicate"
-	labelStatusWorkable   = "Status - workable"
-	labelStatusInProgress = "Status - in progress"
-	labelStatusUpNext     = "Status - up next"
+	LabelActionAwating    = "Action - awaiting feed-back"
+	LabelActionGroomig    = "Action - needs grooming"
+	LabelPrioOne          = "Prio 1 - must have"
+	LabelPrioTwo          = "Prio 2 - should have"
+	LabelPrioThree        = "Prio 3 - could have"
+	LabelPrioFour         = "Prio 4 - won't have"
+	LabelSizeSmall        = "Size 1 - small"
+	LabelSizeMedium       = "Size 2 - medium"
+	LabelSizeLarge        = "Size 3 - large"
+	LabelSizeTooBig       = "Size 4 - too big"
+	LabelStatusDublicate  = "Status - duplicate"
+	LabelStatusWorkable   = "Status - workable"
+	LabelStatusInProgress = "Status - in progress"
+	LabelStatusUpNext     = "Status - up next"
 )
 
 //BranchNameFromIssue ...

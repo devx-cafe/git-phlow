@@ -84,6 +84,7 @@ func Config(key, value, group string, get bool) (string, error) {
 
 	if get {
 		output, err := RunCommand("git", "config", "--global", "--get", pair)
+		output = strings.Replace(output, "\n", "", -1)
 		return output, err
 	}
 	_, err := RunCommand("git", "config", "--global", pair, value)

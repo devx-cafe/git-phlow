@@ -1,7 +1,6 @@
 package phlow
 
 import (
-	"github.com/praqma/git-phlow/printers"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"strings"
@@ -13,7 +12,7 @@ import (
 //WorkOn ...
 func WorkOn(issue int, verbose bool) {
 
-	printers.PrintVerbose("Fetching changes from remote", verbose)
+	fmt.Fprintln(os.Stdout, "Fetching changes from remote")
 	if err := githandler.Fetch(); err != nil {
 		fmt.Println(err)
 		return
@@ -25,7 +24,7 @@ func WorkOn(issue int, verbose bool) {
 		return
 	}
 
-	printers.PrintVerbose("Locating existing issue branches", verbose)
+	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
 	if GetIssueFromBranch(branchInfo.Current) == issue {
 		fmt.Fprintf(os.Stdout, "You are already on branch '%s'\n", branchInfo.Current)
 		return
@@ -41,7 +40,7 @@ func WorkOn(issue int, verbose bool) {
 		}
 	}
 
-	printers.PrintVerbose("No 'local' issue branches found. Searching on github", verbose)
+	fmt.Fprintln(os.Stdout, "No 'local' issue branches found. Searching on github")
 	info, err := plugins.GetOpenIssues(plugins.RepoUrl)
 	if err != nil {
 		fmt.Println(err)
@@ -54,7 +53,20 @@ func WorkOn(issue int, verbose bool) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "branch '%s' created and checked out", name)
+			fmt.Fprintf(os.Stdout, "branch '%s' created and checked out \n", name)
+
+			//Retrieve token
+			token, _ := githandler.Config("token", "", "phlow", true)
+			user, _ := githandler.Config("user", "", "phlow", true)
+
+			if _, labelErr := plugins.SetLabel(plugins.LabelStatusInProgress, plugins.RepoUrl, token, issue); labelErr != nil {
+				fmt.Println(labelErr)
+			}
+
+			if assigneeArr := plugins.SetAssignee(user, plugins.RepoUrl, token, issue); err != nil {
+				fmt.Println(assigneeArr)
+			}
+			fmt.Fprintf(os.Stdout, "Issue updated with label '%s' and assignee '%s' \n", plugins.LabelStatusInProgress, user)
 			return
 		}
 	}

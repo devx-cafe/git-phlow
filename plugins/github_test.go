@@ -72,14 +72,108 @@ func TestGetOpenIssues(t *testing.T) {
 			defer ts.Close()
 			repo, err := GetOpenIssues(ts.URL + "/issues/")
 
-			for _, v := range repo {
-				t.Log(v)
-			}
-
+			So(len(repo), ShouldEqual, 1)
 			So(err, ShouldBeNil)
 		})
 	})
 }
+
+func TestSetLabel(t *testing.T) {
+	Convey("Running tests on 'SetLabel' request", t, func() {
+
+		Convey("SetLabel should return array of labels", func() {
+
+			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != "POST" {
+					t.Errorf("Expected Request 'POST', got '%s'", r.Method)
+				}
+
+				if r.Header.Get("Authorization") != "token abc" {
+					t.Errorf("Authorization error, was '%s'", r.Header.Get("Authorization"))
+				}
+
+				if r.URL.EscapedPath() != "/issues/Praqma/git-phlow/issues/1/labels" {
+					t.Errorf("Expected request to '/issues/Praqma/git-phlow/issues/1/labels', got '%s'", r.URL.EscapedPath())
+				}
+
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(labelResponse))
+
+			}))
+
+			defer ts.Close()
+
+			labels, err := SetLabel(LabelStatusInProgress, ts.URL+"/issues/", "abc", 1)
+			So(len(labels), ShouldEqual, 4)
+			So(err, ShouldBeNil)
+		})
+
+	})
+}
+
+func TestSetAssignee(t *testing.T) {
+	Convey("Runnig tests on 'SetAssignee' function", t, func() {
+		Convey("SetAssignee should not return error", func() {
+
+			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != "POST" {
+					t.Errorf("Expected Request 'POST', got '%s'", r.Method)
+				}
+
+				if r.Header.Get("Authorization") != "token abc" {
+					t.Errorf("Authorization error, was '%s'", r.Header.Get("Authorization"))
+				}
+
+				if r.URL.EscapedPath() != "/issues/Praqma/git-phlow/issues/1/assignees" {
+					t.Errorf("Expected request to '/issues/Praqma/git-phlow/issues/1/assignees', got '%s'", r.URL.EscapedPath())
+				}
+
+				w.WriteHeader(http.StatusCreated)
+				w.Write([]byte(labelResponse))
+
+			}))
+
+			defer ts.Close()
+
+			err := SetAssignee("john markom", ts.URL+"/issues/", "abc", 1)
+			So(err, ShouldBeNil)
+		})
+	})
+}
+
+var expected = `{"assignees":["john markom"]}`
+
+var labelResponse = `
+[
+  {
+    "id": 544302811,
+    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Action%20-%20awaiting%20feed-back",
+    "name": "Action - awaiting feed-back",
+    "color": "6eb82c",
+    "default": false
+  },
+  {
+    "id": 545150499,
+    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Label1",
+    "name": "Label1",
+    "color": "ededed",
+    "default": false
+  },
+  {
+    "id": 545150500,
+    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Label2",
+    "name": "Label2",
+    "color": "ededed",
+    "default": false
+  },
+  {
+    "id": 544302897,
+    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Size%202%20-%20medium",
+    "name": "Size 2 - medium",
+    "color": "208fe5",
+    "default": false
+  }
+]`
 
 var repoResponse = `
 {
@@ -201,8 +295,6 @@ var issueResponse = `[
     "assignees": [
       {
         "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
         "gravatar_id": "",
         "url": "https://api.github.com/users/groenborg",
         "html_url": "https://github.com/groenborg",
@@ -227,25 +319,6 @@ var issueResponse = `[
       "number": 3,
       "title": "Implement workon, init wrapup commands ",
       "description": "Milestone for the first three basic commands",
-      "creator": {
-        "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
-        "type": "User",
-        "site_admin": false
-      },
       "open_issues": 10,
       "closed_issues": 8,
       "state": "open",
@@ -259,371 +332,5 @@ var issueResponse = `[
     "updated_at": "2017-02-20T09:43:00Z",
     "closed_at": null,
     "body": "start over!"
-  },
-  {
-    "url": "https://api.github.com/repos/Praqma/git-phlow/issues/45",
-    "repository_url": "https://api.github.com/repos/Praqma/git-phlow",
-    "labels_url": "https://api.github.com/repos/Praqma/git-phlow/issues/45/labels{/name}",
-    "comments_url": "https://api.github.com/repos/Praqma/git-phlow/issues/45/comments",
-    "events_url": "https://api.github.com/repos/Praqma/git-phlow/issues/45/events",
-    "html_url": "https://github.com/Praqma/git-phlow/issues/45",
-    "id": 207844777,
-    "number": 45,
-    "title": "Support setting default branch in git config",
-    "user": {
-      "login": "JKrag",
-      "id": 1712950,
-      "avatar_url": "https://avatars.githubusercontent.com/u/1712950?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/JKrag",
-      "html_url": "https://github.com/JKrag",
-      "followers_url": "https://api.github.com/users/JKrag/followers",
-      "following_url": "https://api.github.com/users/JKrag/following{/other_user}",
-      "gists_url": "https://api.github.com/users/JKrag/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/JKrag/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/JKrag/subscriptions",
-      "organizations_url": "https://api.github.com/users/JKrag/orgs",
-      "repos_url": "https://api.github.com/users/JKrag/repos",
-      "events_url": "https://api.github.com/users/JKrag/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/JKrag/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "assignees": [
-
-    ],
-    "milestone": null,
-    "comments": 0,
-    "created_at": "2017-02-15T15:56:15Z",
-    "updated_at": "2017-02-15T15:56:15Z",
-    "closed_at": null,
-    "body": "It should be possible to set the name of the integration branch in the normal git config hierarchy.\r\nOnly if the value is not set, it should default to asking GitHub for its \"default branch\".\r\n\r\nThis feature is useful for situations where you are working on e.g. a maintenance branch. \r\nIt will also be useful for future support of other Git servers that do not have a \"default-branch\" API endpoint.\r\n\r\nThis issue probably depends on or relates to #15 "
-  },
-  {
-    "url": "https://api.github.com/repos/Praqma/git-phlow/issues/42",
-    "repository_url": "https://api.github.com/repos/Praqma/git-phlow",
-    "labels_url": "https://api.github.com/repos/Praqma/git-phlow/issues/42/labels{/name}",
-    "comments_url": "https://api.github.com/repos/Praqma/git-phlow/issues/42/comments",
-    "events_url": "https://api.github.com/repos/Praqma/git-phlow/issues/42/events",
-    "html_url": "https://github.com/Praqma/git-phlow/issues/42",
-    "id": 207296792,
-    "number": 42,
-    "title": "Deliver - Add gitwrapper push",
-    "user": {
-      "login": "groenborg",
-      "id": 5576954,
-      "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "id": 524293854,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Prio%201%20-%20must%20have",
-        "name": "Prio 1 - must have",
-        "color": "e83d0f",
-        "default": false
-      },
-      {
-        "id": 524293923,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Size%202%20-%20medium",
-        "name": "Size 2 - medium",
-        "color": "208fe5",
-        "default": false
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": {
-      "login": "groenborg",
-      "id": 5576954,
-      "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "assignees": [
-      {
-        "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
-        "type": "User",
-        "site_admin": false
-      }
-    ],
-    "milestone": {
-      "url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3",
-      "html_url": "https://github.com/Praqma/git-phlow/milestone/3",
-      "labels_url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3/labels",
-      "id": 2309002,
-      "number": 3,
-      "title": "Implement workon, init wrapup commands ",
-      "description": "Milestone for the first three basic commands",
-      "creator": {
-        "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
-        "type": "User",
-        "site_admin": false
-      },
-      "open_issues": 10,
-      "closed_issues": 8,
-      "state": "open",
-      "created_at": "2017-02-08T09:59:49Z",
-      "updated_at": "2017-02-17T12:01:12Z",
-      "due_on": "2017-02-20T08:00:00Z",
-      "closed_at": null
-    },
-    "comments": 0,
-    "created_at": "2017-02-13T18:12:49Z",
-    "updated_at": "2017-02-13T18:12:49Z",
-    "closed_at": null,
-    "body": "Add push gitwrapper "
-  },
-  {
-    "url": "https://api.github.com/repos/Praqma/git-phlow/issues/41",
-    "repository_url": "https://api.github.com/repos/Praqma/git-phlow",
-    "labels_url": "https://api.github.com/repos/Praqma/git-phlow/issues/41/labels{/name}",
-    "comments_url": "https://api.github.com/repos/Praqma/git-phlow/issues/41/comments",
-    "events_url": "https://api.github.com/repos/Praqma/git-phlow/issues/41/events",
-    "html_url": "https://github.com/Praqma/git-phlow/issues/41",
-    "id": 207294158,
-    "number": 41,
-    "title": "Colored printers",
-    "user": {
-      "login": "groenborg",
-      "id": 5576954,
-      "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "id": 524293863,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Prio%203%20-%20could%20have",
-        "name": "Prio 3 - could have",
-        "color": "e8850f",
-        "default": false
-      },
-      {
-        "id": 524293915,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Size%201%20-%20small",
-        "name": "Size 1 - small",
-        "color": "20b4e5",
-        "default": false
-      },
-      {
-        "id": 524293956,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Status%20-%20in%20progress",
-        "name": "Status - in progress",
-        "color": "ededed",
-        "default": false
-      },
-      {
-        "id": 524293957,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Status%20-%20up%20next",
-        "name": "Status - up next",
-        "color": "eeeeee",
-        "default": false
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": {
-      "login": "groenborg",
-      "id": 5576954,
-      "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "assignees": [
-      {
-        "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
-        "type": "User",
-        "site_admin": false
-      }
-    ],
-    "milestone": {
-      "url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3",
-      "html_url": "https://github.com/Praqma/git-phlow/milestone/3",
-      "labels_url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3/labels",
-      "id": 2309002,
-      "number": 3,
-      "title": "Implement workon, init wrapup commands ",
-      "description": "Milestone for the first three basic commands",
-      "creator": {
-        "login": "groenborg",
-        "id": 5576954,
-        "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
-        "type": "User",
-        "site_admin": false
-      },
-      "open_issues": 10,
-      "closed_issues": 8,
-      "state": "open",
-      "created_at": "2017-02-08T09:59:49Z",
-      "updated_at": "2017-02-17T12:01:12Z",
-      "due_on": "2017-02-20T08:00:00Z",
-      "closed_at": null
-    },
-    "comments": 0,
-    "created_at": "2017-02-13T18:01:47Z",
-    "updated_at": "2017-02-13T18:15:43Z",
-    "closed_at": null,
-    "body": "Print colored printers in terminal"
-  },
-  {
-    "url": "https://api.github.com/repos/Praqma/git-phlow/issues/40",
-    "repository_url": "https://api.github.com/repos/Praqma/git-phlow",
-    "labels_url": "https://api.github.com/repos/Praqma/git-phlow/issues/40/labels{/name}",
-    "comments_url": "https://api.github.com/repos/Praqma/git-phlow/issues/40/comments",
-    "events_url": "https://api.github.com/repos/Praqma/git-phlow/issues/40/events",
-    "html_url": "https://github.com/Praqma/git-phlow/issues/40",
-    "id": 206199667,
-    "number": 40,
-    "title": "User story - create and work on issue",
-    "user": {
-      "login": "groenborg",
-      "id": 5576954,
-      "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "labels": [
-      {
-        "id": 524293863,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Prio%203%20-%20could%20have",
-        "name": "Prio 3 - could have",
-        "color": "e8850f",
-        "default": false
-      }
-    ],
-    "state": "open",
-    "locked": false,
-    "assignee": null,
-    "assignees": [
-
-    ],
-    "milestone": null,
-    "comments": 0,
-    "created_at": "2017-02-08T13:35:49Z",
-    "updated_at": "2017-02-08T13:36:07Z",
-    "closed_at": null,
-    "body": "As a:\r\ndeveloper\r\n\r\nI dream of:\r\nbeing able to create an issue and start working on it, in a single command\r\n\r\nSo that:\r\nI can do quick fixes without having to separately create an issue\r\n\r\nsuggested by @JKrag "
   }
 ]`
