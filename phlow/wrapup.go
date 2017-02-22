@@ -5,13 +5,13 @@ import (
 	"strings"
 
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/printers"
+	"os"
 )
 
 //WrapUp ...
 func WrapUp(verbose bool) {
 
-	printers.PrintVerbose("Addind files to index", verbose)
+	fmt.Fprintln(os.Stdout, "Addind files to index")
 
 	//Add all files to index
 	if err := githandler.Add(); err != nil {
@@ -27,5 +27,5 @@ func WrapUp(verbose bool) {
 		fmt.Println(err)
 		return
 	}
-	printers.PrintVerbose(commitMessage, verbose)
+	fmt.Fprintln(os.Stdout, commitMessage)
 }
