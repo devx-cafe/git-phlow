@@ -12,7 +12,9 @@ import (
 func Deliver() {
 
 	branchInfo, _ := githandler.Branch()
-	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoUrl)
+	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
+
+	githandler.Fetch()
 
 	//Is branch master or is branch delivered
 	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == dfBranch) {
@@ -20,7 +22,7 @@ func Deliver() {
 		return
 	}
 
-	output, err := githandler.Push(branchInfo.Current, true)
+	output, err := githandler.PushRename(branchInfo.Current, dfBranch)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -31,5 +33,5 @@ func Deliver() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Branch '%s' is now delivered", branchInfo.Current)
+	fmt.Printf("Branch '%s' is now delivered \n", branchInfo.Current)
 }

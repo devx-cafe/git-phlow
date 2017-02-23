@@ -35,6 +35,5 @@ func Execute() {
 }
 
 func init() {
-
 	RootCmd.PersistentFlags()
 }

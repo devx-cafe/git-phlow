@@ -8,56 +8,84 @@ import (
 	. "github.com/praqma/git-phlow/executor"
 )
 
+//ConfigBranchRemote ...
+func ConfigBranchRemote(branch string) string {
+	configArg := fmt.Sprintf("branch.%s.remote", branch)
+	output, _ := ExecuteCommand("git", "config", configArg)
+	return strings.Replace(output, "\n", "", -1)
+}
+
+//ConfigGet ...
+func ConfigGet(key, group string) string {
+	pair := fmt.Sprintf("%s.%s", group, key)
+	output, _ := ExecuteCommand("git", "config", "--global", "--get", pair)
+	return strings.Replace(output, "\n", "", -1)
+}
+
+//ConfigSet ...
+func ConfigSet(key, value, group string) error {
+	pair := fmt.Sprintf("%s.%s", group, key)
+	_, err := ExecuteCommand("git", "config", "--global", pair, value)
+	return err
+}
+
 //CheckOut ...
-func CheckOut(branch string, new bool) error {
-	if new {
-		_, err := RunCommand("git", "checkout", "-b", branch, "origin/master")
-		return err
-	}
-	_, err := RunCommand("git", "checkout", branch)
+func CheckOut(branch string) error {
+	_, err := ExecuteCommand("git", "checkout", branch)
+	return err
+}
+
+//CheckoutNewBranchFromRemote ...
+func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
+	remote := ConfigBranchRemote(defaultBranch)
+	_, err := ExecuteCommand("git", "checkout", "-b", branch, remote+"/"+defaultBranch)
 	return err
 }
 
 //Status ...
 func Status() error {
-	_, err := RunCommand("git", "status")
+	_, err := ExecuteCommand("git", "status")
 	return err
 }
 
 //Add ...
 func Add() error {
-	_, err := RunCommand("git", "add", "--all")
+	_, err := ExecuteCommand("git", "add", "--all")
 	return err
 }
 
 //Commit ...
 func Commit(message string) (string, error) {
-	return RunCommand("git", "commit", "-m", message)
+	return ExecuteCommand("git", "commit", "-m", message)
 }
 
 //Fetch ...
 func Fetch() error {
-	_, err := RunCommand("git", "fetch", "--all")
+	_, err := ExecuteCommand("git", "fetch", "--all")
 	return err
 }
 
 //Pull ...
 func Pull() (string, error) {
-	return RunCommand("git", "pull", "--rebase")
+	return ExecuteCommand("git", "pull", "--rebase")
 }
 
 //Push ...
-func Push(branch string, rename bool) (string, error) {
+func Push() (string, error) {
+	return ExecuteCommand("git", "push")
+}
+
+//PushRename ...
+func PushRename(branch, defaultBranch string) (string, error) {
+	remote := ConfigBranchRemote(defaultBranch)
 	str := fmt.Sprintf("%s:ready/%s", branch, branch)
-	if rename {
-		return RunCommand("git", "push", "origin", str)
-	}
-	return RunCommand("git", "push")
+
+	return ExecuteCommand("git", "push", remote, str)
 }
 
 //Merge ...
 func Merge(branch string) error {
-	_, err := RunCommand("git", "merge", branch)
+	_, err := ExecuteCommand("git", "merge", branch)
 	return err
 }
 
@@ -70,25 +98,12 @@ type RemoteInfo struct {
 //Remote ...
 func Remote() (*RemoteInfo, error) {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
-	output, err := RunCommand("git", "remote", "-v")
+	output, err := ExecuteCommand("git", "remote", "-v")
 	if err != nil {
 		return nil, err
 	}
 	match := re.FindStringSubmatch(output)
 	return &RemoteInfo{match[1], match[2]}, nil
-}
-
-//Config ...
-func Config(key, value, group string, get bool) (string, error) {
-	pair := fmt.Sprintf("%s.%s", group, key)
-
-	if get {
-		output, err := RunCommand("git", "config", "--global", "--get", pair)
-		output = strings.Replace(output, "\n", "", -1)
-		return output, err
-	}
-	_, err := RunCommand("git", "config", "--global", pair, value)
-	return "", err
 }
 
 //BranchInfo ...
@@ -102,12 +117,12 @@ func Branch() (*BranchInfo, error) {
 	var err error
 	info := BranchInfo{}
 
-	current, cErr := RunCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	current, cErr := ExecuteCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if cErr != nil {
 		return nil, err
 	}
 
-	output, lErr := RunCommand("git", "branch")
+	output, lErr := ExecuteCommand("git", "branch")
 	if lErr != nil {
 		return nil, err
 	}
@@ -123,6 +138,6 @@ func Branch() (*BranchInfo, error) {
 
 //BranchRename ...
 func BranchRename(name string) error {
-	_, err := RunCommand("git", "branch", "-m", name, "delivered/"+name)
+	_, err := ExecuteCommand("git", "branch", "-m", name, "delivered/"+name)
 	return err
 }

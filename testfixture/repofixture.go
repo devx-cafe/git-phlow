@@ -33,7 +33,7 @@ func init() {
 //CreateTestRepository ...
 //Runs gen_test_repo shell script
 func CreateTestRepository(test *testing.T, verbose bool) {
-	output, err := executor.RunCommand(Script)
+	output, err := executor.ExecuteCommand(Script)
 	if err != nil {
 		test.Log(err)
 		os.Exit(1)

@@ -1,13 +1,9 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
-)
-
-var (
-	local          bool
-	verboseDeliver bool
+	"github.com/spf13/cobra"
 )
 
 // deliverCmd represents the deliver command
@@ -17,8 +13,10 @@ var deliverCmd = &cobra.Command{
 	Long:  `deliver your work by pushing your branch to your remote, prefixed with ready`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if local {
+		if options.GlobalFlagLocal {
 			phlow.LocalDeliver()
+		} else {
+			phlow.Deliver()
 		}
 
 	},
@@ -28,7 +26,7 @@ func init() {
 	RootCmd.AddCommand(deliverCmd)
 
 	//Flag for local deliver
-	deliverCmd.Flags().BoolVarP(&local, "local", "l", false, "local delivery")
+	deliverCmd.Flags().BoolVarP(&options.GlobalFlagLocal, "local", "l", false, "local delivery")
 	//Flag for verbose output
-	deliverCmd.Flags().BoolVarP(&verboseDeliver, "verbose", "v", false, "verbose output")
+	deliverCmd.Flags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose output")
 }

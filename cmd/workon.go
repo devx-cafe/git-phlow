@@ -6,12 +6,9 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
-)
-
-var (
-	verbose bool
 )
 
 // workonCmd represents the workon command
@@ -32,7 +29,7 @@ it will create a default name prefixed with your issue number
 				os.Exit(0)
 			}
 
-			phlow.WorkOn(issue, verbose)
+			phlow.WorkOn(issue)
 			os.Exit(0)
 		}
 
@@ -44,6 +41,6 @@ func init() {
 	RootCmd.AddCommand(workonCmd)
 
 	//Enable verbose printers
-	workonCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose printers")
+	workonCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose printers")
 
 }

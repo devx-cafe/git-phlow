@@ -6,19 +6,20 @@ import (
 )
 
 //enable command
-var enableCmd = &cobra.Command{
-	Use:   "enable",
+var authCmd = &cobra.Command{
+	Use:   "auth",
 	Short: "authenticate and enable phlow",
 	Long: `
 authenticate git phlow with your github account for issue management and issue branch workflow, it
 requires you to enter username and  password`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		phlow.Enable()
+		phlow.Auth()
+
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(enableCmd)
+	RootCmd.AddCommand(authCmd)
 
 }

@@ -7,14 +7,17 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/praqma/git-phlow/githandler"
 	"strconv"
+
+	"github.com/praqma/git-phlow/githandler"
 )
 
 var (
 	authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
-	AuthURL  = "https://api.github.com/authorizations"
-	RepoUrl  = "https://api.github.com/repos/"
+	//AuthURL ...
+	AuthURL = "https://api.github.com/authorizations"
+	//RepoURL ...
+	RepoURL = "https://api.github.com/repos/"
 )
 
 //Auth ...
@@ -33,20 +36,22 @@ type Issues struct {
 	Number int    `json:"number"`
 }
 
+//Label ...
 type Label struct {
-	Id    int     `json:"id"`
-	Url   string  `json:"url"`
-	Name  string  `json:"name"`
-	Color string  `json:"color"`
+	ID    int    `json:"id"`
+	URL   string `json:"url"`
+	Name  string `json:"name"`
+	Color string `json:"color"`
 }
 
+//Assignee ...
 type Assignee struct {
 	Assignees []string `json:"assignees"`
 }
 
 //GetOpenIssues ...
 func GetOpenIssues(url string) ([]Issues, error) {
-	info, err := githandler.Remote()
+	info, _ := githandler.Remote()
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
 
 	if res.StatusCode != http.StatusOK {
@@ -74,7 +79,7 @@ func Authorize(user, pass, url string) (string, error) {
 	var auth Auth
 	client := &http.Client{}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(authBody)))
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(authBody)))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.SetBasicAuth(user, pass)
 
@@ -86,7 +91,7 @@ func Authorize(user, pass, url string) (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
-	output, err := ioutil.ReadAll(resp.Body)
+	output, _ := ioutil.ReadAll(resp.Body)
 
 	err = json.Unmarshal(output, &auth)
 	if err != nil {
@@ -98,7 +103,7 @@ func Authorize(user, pass, url string) (string, error) {
 //GetDefaultBranch ...
 func GetDefaultBranch(url string) (string, error) {
 
-	info, err := githandler.Remote()
+	info, _ := githandler.Remote()
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository)
 	if res.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("request did not respond 200 OK: %s", res.Status)
@@ -122,11 +127,11 @@ func GetDefaultBranch(url string) (string, error) {
 //SetLabel ...
 func SetLabel(label, url, token string, number int) ([]Label, error) {
 	client := &http.Client{}
-	info, err := githandler.Remote()
+	info, _ := githandler.Remote()
 	var body = `[ "` + label + `" ]`
 	var uri = url + info.Organisation + "/" + info.Repository + "/issues/" + strconv.Itoa(number) + "/labels" //"/repos/:owner/:repo/issues/:number/labels"
 
-	req, err := http.NewRequest("POST", uri, bytes.NewBuffer([]byte(body)))
+	req, _ := http.NewRequest("POST", uri, bytes.NewBuffer([]byte(body)))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "token "+token)
 
@@ -144,7 +149,7 @@ func SetLabel(label, url, token string, number int) ([]Label, error) {
 	defer resp.Body.Close()
 
 	re := []Label{}
-	output, err := ioutil.ReadAll(resp.Body)
+	output, _ := ioutil.ReadAll(resp.Body)
 
 	err = json.Unmarshal(output, &re)
 	if err != nil {

@@ -3,23 +3,40 @@ package executor
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"os/exec"
+
+	"github.com/praqma/git-phlow/options"
 )
 
-//RunCommand ...
-func RunCommand(command string, argv ...string) (string, error) {
-	cmd := exec.Command(command, argv...)
+//VerboseOutput ...
+//prints the commands being run by the program
+func VerboseOutput(application string, argv ...string) {
+	fmt.Print(application)
+	for _, arg := range argv {
+		fmt.Print(" " + arg)
+	}
+	fmt.Println()
+}
+
+//ExecuteCommand ...
+func ExecuteCommand(command string, argv ...string) (string, error) {
+	if options.GlobalFlagVerbose {
+		VerboseOutput(command, argv...)
+	}
+
+	exe := exec.Command(command, argv...)
 
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
 
-	cmd.Stderr = &stdErrBuffer
-	cmd.Stdout = &stdOutBuffer
+	exe.Stderr = &stdErrBuffer
+	exe.Stdout = &stdOutBuffer
 
-	if err := cmd.Start(); err != nil {
+	if err := exe.Start(); err != nil {
 		return "", errors.New(stdErrBuffer.String())
 	}
 
-	if err := cmd.Wait(); err != nil {
+	if err := exe.Wait(); err != nil {
 		return "", errors.New(stdErrBuffer.String())
 	}
 

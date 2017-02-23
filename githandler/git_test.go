@@ -24,6 +24,27 @@ func TestRemote(t *testing.T) {
 	})
 }
 
+func TestConfig(t *testing.T) {
+	Convey("Running tests on 'ConfigBranchRemote'", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("ConfigBranchRemote should return origin", func() {
+			remote := ConfigBranchRemote("master")
+
+			So(remote, ShouldEqual, "origin")
+		})
+
+		Convey("ConfigBranchRemote of wrong branch should return err", func() {
+			remote := ConfigBranchRemote("bsld")
+
+			So(remote, ShouldEqual, "")
+		})
+
+		testfixture.RemoveTestRepository(t)
+	})
+}
+
 func TestBranch(t *testing.T) {
 	Convey("Running tests on 'Branch' function", t, func() {
 
@@ -53,34 +74,39 @@ func TestCheckout(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("Checkout existing branch should not return error", func() {
-			err := CheckOut("bar", false)
+			err := CheckOut("bar")
 			So(err, ShouldBeNil)
 		})
 
 		Convey("Checkout Current branch should not return error", func() {
 			info, _ := Branch()
-			err := CheckOut(info.Current, false)
+			err := CheckOut(info.Current)
 			So(err, ShouldBeNil)
 		})
 
 		Convey("Checkout from origin branch should not return error", func() {
-			err := CheckOut("foo", false)
+			err := CheckOut("foo")
 			So(err, ShouldBeNil)
 		})
 
 		Convey("Checkout nonexisting branch should return error", func() {
-			err := CheckOut("i-am-not-a-branch", false)
+			err := CheckOut("i-am-not-a-branch")
 			So(err, ShouldNotBeNil)
 		})
 
 		Convey("Checkout uncomitted changes should return error", func() {
 			ioutil.WriteFile("./README.md", []byte("I AM A CONFLICTIONG CHANGE"), 0755)
-			err := CheckOut("foo", false)
+			err := CheckOut("foo")
 			So(err, ShouldNotBeNil)
 		})
 
-		Convey("Checkout now origin branch should not return error", func() {
-			err := CheckOut("12-issue", true)
+		Convey("Checkout new origin branch should not return error", func() {
+			err := CheckoutNewBranchFromRemote("12-issue", "master")
+			So(err, ShouldBeNil)
+		})
+
+		Convey("Checkout existing origin branch should return error", func() {
+			err := CheckoutNewBranchFromRemote("foo", "master")
 			So(err, ShouldBeNil)
 		})
 

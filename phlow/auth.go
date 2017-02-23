@@ -14,25 +14,21 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-/*
-   Reauthorize should also be possible
-*/
+//Auth ...
+func Auth() {
+	token := githandler.ConfigGet("token", "phlow")
+	user := githandler.ConfigGet("user", "phlow")
 
-//Enable ...
-func Enable() {
-	token, tErr := githandler.Config("token", "", "phlow", true)
-	user, uErr := githandler.Config("user", "", "phlow", true)
-
-	if (tErr == nil && token != "") || (uErr == nil && user != "") {
+	if token != "" && user != "" {
 		fmt.Println("you are already signed in")
 		return
 	}
 
 	fmt.Fprintf(os.Stdout, "enter credentials for %s \n", "github")
+
 	//Read user input username
 	username := ReadInput("username: ")
 	//Read user input password
-
 	password := ReadPassword("password: ")
 
 	token, err := plugins.Authorize(username, password, plugins.AuthURL)
@@ -41,8 +37,8 @@ func Enable() {
 		return
 	}
 
-	githandler.Config("token", token, "phlow", false)
-	githandler.Config("user", username, "phlow", false)
+	githandler.ConfigSet("token", token, "phlow")
+	githandler.ConfigSet("user", username, "phlow")
 
 	fmt.Println("Success fully authorized: 'git phlow' is now enabled  ")
 }

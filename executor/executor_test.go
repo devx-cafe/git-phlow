@@ -8,16 +8,16 @@ import (
 
 func TestRunCommand(t *testing.T) {
 
-	Convey("Runnig tests on 'RunCommand' function", t, func() {
+	Convey("Runnig tests on 'ExecuteCommand' function", t, func() {
 
 		Convey("running ls should not return an error and stdout", func() {
-			output, err := RunCommand("ls", "-lah")
+			output, err := ExecuteCommand("ls", "-lah")
 			So(output, ShouldNotBeBlank)
 			So(err, ShouldBeNil)
 		})
 
 		Convey("running lsk should return an error and stderr", func() {
-			output, err := RunCommand("lsk", "-lah")
+			output, err := ExecuteCommand("lsk", "-lah")
 			So(output, ShouldBeBlank)
 			So(err, ShouldNotBeNil)
 		})

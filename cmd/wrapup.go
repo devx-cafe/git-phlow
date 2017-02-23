@@ -1,11 +1,10 @@
 package cmd
 
 import (
+	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
 )
-
-var verboseWrapUp bool
 
 var wrapupCmd = &cobra.Command{
 	Use:   "wrapup",
@@ -16,7 +15,7 @@ an issue on github
 `,
 
 	Run: func(cmd *cobra.Command, args []string) {
-		phlow.WrapUp(verboseWrapUp)
+		phlow.WrapUp()
 	},
 }
 
@@ -24,6 +23,6 @@ func init() {
 	RootCmd.AddCommand(wrapupCmd)
 
 	//Enable verbose printers
-	wrapupCmd.Flags().BoolVarP(&verboseWrapUp, "verbose", "v", false, "print verbose output")
+	wrapupCmd.Flags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "print verbose output")
 
 }

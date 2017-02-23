@@ -8,7 +8,7 @@ import (
 )
 
 //MkAlias ...
-func MkAlias(verbose bool) {
+func MkAlias() {
 	group := "alias"
 	aliases := make(map[string]string)
 	aliases["wrapup"] = "phlow wrapup"
@@ -17,10 +17,10 @@ func MkAlias(verbose bool) {
 	aliases["purge"] = "phlow purge"
 
 	for key, value := range aliases {
-		str, _ := githandler.Config(key, "", group, true)
+		str := githandler.ConfigGet(key, group)
 		if str == "" {
 			fmt.Printf("Creating alias '%s' \n", key)
-			githandler.Config(key, value, group, false)
+			githandler.ConfigSet(key, value, group)
 		} else {
 			fmt.Printf("Alias '%s' already exists \n", key)
 		}

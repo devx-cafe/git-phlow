@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/praqma/git-phlow/githandler"
 	"os"
+
+	"github.com/praqma/git-phlow/githandler"
 )
 
 //WrapUp ...
-func WrapUp(verbose bool) {
+func WrapUp() {
 
 	fmt.Fprintln(os.Stdout, "Addind files to index")
 
