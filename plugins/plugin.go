@@ -41,25 +41,16 @@ var (
 //BranchNameFromIssue ...
 func BranchNameFromIssue(issue int, name string) string {
 	var result string
+	
+	removeNonAlphaNumeric := regexp.MustCompile("([^\\w-])+")
+	result = removeNonAlphaNumeric.ReplaceAllString(name, "-")
 
-	result = strings.ToLower(name)
-	result = strings.Replace(result, " ", "-", -1)
+	removeDuplicateChars := regexp.MustCompile("([-_]{2,})")
+	result = removeDuplicateChars.ReplaceAllString(result, "")
 
-	if strings.HasPrefix(result, ".") {
-		result = result[1:]
-	}
-
-	if strings.HasSuffix(result, "/") {
-		result = result[:len(result)-1]
-
-	}
-
-	result = strings.Replace(result, ".", "-", -1)
-	result = strings.Replace(result, "\"", "", -1)
-	r := regexp.MustCompile("[\040\177 ~^:?*[]+")
-	result = r.ReplaceAllString(result, "")
-	result = strconv.Itoa(issue) + "-" + result
-	return result
+	result = strings.Trim(result, "-")
+	result = strings.ToLower(result)
+	return strconv.Itoa(issue) + "-" + result
 }
 
 func efficientConcatString(args ...string) string {
