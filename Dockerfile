@@ -10,8 +10,8 @@ COPY . .
 # -v is for verbse mode
 # ./... runs through all packages and downloads test deps and prod deps
 RUN go get -d -t -v ./...
-
+RUN go install
 #Run tests in sequence and not parallel
 #the tests setup does not support parallel 
 #testing at the moment
-ENTRYPOINT go test -v -p 1 ./...
+ENTRYPOINT git phlow
