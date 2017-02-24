@@ -6,6 +6,8 @@ image_resource:
 
 inputs:
   - name: git-phlow
-
-run:
-  path: git-phlow/ci/tasks/test.sh
+  - name: test-image
+  
+put: test-image
+  params: 
+    build: git-phlow

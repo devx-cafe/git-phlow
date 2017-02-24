@@ -4,7 +4,13 @@ resources:
       source:
         uri: https://github.com/Praqma/git-phlow.git
         branch: master
-
+    
+    - name: test-image
+      type: docker-image
+      source: 
+        email: {{docker-hub-email}}
+        password: {{docker-hub-password}}
+        repository: {{docker-hub-url}}
 
 jobs:
   - name: integration
