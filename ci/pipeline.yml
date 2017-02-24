@@ -24,7 +24,8 @@ jobs:
   - name: run-integration-tests
     plan: 
       - get: phlow-test-image
-        passed: [build-test-image]
-      - task:
-          file: git-phlow/ci/tasks/test.yml
+      - get: git-phlow
+       # passed: [build-test-image]
+      - task: run-tests
+        file: git-phlow/ci/tasks/test.yml
   
