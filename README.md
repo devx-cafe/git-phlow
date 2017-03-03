@@ -4,12 +4,10 @@ maintainer: groenborg
 
 # git-phlow - the release train extension
 
-| Job | Status  |
+| Build | go report  |
 | ------------- | ----------------- |
-| `integration` | ![build status](https://concourse.code.praqma.com/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge)       |
+| [build status](https://concourse.code.praqma.com/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge) | [![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow)       |
 
-
-[![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow)
 
 git-phlow (pronounced _"git flow"_), is a CLI extension for git, which is designed to provide an extra set of commands to easily create, wrapup, and deliver tasks/issues created on [github](https://github.com) and [waffle](https://waffle.io/).
 
