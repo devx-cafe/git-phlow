@@ -4,28 +4,34 @@ resources:
       source:
         uri: https://github.com/Praqma/git-phlow.git
         branch: develop
-    
-    - name: phlow-test-image
-      type: docker-image
-      source: 
-        username: {{docker-hub-email}}
-        password: {{docker-hub-password}}
-        repository: {{docker-hub-url}}
+   
+    - name: version
+      type: semver
+      source:
+        driver: git
+        uri: git@gituhb.com:praqma/git-phlow.git
+        branch: version
+        file: version
+        private_key: {{concourse-repo-private-key}} 
 
 jobs:
-  - name: build-test-image
-    plan:
-    - get: git-phlow
-      trigger: true
-    #- get: phlow-test-image 
-    - put: phlow-test-image
-      params: 
-        build: git-phlow
-  - name: run-integration-tests
-    plan: 
-      - get: phlow-test-image
-      - get: git-phlow
-       # passed: [build-test-image]
-      - task: run-tests
-        file: git-phlow/ci/tasks/test.yml
+- name: integration-linux
+  plan: 
+  - get: git-phlow
+    trigger: true
+  - task: integration-test
+    file: git-phlow/ci/tasks/test-linux.yml
   
+- name: integration-darwin
+  plan:
+  - get: git-phlow
+    trigger: true
+  - task: integration-test-two
+    file: git-phlow/ci/tasks/test-darwin.yml
+
+- name: create-release-binary
+  plan: 
+    - get: version
+    - get: git-phlow
+    - task: create-release 
+      file: git-phlow/ci/tasks/gen-bin.yml
