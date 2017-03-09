@@ -6,11 +6,11 @@ image_resource:
   source: {repository: golang, tag: "1.7"}
 
 inputs:
-- name: version
-- name: git-phlow-tested
-  trigger: true
+- name: resource-version
+- name: git-phlow
+
 outputs:
-- name: project-bin
+- name: build-artifacts
 
 run:
-  path: git-phlow/ci/scripts/create-binary.sh
+  path: git-phlow/ci/scripts/build.sh

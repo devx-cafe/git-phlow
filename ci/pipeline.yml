@@ -1,37 +1,162 @@
 resources:
+    #GITHUB REPOSITORY
     - name: git-phlow
       type: git
       source:
         uri: https://github.com/Praqma/git-phlow.git
-        branch: develop
-   
-    - name: version
+        branch: master
+
+   #VERSION 
+    - name: resource-version
       type: semver
       source:
         driver: git
-        uri: git@gituhb.com:praqma/git-phlow.git
+        uri: git@github.com:Praqma/git-phlow.git
         branch: version
         file: version
-        private_key: {{concourse-repo-private-key}} 
+        private_key: {{github-private-key}} 
 
+    #GITHUB RELEASE
+    - name: gh-release
+      type: github-release
+      source:
+        user: praqma
+        repository: git-phlow
+        access_token: {{github-token}}
+    #S3 BUCKET FOR ARTIFACTS
+    - name: phlow-artifact-linux-s3
+      type: s3
+      source: 
+        bucket: git-phlow-pipeline-artifacts
+        regexp: git-phlow-(.*)-linux.tar.gz
+        access_key_id: {{s3-access-key-id}}
+        region_name: eu-central-1
+        secret_access_key: {{s3-secret-access-key}}
+    - name: phlow-artifact-darwin-s3
+      type: s3
+      source: 
+        bucket: git-phlow-pipeline-artifacts
+        regexp: git-phlow-(.*)-darwin.tar.gz
+        access_key_id: {{s3-access-key-id}}
+        region_name: eu-central-1
+        secret_access_key: {{s3-secret-access-key}}
+################# PIPELINE JOBS #################
+#INTEGRATION TEST JOB
 jobs:
-- name: integration-linux
-  plan: 
-  - get: git-phlow
-    trigger: true
-  - task: integration-test
-    file: git-phlow/ci/tasks/test-linux.yml
-  
-- name: integration-darwin
+- name: integration-tests
   plan:
   - get: git-phlow
     trigger: true
-  - task: integration-test-two
-    file: git-phlow/ci/tasks/test-darwin.yml
-
-- name: create-release-binary
-  plan: 
-    - get: version
-    - get: git-phlow
+  - task: integration
+    file: git-phlow/ci/tasks/run-tests.yml
+#VERSIONIGN JOB 
+- name: job-versioning
+  public: true
+  serial: true
+  plan:
+  - get: resource-version
+    
+#RELEASE MAJOR
+- name: create-major
+  plan:
+    - get: resource-version
+      params: {bump: major}
+    - get: git-phlow 
+      passed: [integration-tests]
+    - put: resource-version
+      params: {file: resource-version/version}
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
+    - put: phlow-artifact-linux-s3
+      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+    - put: phlow-artifact-darwin-s3
+      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}
+#RELEASE MINOR 
+- name: create-minor
+  plan:
+    - get: resource-version
+      params: {bump: minor}
+    - get: git-phlow 
+      passed: [integration-tests]
+    - put: resource-version
+      params: {file: resource-version/version}
+    - task: create-release 
+      file: git-phlow/ci/tasks/gen-bin.yml
+    - put: phlow-artifact-linux-s3
+      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+    - put: phlow-artifact-darwin-s3
+      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}
+#RELEASE PATCH
+- name: create-patch
+  plan:
+    - get: resource-version
+      params: {bump: patch}
+    - get: git-phlow 
+      passed: [integration-tests]
+      trigger: true
+    - put: resource-version
+      params: {file: resource-version/version}
+    - task: create-release 
+      file: git-phlow/ci/tasks/gen-bin.yml
+    - put: phlow-artifact-linux-s3
+      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+    - put: phlow-artifact-darwin-s3
+      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}                    
+#CREATE A GITHUB RELEASE
+- name: shipit-patch
+  plan:
+  - get: resource-version
+  - get: git-phlow
+  - get: phlow-artifact-linux-s3
+    passed: [create-patch]
+  - get: phlow-artifact-darwin-s3
+    passed: [create-patch]
+  - put: gh-release
+    params:
+      name: resource-version/version 
+      tag: resource-version/version
+      tag_prefix: v 
+      body: git-phlow/ci/notes/release-notes.md
+      globs: 
+        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz
+#CREATE A GITHUB RELEASE
+- name: shipit-minor
+  plan:
+  - get: resource-version
+  - get: git-phlow
+  - get: phlow-artifact-linux-s3
+    passed: [create-minor]
+    trigger: true
+  - get: phlow-artifact-darwin-s3
+    passed: [create-minor]
+    trigger: true
+  - put: gh-release
+    params:
+      name: resource-version/version 
+      tag: resource-version/version
+      tag_prefix: v 
+      body: git-phlow/ci/notes/release-notes.md
+      globs: 
+        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz
+#CREATE A GITHUB RELEASE
+- name: shipit-major
+  plan:
+  - get: resource-version
+  - get: git-phlow
+  - get: phlow-artifact-linux-s3
+    passed: [create-major]
+    trigger: true
+  - get: phlow-artifact-darwin-s3
+    passed: [create-major]
+    trigger: true
+  - put: gh-release
+    params:
+      name: resource-version/version 
+      tag: resource-version/version
+      tag_prefix: v 
+      body: git-phlow/ci/notes/release-notes.md
+      globs: 
+        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz

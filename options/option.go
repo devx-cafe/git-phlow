@@ -3,8 +3,20 @@ Contains all global variables
 */
 package options
 
-//GlobalFlags
+//Global flags for commandline inputs ...
 var (
+	//GlobalFlagVerbose ...
 	GlobalFlagVerbose = false
-	GlobalFlagLocal   = false
+
+	//GlobalFlagLocal ...
+	GlobalFlagLocal = false
+
+	//Sha1 git commit hash
+	Sha1 string
+
+	//Version build version
+	Version string
+
+	//Date date of build
+	Date string
 )

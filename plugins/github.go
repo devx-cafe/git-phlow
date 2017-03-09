@@ -51,7 +51,12 @@ type Assignee struct {
 
 //GetOpenIssues ...
 func GetOpenIssues(url string) ([]Issues, error) {
-	info, _ := githandler.Remote()
+
+	info, err := githandler.Remote("master")
+	if err != nil {
+		return nil, err
+	}
+
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
 
 	if res.StatusCode != http.StatusOK {
@@ -102,8 +107,10 @@ func Authorize(user, pass, url string) (string, error) {
 
 //GetDefaultBranch ...
 func GetDefaultBranch(url string) (string, error) {
-
-	info, _ := githandler.Remote()
+	info, err := githandler.Remote("master")
+	if err != nil {
+		return "", err
+	}
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository)
 	if res.StatusCode != http.StatusOK {
 		return "", fmt.Errorf("request did not respond 200 OK: %s", res.Status)
@@ -125,9 +132,8 @@ func GetDefaultBranch(url string) (string, error) {
 }
 
 //SetLabel ...
-func SetLabel(label, url, token string, number int) ([]Label, error) {
+func SetLabel(label, url, token string, number int, info *githandler.RemoteInfo) ([]Label, error) {
 	client := &http.Client{}
-	info, _ := githandler.Remote()
 	var body = `[ "` + label + `" ]`
 	var uri = url + info.Organisation + "/" + info.Repository + "/issues/" + strconv.Itoa(number) + "/labels" //"/repos/:owner/:repo/issues/:number/labels"
 
@@ -161,9 +167,8 @@ func SetLabel(label, url, token string, number int) ([]Label, error) {
 
 //SetAssignee ...
 //Sets you as an assignee
-func SetAssignee(assignee, url, token string, number int) error {
+func SetAssignee(assignee, url, token string, number int, info *githandler.RemoteInfo) error {
 	client := &http.Client{}
-	info, _ := githandler.Remote()
 
 	var apiURL = fmt.Sprintf(url+"%s/%s/issues/%s/assignees", info.Organisation, info.Repository, strconv.Itoa(number))
 	jsonBytes, _ := json.Marshal(Assignee{Assignees: []string{assignee}})
