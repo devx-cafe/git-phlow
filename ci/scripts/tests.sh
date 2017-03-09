@@ -5,8 +5,6 @@ set -e -u -x
 #THE STRUCTURE IS NECESSARY FOR GO TOOLS OTHERWISE 
 # 'build' AND 'get' WILL FAIL
 
-echo $GOPATH
-
 mkdir -p $GOPATH/src/github.com/praqma
 cp -R git-phlow/ $GOPATH/src/github.com/praqma
 
