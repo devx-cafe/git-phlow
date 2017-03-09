@@ -49,6 +49,8 @@ func WorkOn(issue int) {
 
 	//Getting default branch
 	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
+	remoteInfo, _ := githandler.Remote(dfBranch)
+
 
 	for _, iss := range info {
 		if iss.Number == issue {
@@ -63,11 +65,11 @@ func WorkOn(issue int) {
 			token := githandler.ConfigGet("token", "phlow")
 			user := githandler.ConfigGet("user", "phlow")
 
-			if _, labelErr := plugins.SetLabel(plugins.LabelStatusInProgress, plugins.RepoURL, token, issue); labelErr != nil {
+			if _, labelErr := plugins.SetLabel(plugins.LabelStatusInProgress, plugins.RepoURL, token, issue, remoteInfo); labelErr != nil {
 				fmt.Println(labelErr)
 			}
 
-			if assigneeArr := plugins.SetAssignee(user, plugins.RepoURL, token, issue); err != nil {
+			if assigneeArr := plugins.SetAssignee(user, plugins.RepoURL, token, issue, remoteInfo); err != nil {
 				fmt.Println(assigneeArr)
 			}
 			fmt.Fprintf(os.Stdout, "Issue updated with label '%s' and assignee '%s' \n", plugins.LabelStatusInProgress, user)

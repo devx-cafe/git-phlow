@@ -96,13 +96,20 @@ type RemoteInfo struct {
 }
 
 //Remote ...
-func Remote() (*RemoteInfo, error) {
+func Remote(defaultBranch string) (*RemoteInfo, error) {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
-	output, err := ExecuteCommand("git", "remote", "-v")
-	if err != nil {
+	var res string
+	var err error
+
+	if res, err = ExecuteCommand("git", "config", fmt.Sprintf("branch.%s.remote", defaultBranch)); err != nil {
 		return nil, err
 	}
-	match := re.FindStringSubmatch(output)
+	res = strings.Trim(res, "\n")
+	if res, err = ExecuteCommand("git", "config", "--get", fmt.Sprintf("remote.%s.url", res)); err != nil {
+		return nil, err
+	}
+	res = strings.Trim(res, "\n")
+	match := re.FindStringSubmatch(res)
 	return &RemoteInfo{match[1], match[2]}, nil
 }
 
