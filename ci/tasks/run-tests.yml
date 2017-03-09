@@ -8,8 +8,5 @@ image_resource:
 inputs:
 - name: git-phlow
 
-outputs: 
-- name: phlow-source
-
 run:
   path: git-phlow/ci/scripts/tests.sh
