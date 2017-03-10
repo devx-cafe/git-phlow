@@ -14,11 +14,12 @@ import (
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
 	Use:   "workon [issue number]",
-	Short: "Create or change branch from an issue number",
+	Short: "create or change to an issue branch",
 	Long: `
-work-on creates a new branch from an issue number, if phlow have been
-initialized with a plugin, it will automatically fetch the issue name from the extension, otherwise
-it will create a default name prefixed with your issue number
+[workon] creates a new branch from an issue number fetched from github.
+A branch will be created from your remote default branch and named after the title
+of the issue eg. branch => "42-calculate-meaning-of-life".
+From here you the work can start, and when finished run phlow wrapup.
 	`,
 	Run: func(cmd *cobra.Command, args []string) {
 

@@ -8,10 +8,10 @@ import (
 
 var wrapupCmd = &cobra.Command{
 	Use:   "wrapup",
-	Short: "Add work to index and commit with close# message",
+	Short: "add changes and make auto-commit",
 	Long: `
-Add all your work from working area to index, and makes an automatic close# commit, which closes
-an issue on github
+[wrapup] adds all your work from the working area to the index, and makes an automatic close # commit, which closes
+an issue on github eg. commit message => "close #42 fetch meaning of life"
 `,
 
 	Run: func(cmd *cobra.Command, args []string) {

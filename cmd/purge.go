@@ -18,6 +18,6 @@ var purgeCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(purgeCmd)
+	//RootCmd.AddCommand(purgeCmd)
 
 }
