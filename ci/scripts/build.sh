@@ -21,14 +21,16 @@ cd $GOPATH/src/github.com/praqma/git-phlow
 go get -d -t -v ./...
 
 #BUILD BINARY
-#GENEREATE ONE BINARY FOR DARWIN AND LINUX
+#GENEREATE ONE BINARY FOR DARWIN AND COMPRESS IT TO TAR FILE
+export GOOS=darwin
+export GOARCH=amd64
 go build -ldflags "-X   github.com/praqma/git-phlow/options.Version=`echo $VERSION` -X  github.com/praqma/git-phlow/options.Sha1=`git rev-parse HEAD` -X  github.com/praqma/git-phlow/options.Date=`date +'%d-%m-%Y'`"
-
-#GENERATE A COMPRESSED TAR FILE FOR PLATFORMS LINUX AND DARWIN
-tar -cvzf $BUILDPATH/build-artifacts/git-phlow-$VERSION-darwin.tar.gz git-phlow
-tar -cvzf $BUILDPATH/build-artifacts/git-phlow-$VERSION-linux.tar.gz git-phlow
-
-cd $BUILDPATH/build-artifacts
+tar -cvzf $BUILDPATH/build-artifacts/git-phlow-$VERSION-darwin-$GOARCH.tar.gz git-phlow
 
 
-
+#BUILD BINARY
+#GENEREATE ONE BINARY FOR LINUX AND COMPRESS IT TO TAR FILE
+export GOOS=linux
+export GOARCH=amd64
+go build -ldflags "-X   github.com/praqma/git-phlow/options.Version=`echo $VERSION` -X  github.com/praqma/git-phlow/options.Sha1=`git rev-parse HEAD` -X  github.com/praqma/git-phlow/options.Date=`date +'%d-%m-%Y'`"
+tar -cvzf $BUILDPATH/build-artifacts/git-phlow-$VERSION-linux-$GOARCH.tar.gz git-phlow

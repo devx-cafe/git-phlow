@@ -28,7 +28,7 @@ resources:
       type: s3
       source: 
         bucket: git-phlow-pipeline-artifacts
-        regexp: git-phlow-(.*)-linux.tar.gz
+        regexp: git-phlow-(.*)-linux-(.*).tar.gz
         access_key_id: {{s3-access-key-id}}
         region_name: eu-central-1
         secret_access_key: {{s3-secret-access-key}}
@@ -36,7 +36,7 @@ resources:
       type: s3
       source: 
         bucket: git-phlow-pipeline-artifacts
-        regexp: git-phlow-(.*)-darwin.tar.gz
+        regexp: git-phlow-(.*)-darwin-(.*).tar.gz
         access_key_id: {{s3-access-key-id}}
         region_name: eu-central-1
         secret_access_key: {{s3-secret-access-key}}
@@ -68,9 +68,9 @@ jobs:
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
     - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
     - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}
+      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}
 #RELEASE MINOR 
 - name: create-minor
   plan:
@@ -83,9 +83,9 @@ jobs:
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
     - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
     - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}
+      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}
 #RELEASE PATCH
 - name: create-patch
   plan:
@@ -99,9 +99,9 @@ jobs:
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
     - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux.tar.gz}
+      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
     - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin.tar.gz}                    
+      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}                    
 #CREATE A GITHUB RELEASE
 - name: shipit-patch
   plan:
@@ -118,8 +118,8 @@ jobs:
       tag_prefix: v 
       body: git-phlow/ci/notes/release-notes.md
       globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz
+        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
 #CREATE A GITHUB RELEASE
 - name: shipit-minor
   plan:
@@ -138,8 +138,8 @@ jobs:
       tag_prefix: v 
       body: git-phlow/ci/notes/release-notes.md
       globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz
+        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
 #CREATE A GITHUB RELEASE
 - name: shipit-major
   plan:
@@ -158,5 +158,5 @@ jobs:
       tag_prefix: v 
       body: git-phlow/ci/notes/release-notes.md
       globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin.tar.gz
+        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
