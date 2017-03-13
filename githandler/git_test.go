@@ -10,7 +10,7 @@ import (
 )
 
 func TestRemote(t *testing.T) {
-	SkipConvey("Running tests on 'Remote' function (runs in project)", t, func() {
+	Convey("Running tests on 'Remote' function (runs in project)", t, func() {
 
 		Convey("Remote should return organisation and repo name", func() {
 			remote, _ := Remote("master")
@@ -50,7 +50,7 @@ func TestBranch(t *testing.T) {
 
 		Convey("branch should return List of branches", func() {
 			info, err := Branch()
-			So(len(info.List), ShouldEqual, 2)
+			So(len(info.List), ShouldEqual, 9)
 			So(err, ShouldBeNil)
 		})
 
@@ -63,6 +63,52 @@ func TestBranch(t *testing.T) {
 		testfixture.RemoveTestRepository(t)
 
 	})
+}
+
+func TestBranchDelete(t *testing.T) {
+
+	testfixture.CreateTestRepository(t, false)
+
+	Convey("Running tests on 'BranchDelete' function", t, func() {
+
+		Convey("BranchDelte should delete local branch and return message", func() {
+			output, err := BranchDelete("delivered/1-issue-branch", "", false, false)
+			info, _ := Branch()
+
+			t.Log(info.List)
+			So(err, ShouldBeNil)
+			So(output, ShouldNotBeEmpty)
+			So(info.List, ShouldHaveLength, 8)
+		})
+
+		Convey("BranchDelete should delete remote branch and return message", func() {
+			_, err1 := BranchDelete("delivered/24-issue-branch", "origin", true, false)
+			_, err2 := BranchDelete("delivered/42-issue-branch", "origin", true, false)
+			info, _ := Branch()
+
+			t.Log(info.List)
+			So(err1, ShouldBeNil)
+			So(err2, ShouldBeNil)
+			So(info.List, ShouldHaveLength, 6)
+		})
+	})
+
+	testfixture.RemoveTestRepository(t)
+
+}
+
+func TestBranchDelivered(t *testing.T) {
+
+	testfixture.CreateTestRepository(t, false)
+
+	Convey("Running tests in 'BranchDelivered' function", t, func() {
+		locals, remotes := BranchDelivered("origin")
+		So(locals, ShouldHaveLength, 1)
+		So(remotes, ShouldHaveLength, 2)
+		So(remotes, ShouldContain, "delivered/24-issue-branch")
+	})
+
+	testfixture.RemoveTestRepository(t)
 }
 
 func TestCheckout(t *testing.T) {

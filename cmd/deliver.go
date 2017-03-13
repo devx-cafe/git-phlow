@@ -10,7 +10,7 @@ import (
 var deliverCmd = &cobra.Command{
 	Use:   "deliver",
 	Short: "deliver changes to remote master",
-	Long:  `
+	Long: `
 [deliver] fetches the latest changes and tries to push the committed changes
 to the remote repository. Deliver only runs if you are located on an issue branch
 created with workon, or a branch which if not your default (typically master).
@@ -37,6 +37,4 @@ func init() {
 
 	//Flag for local deliver
 	deliverCmd.Flags().BoolVarP(&options.GlobalFlagLocal, "local", "l", false, "local delivery")
-	//Flag for verbose output
-	deliverCmd.Flags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose output")
 }

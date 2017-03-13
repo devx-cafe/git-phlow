@@ -54,6 +54,17 @@ return_to_master () {
     git checkout master
 }
 
+
+create_delivered_branches () {
+    git checkout -b delivered/42-issue-branch
+    echo "on branch delivered/42-issue-branch" > README.md
+    add_all_and_commit "delivered/42 branch commit"
+    return_to_master
+    git checkout -b delivered/24-issue-branch
+    echo "on branch delivered/24-issue-branch" > README.md
+    add_all_and_commit "delivered/24 branch commit"
+}
+
 add_all_and_commit (){
     git add .
     git commit -m "$1"
@@ -63,6 +74,7 @@ create_origin () {
     git clone $GITHUB_FAKE/github $GITHUB_FAKE/phlow-test-pkg
     cd $GITHUB_FAKE/phlow-test-pkg
     git branch bar
+    git branch delivered/1-issue-branch
 }
 
 
@@ -73,6 +85,8 @@ two_commits_on_master
 branch_foo_additions
 branch_master_additions
 branch_issue_additions
+return_to_master
+create_delivered_branches
 return_to_master
 create_origin
 echo "WRAPPING UP JOB"

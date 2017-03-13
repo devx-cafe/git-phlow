@@ -65,6 +65,12 @@ func Fetch() error {
 	return err
 }
 
+//FetchPrune ...
+func FetchPrune() error {
+	_, err := ExecuteCommand("git", "fetch", "--prune")
+	return err
+}
+
 //Pull ...
 func Pull() (string, error) {
 	return ExecuteCommand("git", "pull", "--rebase")
@@ -129,7 +135,7 @@ func Branch() (*BranchInfo, error) {
 		return nil, err
 	}
 
-	output, lErr := ExecuteCommand("git", "branch")
+	output, lErr := ExecuteCommand("git", "branch", "-a")
 	if lErr != nil {
 		return nil, err
 	}
@@ -137,7 +143,9 @@ func Branch() (*BranchInfo, error) {
 	info.Current = strings.TrimSpace(current)
 	for _, branch := range strings.Split(output, "\n") {
 		if branch != "" {
-			info.List = append(info.List, strings.TrimSpace(branch))
+			branch = strings.TrimPrefix(branch, "*")
+			branch = strings.TrimSpace(branch)
+			info.List = append(info.List, branch)
 		}
 	}
 	return &info, err
@@ -147,4 +155,36 @@ func Branch() (*BranchInfo, error) {
 func BranchRename(name string) error {
 	_, err := ExecuteCommand("git", "branch", "-m", name, "delivered/"+name)
 	return err
+}
+
+//BranchDelete ...
+func BranchDelete(name, remote string, deleteRemote, force bool) (string, error) {
+	if deleteRemote {
+		return ExecuteCommand("git", "push", remote, "--delete", name)
+	}
+
+	if force {
+		return ExecuteCommand("git", "branch", "-D", name)
+	}
+	return ExecuteCommand("git", "branch", "-d", name)
+}
+
+func BranchDelivered(remote string) (localBranches []string, remoteBranches []string) {
+	info, err := Branch()
+
+	if err != nil {
+		return
+	}
+
+	for _, branch := range info.List {
+		if strings.HasPrefix(branch, "delivered/") {
+			localBranches = append(localBranches, branch)
+		}
+		if strings.HasPrefix(branch, "remotes/"+remote+"/delivered") {
+			branch = strings.TrimPrefix(branch, "remotes/"+remote+"/")
+			remoteBranches = append(remoteBranches, branch)
+		}
+
+	}
+	return
 }

@@ -2,25 +2,23 @@ package cmd
 
 import (
 	"fmt"
-
 	"os"
 	"strconv"
-
-	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/options"
 )
 
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
 	Use:   "workon [issue number]",
 	Short: "create or change to an issue branch",
-	Long: `
-[workon] creates a new branch from an issue number fetched from github.
+	Long: fmt.Sprintf(`
+%s creates a new branch from an issue number fetched from github.
 A branch will be created from your remote default branch and named after the title
 of the issue eg. branch => "42-calculate-meaning-of-life".
 From here you the work can start, and when finished run phlow wrapup.
-	`,
+	`, options.Bold("workon")),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		if len(args) > 0 {
@@ -40,8 +38,4 @@ From here you the work can start, and when finished run phlow wrapup.
 
 func init() {
 	RootCmd.AddCommand(workonCmd)
-
-	//Enable verbose printers
-	workonCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose printers")
-
 }

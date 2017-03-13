@@ -14,6 +14,9 @@ var (
 	//GlobalFlagVersion ...
 	GlobalFlagVersion = false
 
+	//GlobalFlagForce ...
+	GlobalFlagForce = false
+
 	//Sha1 git commit hash
 	Sha1 string
 
