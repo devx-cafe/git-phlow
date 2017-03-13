@@ -3,9 +3,9 @@ package phlow
 import (
 	"testing"
 
-	. "github.com/smartystreets/goconvey/convey"
-	"github.com/praqma/git-phlow/testfixture"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/testfixture"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestGetIssueFromBranch(t *testing.T) {

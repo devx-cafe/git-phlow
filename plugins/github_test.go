@@ -5,9 +5,9 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/praqma/git-phlow/githandler"
 	. "github.com/smartystreets/goconvey/convey"
 	"strings"
-	"github.com/praqma/git-phlow/githandler"
 )
 
 func TestAuthorize(t *testing.T) {
@@ -103,7 +103,7 @@ func TestSetLabel(t *testing.T) {
 			}))
 
 			defer ts.Close()
-			info := githandler.RemoteInfo{Organisation:"org",Repository:"phlow-repo"}
+			info := githandler.RemoteInfo{Organisation: "org", Repository: "phlow-repo"}
 
 			labels, err := SetLabel(LabelStatusInProgress, ts.URL+"/issues/", "abc", 1, &info)
 			So(len(labels), ShouldEqual, 4)
@@ -137,7 +137,7 @@ func TestSetAssignee(t *testing.T) {
 
 			defer ts.Close()
 
-			info := githandler.RemoteInfo{Organisation:"org",Repository:"phlow-repo"}
+			info := githandler.RemoteInfo{Organisation: "org", Repository: "phlow-repo"}
 			err := SetAssignee("john markom", ts.URL+"/issues/", "abc", 1, &info)
 			So(err, ShouldBeNil)
 		})

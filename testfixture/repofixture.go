@@ -3,8 +3,8 @@ package testfixture
 import (
 	"errors"
 	"fmt"
-	"os"
 	"github.com/praqma/git-phlow/executor"
+	"os"
 	"testing"
 )
 

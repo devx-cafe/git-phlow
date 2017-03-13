@@ -65,6 +65,16 @@ create_delivered_branches () {
     add_all_and_commit "delivered/24 branch commit"
 }
 
+create_ready_branches () {
+    git checkout -b ready/15-issue-branch
+    echo "on branch ready/15-issue-branch" > README.md
+    add_all_and_commit "ready/16 branch commit"
+    return_to_master
+    git checkout -b ready/99-issue-branch
+    echo "on branch ready/99-issue-branch" > README.md
+    add_all_and_commit "ready/99 branch commit"
+}
+
 add_all_and_commit (){
     git add .
     git commit -m "$1"
@@ -87,6 +97,8 @@ branch_master_additions
 branch_issue_additions
 return_to_master
 create_delivered_branches
+return_to_master
+create_ready_branches
 return_to_master
 create_origin
 echo "WRAPPING UP JOB"

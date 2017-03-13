@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-	"strconv"
+	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
-	"github.com/praqma/git-phlow/options"
+	"os"
+	"strconv"
 )
 
 // workonCmd represents the workon command

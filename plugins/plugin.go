@@ -41,7 +41,7 @@ var (
 //BranchNameFromIssue ...
 func BranchNameFromIssue(issue int, name string) string {
 	var result string
-	
+
 	removeNonAlphaNumeric := regexp.MustCompile("([^\\w-])+")
 	result = removeNonAlphaNumeric.ReplaceAllString(name, "-")
 

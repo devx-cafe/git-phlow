@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/githandler"
 	"fmt"
+	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/spf13/cobra"
 )
 
 // purgeCmd represents the purge command

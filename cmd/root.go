@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/options"
+	"github.com/spf13/cobra"
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -48,7 +48,7 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags()
-	RootCmd.Flags().BoolVar(&options.GlobalFlagVersion, "version",false, "current version")
+	RootCmd.Flags().BoolVar(&options.GlobalFlagVersion, "version", false, "current version")
 
 	RootCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose printers")
 }

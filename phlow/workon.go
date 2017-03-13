@@ -51,7 +51,6 @@ func WorkOn(issue int) {
 	dfBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
 	remoteInfo, _ := githandler.Remote(dfBranch)
 
-
 	for _, iss := range info {
 		if iss.Number == issue {
 			name := plugins.BranchNameFromIssue(issue, iss.Title)

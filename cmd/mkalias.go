@@ -1,10 +1,10 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
-	"fmt"
 )
 
 // mkaliasCmd represents the mkalias command
