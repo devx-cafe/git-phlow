@@ -17,6 +17,9 @@ var (
 	//GlobalFlagForce ...
 	GlobalFlagForce = false
 
+	//GlobalFlagHumanReadable ...
+	GlobalFlagHumanReadable bool
+
 	//Sha1 git commit hash
 	Sha1 string
 

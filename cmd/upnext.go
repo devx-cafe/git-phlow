@@ -31,4 +31,8 @@ The branch created first, is the branch thats up next.
 func init() {
 	//Adding UpNext as sub-command to agentCmd
 	agentCmd.AddCommand(upNextCmd)
+
+	
+	upNextCmd.Flags().BoolVar(&options.GlobalFlagHumanReadable, "human", false, "output human readable info")
+
 }
