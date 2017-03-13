@@ -1,7 +1,6 @@
 package githandler
 
 import (
-	"fmt"
 	"github.com/praqma/git-phlow/testfixture"
 	. "github.com/smartystreets/goconvey/convey"
 	"testing"
@@ -14,7 +13,7 @@ func TestBranch(t *testing.T) {
 
 		Convey("branch should return List of branches", func() {
 			info, err := Branch()
-			So(len(info.List), ShouldEqual, 9)
+			So(len(info.List), ShouldEqual, 11)
 			So(err, ShouldBeNil)
 		})
 
@@ -42,7 +41,7 @@ func TestBranchDelete(t *testing.T) {
 			t.Log(info.List)
 			So(err, ShouldBeNil)
 			So(output, ShouldNotBeEmpty)
-			So(info.List, ShouldHaveLength, 8)
+			So(info.List, ShouldHaveLength, 10)
 		})
 
 		Convey("BranchDelete should delete remote branch and return message", func() {
@@ -53,7 +52,7 @@ func TestBranchDelete(t *testing.T) {
 			t.Log(info.List)
 			So(err1, ShouldBeNil)
 			So(err2, ShouldBeNil)
-			So(info.List, ShouldHaveLength, 6)
+			So(info.List, ShouldHaveLength, 8)
 		})
 	})
 
@@ -80,9 +79,9 @@ func TestBranchReady(t *testing.T) {
 
 	Convey("Running tests in 'BranchDelivered' function", t, func() {
 		remotes := BranchReady("origin")
-
+		t.Log(remotes)
 		So(remotes, ShouldHaveLength, 2)
-		So(remotes, ShouldContain, "ready/99-issue-branch")
+		So(remotes, ShouldContain, "origin/ready/99-issue-branch")
 	})
 
 	testfixture.RemoveTestRepository(t)
@@ -94,21 +93,17 @@ func TestBranchTime(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("Should get unix timestamp", func() {
-			var output int
-			var err error
+			output, err := BranchTime("origin/ready/99-issue-branch")
 
-			branches := BranchReady("origin")
+			So(err, ShouldBeNil)
+			So(output, ShouldBeGreaterThan, 100000)
+		})
 
-			for _, br := range branches {
+		Convey("Should fail geting unix timestamp", func() {
+			output, err := BranchTime("bluarh.. not a branch")
 
-				if output, err = BranchTime(br); err == nil {
-					fmt.Printf("%s : %d \n", br, output)
-				}
-			}
-
-			t.Log(err)
-			t.Log(output)
-
+			So(err, ShouldNotBeNil)
+			So(output, ShouldEqual, -1)
 		})
 
 		testfixture.RemoveTestRepository(t)
