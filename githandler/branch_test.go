@@ -61,30 +61,38 @@ func TestBranchDelete(t *testing.T) {
 
 func TestBranchDelivered(t *testing.T) {
 
-	testfixture.CreateTestRepository(t, false)
-
 	Convey("Running tests in 'BranchDelivered' function", t, func() {
-		locals, remotes := BranchDelivered("origin")
-		So(locals, ShouldHaveLength, 1)
-		So(remotes, ShouldHaveLength, 2)
-		So(remotes, ShouldContain, "delivered/24-issue-branch")
-	})
 
-	testfixture.RemoveTestRepository(t)
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("BranchDelivred should return lists of delivered branches", func() {
+			locals, remotes := BranchDelivered("origin")
+			So(locals, ShouldHaveLength, 1)
+			So(remotes, ShouldHaveLength, 2)
+			So(remotes, ShouldContain, "delivered/24-issue-branch")
+
+		})
+
+		testfixture.RemoveTestRepository(t)
+	})
 }
 
 func TestBranchReady(t *testing.T) {
 
-	testfixture.CreateTestRepository(t, false)
-
 	Convey("Running tests in 'BranchDelivered' function", t, func() {
-		remotes := BranchReady("origin")
-		t.Log(remotes)
-		So(remotes, ShouldHaveLength, 2)
-		So(remotes, ShouldContain, "origin/ready/99-issue-branch")
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("BranchReady should return list of ready branches", func() {
+			remotes := BranchReady("origin")
+			t.Log(remotes)
+			So(remotes, ShouldHaveLength, 2)
+			So(remotes, ShouldContain, "origin/ready/99-issue-branch")
+		})
+
+		testfixture.RemoveTestRepository(t)
 	})
 
-	testfixture.RemoveTestRepository(t)
 }
 
 func TestBranchTime(t *testing.T) {

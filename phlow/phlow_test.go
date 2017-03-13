@@ -6,6 +6,7 @@ import (
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/testfixture"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/praqma/git-phlow/githandler"
 )
 
 func TestGetIssueFromBranch(t *testing.T) {
@@ -51,4 +52,21 @@ func TestCleanRemote(t *testing.T) {
 		testfixture.RemoveTestRepository(t)
 	})
 
+}
+
+func TestUpNext(t *testing.T) {
+	Convey("Running tests on 'GetNextBranch' function", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("Testing output of clean function", func() {
+			branches := githandler.BranchReady("origin")
+			res := GetNextBranch(branches)
+
+			So(res, ShouldEqual, "origin/ready/15-issue-branch")
+		})
+
+		testfixture.RemoveTestRepository(t)
+
+	})
 }
