@@ -1,10 +1,11 @@
 package phlow
 
 import (
-	"github.com/praqma/git-phlow/githandler"
-	"sort"
 	"fmt"
+	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"os"
+	"sort"
 )
 
 func UpNext(remote string) {
@@ -17,7 +18,7 @@ func UpNext(remote string) {
 		}
 
 		next := GetNextBranch(branches)
-		fmt.Print(next)
+		fmt.Fprint(os.Stdout, next)
 		return
 	}
 
@@ -36,9 +37,9 @@ func GetNextBranch(branches []string) string {
 	for _, br := range branches {
 		if time, err = githandler.BranchTime(br); err == nil {
 			m[time] = br
-			
+
 			if options.GlobalFlagHumanReadable {
-				fmt.Printf("%s : %d", br, time)
+				fmt.Printf("%s : %d \n", br, time)
 			}
 		}
 	}

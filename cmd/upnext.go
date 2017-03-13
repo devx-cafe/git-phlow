@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
-	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/phlow"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/spf13/cobra"
 )
 
 // upNextCmd represents the upnext command
@@ -32,7 +32,6 @@ func init() {
 	//Adding UpNext as sub-command to agentCmd
 	agentCmd.AddCommand(upNextCmd)
 
-	
 	upNextCmd.Flags().BoolVar(&options.GlobalFlagHumanReadable, "human", false, "output human readable info")
 
 }

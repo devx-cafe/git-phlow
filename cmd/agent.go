@@ -3,9 +3,9 @@ package cmd
 import (
 	//"fmt"
 
-	"github.com/spf13/cobra"
 	"fmt"
 	"github.com/praqma/git-phlow/options"
+	"github.com/spf13/cobra"
 )
 
 // agentCmd represents the agent command
