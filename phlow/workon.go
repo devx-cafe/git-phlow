@@ -8,6 +8,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/options"
 )
 
 //WorkOn ...
@@ -27,7 +28,7 @@ func WorkOn(issue int) {
 
 	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
 	if GetIssueFromBranch(branchInfo.Current) == issue {
-		fmt.Fprintf(os.Stdout, "You are already on branch '%s'\n", branchInfo.Current)
+		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", options.BranchFormat(branchInfo.Current))
 		return
 	}
 
@@ -36,12 +37,12 @@ func WorkOn(issue int) {
 			if err = githandler.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
-			fmt.Fprintf(os.Stdout, "Switched to branch '%s' \n", branch)
+			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", options.BranchFormat(branch))
 			return
 		}
 	}
 
-	fmt.Fprintln(os.Stdout, "No 'local' issue branches found. Searching on github")
+	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", options.Bold("issue-branches"))
 	info, err := plugins.GetOpenIssues(plugins.RepoURL)
 	if err != nil {
 		fmt.Println(err)
@@ -58,7 +59,7 @@ func WorkOn(issue int) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "branch '%s' created and checked out \n", name)
+			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", options.BranchFormat(name))
 
 			//Retrieve token
 			token := githandler.ConfigGet("token", "phlow")
@@ -71,12 +72,14 @@ func WorkOn(issue int) {
 			if assigneeArr := plugins.SetAssignee(user, plugins.RepoURL, token, issue, remoteInfo); err != nil {
 				fmt.Println(assigneeArr)
 			}
-			fmt.Fprintf(os.Stdout, "Issue updated with label '%s' and assignee '%s' \n", plugins.LabelStatusInProgress, user)
+			fmt.Fprintf(os.Stdout, "\nIssue %s updated:  \n", options.IssueFormat(issue))
+			fmt.Fprintf(os.Stdout, "Label    => %s \n", options.LabelFormat(plugins.LabelStatusInProgress))
+			fmt.Fprintf(os.Stdout, "Assignee => %s \n", options.AssigneeFormat(user))
 			return
 		}
 	}
 
-	fmt.Println("No 'remote' issues matches you input")
+	fmt.Println("No issues matches you input")
 }
 
 //GetIssueFromBranch ...

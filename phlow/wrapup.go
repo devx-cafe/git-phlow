@@ -12,7 +12,7 @@ import (
 //WrapUp ...
 func WrapUp() {
 
-	fmt.Fprintln(os.Stdout, "Addind files to index")
+	fmt.Fprintln(os.Stdout, "Adding files to index")
 
 	//Add all files to index
 	if err := githandler.Add(); err != nil {

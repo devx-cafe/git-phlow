@@ -21,7 +21,7 @@ func LocalDeliver() {
 		fmt.Printf("You cannot deliver: %s \n", branchInfo.Current)
 		return
 	}
-	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", options.Bold(dfBranch))
+	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", options.BranchFormat(dfBranch))
 	//Checkout default branch: master
 	if err := githandler.CheckOut(dfBranch); err != nil {
 		fmt.Println(err)
@@ -36,7 +36,7 @@ func LocalDeliver() {
 	}
 	fmt.Println(output)
 
-	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", options.Bold(branchInfo.Current), options.Bold(dfBranch))
+	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", options.BranchFormat(branchInfo.Current), options.BranchFormat(dfBranch))
 	//Merge feature branch into default
 	if err = githandler.Merge(branchInfo.Current); err != nil {
 		fmt.Println(err)
@@ -45,13 +45,13 @@ func LocalDeliver() {
 	githandler.BranchRename(branchInfo.Current)
 
 	//Push changes to github
-	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", options.Bold(dfBranch))
+	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", options.BranchFormat(dfBranch))
 	output, err = githandler.Push()
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 	fmt.Fprintln(os.Stdout, output)
-	fmt.Printf("Branch %s fearlessly delivered to %s \n", options.Bold(branchInfo.Current), options.Bold(dfBranch))
+	fmt.Printf("Branch %s fearlessly delivered to %s \n", options.BranchFormat(branchInfo.Current), options.BranchFormat(dfBranch))
 
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/options"
 )
 
 //Deliver ...
@@ -18,7 +19,7 @@ func Deliver() {
 
 	//Is branch master or is branch delivered
 	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == dfBranch) {
-		fmt.Printf("You cannot deliver: %s", branchInfo.Current)
+		fmt.Printf("Could not deliver: %s", branchInfo.Current)
 		return
 	}
 
@@ -33,5 +34,5 @@ func Deliver() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Branch '%s' is now delivered \n", branchInfo.Current)
+	fmt.Printf("Branch %s  is now delivered \n", options.BranchFormat(branchInfo.Current))
 }
