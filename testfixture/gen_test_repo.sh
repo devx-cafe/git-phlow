@@ -26,6 +26,11 @@ two_commits_on_master () {
     add_all_and_commit "1 commit - changes to readme"
     echo "file1" > file1.txt
     add_all_and_commit "2 commit - changes to file1"
+    echo "#!/bin/bash  \n exit 0" > test.sh
+    chmod 755 ./test.sh
+    echo "#!/bin/bash  \n exit 1" > testerr.sh
+    chmod 755 ./testerr.sh
+    add_all_and_commit "3 commit - test script added"
 }
 
 branch_foo_additions (){

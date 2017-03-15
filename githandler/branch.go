@@ -1,9 +1,10 @@
 package githandler
 
 import (
-	. "github.com/praqma/git-phlow/executor"
 	"strconv"
 	"strings"
+
+	"github.com/praqma/git-phlow/executor"
 )
 
 //BranchInfo ...
@@ -17,12 +18,12 @@ func Branch() (*BranchInfo, error) {
 	var err error
 	info := BranchInfo{}
 
-	current, cErr := ExecuteCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	current, cErr := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if cErr != nil {
 		return nil, err
 	}
 
-	output, lErr := ExecuteCommand("git", "branch", "-a")
+	output, lErr := executor.ExecuteCommand("git", "branch", "-a")
 	if lErr != nil {
 		return nil, err
 	}
@@ -40,20 +41,20 @@ func Branch() (*BranchInfo, error) {
 
 //BranchRename ...
 func BranchRename(name string) error {
-	_, err := ExecuteCommand("git", "branch", "-m", name, "delivered/"+name)
+	_, err := executor.ExecuteCommand("git", "branch", "-m", name, "delivered/"+name)
 	return err
 }
 
 //BranchDelete ...
 func BranchDelete(name, remote string, deleteRemote, force bool) (string, error) {
 	if deleteRemote {
-		return ExecuteCommand("git", "push", remote, "--delete", name)
+		return executor.ExecuteCommand("git", "push", remote, "--delete", name)
 	}
 
 	if force {
-		return ExecuteCommand("git", "branch", "-D", name)
+		return executor.ExecuteCommand("git", "branch", "-D", name)
 	}
-	return ExecuteCommand("git", "branch", "-d", name)
+	return executor.ExecuteCommand("git", "branch", "-d", name)
 }
 
 //BranchDelivered ...
@@ -94,7 +95,7 @@ func BranchReady(remote string) (remoteBranches []string) {
 
 //BranchTime ...
 func BranchTime(name string) (int, error) {
-	output, err := ExecuteCommand("git", "log", "-n 1", name, "--format=format:%ct")
+	output, err := executor.ExecuteCommand("git", "log", "-n 1", name, "--format=format:%ct")
 	if err != nil {
 		return -1, err
 	}

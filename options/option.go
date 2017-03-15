@@ -17,6 +17,9 @@ var (
 	//GlobalFlagForce ...
 	GlobalFlagForce = false
 
+	//GlobalFlagShowTestOutput ...
+	GlobalFlagShowTestOutput bool
+
 	//GlobalFlagHumanReadable ...
 	GlobalFlagHumanReadable bool
 

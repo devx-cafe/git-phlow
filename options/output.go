@@ -10,6 +10,16 @@ func Bold(message string) string {
 	return color.New(color.Bold).SprintFunc()(message)
 }
 
+//SuccessFormat ...
+func SuccessFormat(err string) string {
+	return color.New(color.FgHiGreen).SprintFunc()(err)
+}
+
+//ErrorFormat ...
+func ErrorFormat(err string) string {
+	return color.New(color.FgHiRed).SprintFunc()(err)
+}
+
 //LabelFormat ...
 func LabelFormat(message string) string {
 	return color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite).SprintFunc()(message)

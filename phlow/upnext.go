@@ -2,12 +2,16 @@ package phlow
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/options"
 	"os"
 	"sort"
+
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 )
 
+//UpNext ...
+//Returns the next branch ready for integration based on time of creation
+//Oldest branches gets integrated first.
 func UpNext(remote string) {
 
 	branches := githandler.BranchReady(remote)
@@ -17,7 +21,7 @@ func UpNext(remote string) {
 			fmt.Println("'ready/' branches found on remote")
 		}
 
-		next := GetNextBranch(branches)
+		next := getNextBranch(branches)
 		fmt.Fprint(os.Stdout, next)
 		return
 	}
@@ -28,7 +32,9 @@ func UpNext(remote string) {
 
 }
 
-func GetNextBranch(branches []string) string {
+//getNextBranch
+//Sort branches and returns the oldest ready branch
+func getNextBranch(branches []string) string {
 	m := make(map[int]string)
 	var time int
 	var err error

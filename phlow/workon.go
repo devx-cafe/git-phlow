@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/plugins"
 )
 
 //WorkOn ...

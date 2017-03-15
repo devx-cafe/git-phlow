@@ -2,6 +2,7 @@ package phlow
 
 import (
 	"fmt"
+
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 )

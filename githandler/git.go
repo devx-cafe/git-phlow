@@ -5,80 +5,80 @@ import (
 	"regexp"
 	"strings"
 
-	. "github.com/praqma/git-phlow/executor"
+	"github.com/praqma/git-phlow/executor"
 )
 
 //ConfigBranchRemote ...
 func ConfigBranchRemote(branch string) string {
 	configArg := fmt.Sprintf("branch.%s.remote", branch)
-	output, _ := ExecuteCommand("git", "config", configArg)
+	output, _ := executor.ExecuteCommand("git", "config", configArg)
 	return strings.Replace(output, "\n", "", -1)
 }
 
 //ConfigGet ...
 func ConfigGet(key, group string) string {
 	pair := fmt.Sprintf("%s.%s", group, key)
-	output, _ := ExecuteCommand("git", "config", "--global", "--get", pair)
+	output, _ := executor.ExecuteCommand("git", "config", "--global", "--get", pair)
 	return strings.Replace(output, "\n", "", -1)
 }
 
 //ConfigSet ...
 func ConfigSet(key, value, group string) error {
 	pair := fmt.Sprintf("%s.%s", group, key)
-	_, err := ExecuteCommand("git", "config", "--global", pair, value)
+	_, err := executor.ExecuteCommand("git", "config", "--global", pair, value)
 	return err
 }
 
 //CheckOut ...
 func CheckOut(branch string) error {
-	_, err := ExecuteCommand("git", "checkout", branch)
+	_, err := executor.ExecuteCommand("git", "checkout", branch)
 	return err
 }
 
 //CheckoutNewBranchFromRemote ...
 func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
 	remote := ConfigBranchRemote(defaultBranch)
-	_, err := ExecuteCommand("git", "checkout", "-b", branch, remote+"/"+defaultBranch)
+	_, err := executor.ExecuteCommand("git", "checkout", "-b", branch, remote+"/"+defaultBranch)
 	return err
 }
 
 //Status ...
 func Status() error {
-	_, err := ExecuteCommand("git", "status")
+	_, err := executor.ExecuteCommand("git", "status")
 	return err
 }
 
 //Add ...
 func Add() error {
-	_, err := ExecuteCommand("git", "add", "--all")
+	_, err := executor.ExecuteCommand("git", "add", "--all")
 	return err
 }
 
 //Commit ...
 func Commit(message string) (string, error) {
-	return ExecuteCommand("git", "commit", "-m", message)
+	return executor.ExecuteCommand("git", "commit", "-m", message)
 }
 
 //Fetch ...
 func Fetch() error {
-	_, err := ExecuteCommand("git", "fetch", "--all")
+	_, err := executor.ExecuteCommand("git", "fetch", "--all")
 	return err
 }
 
 //FetchPrune ...
 func FetchPrune() error {
-	_, err := ExecuteCommand("git", "fetch", "--prune")
+	_, err := executor.ExecuteCommand("git", "fetch", "--prune")
 	return err
 }
 
 //Pull ...
 func Pull() (string, error) {
-	return ExecuteCommand("git", "pull", "--rebase")
+	return executor.ExecuteCommand("git", "pull", "--rebase")
 }
 
 //Push ...
 func Push() (string, error) {
-	return ExecuteCommand("git", "push")
+	return executor.ExecuteCommand("git", "push")
 }
 
 //PushRename ...
@@ -86,12 +86,12 @@ func PushRename(branch, defaultBranch string) (string, error) {
 	remote := ConfigBranchRemote(defaultBranch)
 	str := fmt.Sprintf("%s:ready/%s", branch, branch)
 
-	return ExecuteCommand("git", "push", remote, str)
+	return executor.ExecuteCommand("git", "push", remote, str)
 }
 
 //Merge ...
 func Merge(branch string) error {
-	_, err := ExecuteCommand("git", "merge", branch)
+	_, err := executor.ExecuteCommand("git", "merge", branch)
 	return err
 }
 
@@ -107,11 +107,11 @@ func Remote(defaultBranch string) (*RemoteInfo, error) {
 	var res string
 	var err error
 
-	if res, err = ExecuteCommand("git", "config", fmt.Sprintf("branch.%s.remote", defaultBranch)); err != nil {
+	if res, err = executor.ExecuteCommand("git", "config", fmt.Sprintf("branch.%s.remote", defaultBranch)); err != nil {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")
-	if res, err = ExecuteCommand("git", "config", "--get", fmt.Sprintf("remote.%s.url", res)); err != nil {
+	if res, err = executor.ExecuteCommand("git", "config", "--get", fmt.Sprintf("remote.%s.url", res)); err != nil {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")

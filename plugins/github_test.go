@@ -5,9 +5,10 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"strings"
+
 	"github.com/praqma/git-phlow/githandler"
 	. "github.com/smartystreets/goconvey/convey"
-	"strings"
 )
 
 func TestAuthorize(t *testing.T) {

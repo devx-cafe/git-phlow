@@ -1,9 +1,10 @@
 package githandler
 
 import (
+	"testing"
+
 	"github.com/praqma/git-phlow/testfixture"
 	. "github.com/smartystreets/goconvey/convey"
-	"testing"
 )
 
 func TestBranch(t *testing.T) {
