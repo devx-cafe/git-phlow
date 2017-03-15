@@ -31,10 +31,10 @@ To install the phlow, open your terminal and run the following commands. That wi
 
 ```shell
 #For Mac
-wget https://github.com/Praqma/git-phlow/releases/download/v0.1.5/git-phlow-0.1.5-darwin-amd64.tar.gz && tar -xzf git-phlow-0.1.5-darwin-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/v1.0.0/git-phlow-1.0.0-darwin-amd64.tar.gz && tar -xzf git-phlow-1.0.0-darwin-amd64.tar.gz && mv git-phlow /usr/local/bin
 
 #For linux
-wget https://github.com/Praqma/git-phlow/releases/download/v0.1.5/git-phlow-0.1.5-linux-amd64.tar.gz && tar -xzf git-phlow-0.1.5-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/v1.0.0/git-phlow-1.0.0-linux-amd64.tar.gz && tar -xzf git-phlow-1.0.0-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
 ```
 
 ### Using the Phlow
