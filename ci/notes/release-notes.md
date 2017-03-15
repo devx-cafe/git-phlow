@@ -1,8 +1,9 @@
-This version bumps up the required version of git. Git v1.7.0 or later is required.
-clean command have been added, so now you can cleanup the workspace by deleting all local and remote branches
-prefixed with 'delivered'.
+We are happy to announce this new release of git-phlow!
+We keep adding features and remove bugs. This time around we have added a bunch of new features, and drastically improved the UI and the overall phlow experience.
+Lets face it! The UI was a bit tedious before. This version bumps up the required version of git. Git v1.7.0 or later is required.
+Some fancy new commands have been added and previous ones have been improved.
 
-Agent commands have now been added. So the extension can be used by integration services.
+Agent commands have also now been added. So the extension can be used by integration services, who would like to use the pragmatic workflow
 
 #### Features
 - agent commands @groenborg

@@ -9,7 +9,7 @@ import (
 )
 
 func TestRemote(t *testing.T) {
-	Convey("Running tests on 'Remote' function (runs in project)", t, func() {
+	SkipConvey("Running tests on 'Remote' function (runs in project)", t, func() {
 
 		Convey("Remote should return organisation and repo name", func() {
 			remote, _ := Remote("master")
