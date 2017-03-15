@@ -7,6 +7,8 @@ import (
 	"github.com/praqma/git-phlow/options"
 	"os"
 	"strings"
+
+	"github.com/praqma/git-phlow/ui"
 )
 
 //Deliver ...
@@ -21,18 +23,20 @@ func Deliver(defaultBranch string) {
 		return
 	}
 
-	output, err := githandler.PushRename(branchInfo.Current, defaultBranch)
+	ui.PhlowSpinner.Start("pushing")
+	_, err := githandler.PushRename(branchInfo.Current, defaultBranch)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(output)
+	ui.PhlowSpinner.Stop()
+	fmt.Println("Changes pushed")
 
 	if err := githandler.BranchRename(branchInfo.Current); err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Branch %s  is now delivered \n", options.BranchFormat(branchInfo.Current))
+	fmt.Printf("Branch %s  is now delivered \n", ui.BranchFormat(branchInfo.Current))
 }
 
 //LocalDeliver ...
@@ -46,7 +50,7 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 
-	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", options.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", ui.BranchFormat(defaultBranch))
 	//Checkout default branch: master
 	if err := githandler.CheckOut(defaultBranch); err != nil {
 		fmt.Println(err)
@@ -61,7 +65,7 @@ func LocalDeliver(defaultBranch string) {
 	}
 	fmt.Println(output)
 
-	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", options.BranchFormat(branchInfo.Current), options.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", ui.BranchFormat(branchInfo.Current), ui.BranchFormat(defaultBranch))
 	//Merge feature branch into default
 	if err = githandler.Merge(branchInfo.Current); err != nil {
 		fmt.Println(err)
@@ -70,14 +74,15 @@ func LocalDeliver(defaultBranch string) {
 	githandler.BranchRename(branchInfo.Current)
 
 	//Push changes to github
-	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", options.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.BranchFormat(defaultBranch))
+	ui.PhlowSpinner.Start("Pushing changes")
 	output, err = githandler.Push()
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Fprintln(os.Stdout, output)
-	fmt.Printf("Branch %s fearlessly delivered to %s \n", options.BranchFormat(branchInfo.Current), options.BranchFormat(defaultBranch))
+	ui.PhlowSpinner.Stop()
+	fmt.Printf("Changes from %s delivered to %s \n", ui.BranchFormat(branchInfo.Current), ui.BranchFormat(defaultBranch))
 
 }
 

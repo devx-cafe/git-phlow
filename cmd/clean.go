@@ -8,6 +8,7 @@ import (
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/ui"
 )
 
 // purgeCmd represents the purge command
@@ -17,7 +18,7 @@ var cleanCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s removes all branches prefixed with 'delivered/'.
 It deletes safely by running 'git branch -d'. By default, both local and remote branches are deleted.
-`, options.Bold("phlow clean")),
+`, ui.Bold("phlow clean")),
 	Run: func(cmd *cobra.Command, args []string) {
 
 		defaultBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)

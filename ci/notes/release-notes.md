@@ -12,6 +12,7 @@ Agent commands have now been added. So the extension can be used by integration 
 - deliver with tests #54 @groenborg
     - flag (s) for showing test output
 - wrapup soft #61 (wrapup does not add all by default anymore) @groenborg
+- loading spinners #62 (spinners appear when doing time consuming tasks) @groenborg
 
 #### Agent Features
  - upnext #55 (get next branch for integration) @groenborg

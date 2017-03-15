@@ -5,8 +5,8 @@ import (
 
 	"fmt"
 
-	"github.com/praqma/git-phlow/options"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/ui"
 )
 
 // agentCmd represents the agent command
@@ -17,7 +17,7 @@ var agentCmd = &cobra.Command{
 %s commands are a set of subcommands available for ci/cd services. They are meant as a way of services to easily
 be compatible with %s.
 These are not meant to used locally as a part of your local workflow
-`, options.Bold("agent"), options.Bold("the praqmatic workflow")),
+`, ui.Bold("agent"), ui.Bold("the praqmatic workflow")),
 }
 
 func init() {

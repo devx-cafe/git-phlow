@@ -5,6 +5,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //Clean ...
@@ -17,7 +18,7 @@ func Clean(remoteName string) {
 		if _, err = githandler.BranchDelete(branch, "", false, options.GlobalFlagForce); err != nil {
 			fmt.Printf("Could not delete branch %s \n", branch)
 		} else {
-			fmt.Printf("Local branch %s deleted \n", options.BranchFormat(branch))
+			fmt.Printf("Local branch %s deleted \n", ui.BranchFormat(branch))
 		}
 	}
 
@@ -26,7 +27,7 @@ func Clean(remoteName string) {
 			if _, err = githandler.BranchDelete(branch, remoteName, true, false); err != nil {
 				fmt.Printf("Could not delete branch %s \n", branch)
 			} else {
-				fmt.Printf("Remote branch %s deleted \n", options.BranchFormat(branch))
+				fmt.Printf("Remote branch %s deleted \n", ui.BranchFormat(branch))
 			}
 		}
 		githandler.FetchPrune()

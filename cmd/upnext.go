@@ -8,6 +8,7 @@ import (
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/ui"
 )
 
 // upNextCmd represents the upnext command
@@ -17,7 +18,7 @@ var upNextCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s gets the next branch ready for integration based on the branch creation time.
 The branch created first, is the branch thats up next.
-`, options.Bold("upnext")),
+`, ui.Bold("upnext")),
 
 	Run: func(cmd *cobra.Command, args []string) {
 

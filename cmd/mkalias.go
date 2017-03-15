@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/ui"
 )
 
 // mkaliasCmd represents the mkalias command
@@ -15,7 +15,7 @@ var mkaliasCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s creates all the alias for your git phlow commands, so you can type 'git workon' in stead of
 'git phlow workon', the alias will be created in your global .gitconfig file
-`, options.Bold("mkalias")),
+`, ui.Bold("mkalias")),
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.MkAlias()
 	},

@@ -8,6 +8,7 @@ import (
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/ui"
 )
 
 // deliverCmd represents the deliver command
@@ -31,11 +32,11 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 		//Run tests before deliver
 		if len(args) > 0 {
 			if err := phlow.TestDeliver(args); err != nil {
-				fmt.Println(options.ErrorFormat("!! Tests did not exit with code 0 !!"))
+				fmt.Println(ui.ErrorFormat("!! Tests did not exit with code 0 !!"))
 				fmt.Println(err)
 				os.Exit(1)
 			}
-			fmt.Println(options.SuccessFormat("Tests exited with code 0 - starting deliver process"))
+			fmt.Println(ui.SuccessFormat("Tests exited with code 0 - starting deliver process"))
 		}
 
 		//If Run if local deliver

@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //WorkOn ...
@@ -28,7 +28,7 @@ func WorkOn(issue int) {
 
 	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
 	if GetIssueFromBranch(branchInfo.Current) == issue {
-		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", options.BranchFormat(branchInfo.Current))
+		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.BranchFormat(branchInfo.Current))
 		return
 	}
 
@@ -37,12 +37,12 @@ func WorkOn(issue int) {
 			if err = githandler.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
-			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", options.BranchFormat(branch))
+			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", ui.BranchFormat(branch))
 			return
 		}
 	}
 
-	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", options.Bold("issue-branches"))
+	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", ui.Bold("issue-branches"))
 	info, err := plugins.GetOpenIssues(plugins.RepoURL)
 	if err != nil {
 		fmt.Println(err)
@@ -59,7 +59,7 @@ func WorkOn(issue int) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", options.BranchFormat(name))
+			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", ui.BranchFormat(name))
 
 			//Retrieve token
 			token := githandler.ConfigGet("token", "phlow")
@@ -72,9 +72,9 @@ func WorkOn(issue int) {
 			if assigneeArr := plugins.SetAssignee(user, plugins.RepoURL, token, issue, remoteInfo); err != nil {
 				fmt.Println(assigneeArr)
 			}
-			fmt.Fprintf(os.Stdout, "\nIssue %s updated:  \n", options.IssueFormat(issue))
-			fmt.Fprintf(os.Stdout, "Label    => %s \n", options.LabelFormat(plugins.LabelStatusInProgress))
-			fmt.Fprintf(os.Stdout, "Assignee => %s \n", options.AssigneeFormat(user))
+			fmt.Fprintf(os.Stdout, "\nIssue %s updated:  \n", ui.IssueFormat(issue))
+			fmt.Fprintf(os.Stdout, "Label    => %s \n", ui.LabelFormat(plugins.LabelStatusInProgress))
+			fmt.Fprintf(os.Stdout, "Assignee => %s \n", ui.AssigneeFormat(user))
 			return
 		}
 	}
