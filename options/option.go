@@ -23,6 +23,9 @@ var (
 	//GlobalFlagHumanReadable ...
 	GlobalFlagHumanReadable bool
 
+	//GlobalFlagHard ...
+	GlobalFlagHard bool
+
 	//Sha1 git commit hash
 	Sha1 string
 

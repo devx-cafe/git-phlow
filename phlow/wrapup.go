@@ -7,17 +7,19 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 )
 
 //WrapUp ...
 func WrapUp() {
 
-	fmt.Fprintln(os.Stdout, "Adding files to index")
-
 	//Add all files to index
-	if err := githandler.Add(); err != nil {
-		fmt.Println("project files could not be added: " + err.Error())
-		return
+	if options.GlobalFlagHard {
+		fmt.Fprintln(os.Stdout, "Adding files to index")
+		if err := githandler.Add(); err != nil {
+			fmt.Println("project files could not be added: " + err.Error())
+			return
+		}
 	}
 
 	//Retrieve branch info - current branch
@@ -25,7 +27,7 @@ func WrapUp() {
 	commitMessage := "close #" + strings.Replace(info.Current, "-", " ", -1)
 
 	if _, err := githandler.Commit(commitMessage); err != nil {
-		fmt.Println(err)
+		fmt.Println("Nothing to commit!")
 		return
 	}
 	fmt.Fprintln(os.Stdout, commitMessage)

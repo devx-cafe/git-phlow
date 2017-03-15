@@ -23,4 +23,6 @@ an issue on github eg. commit message => "close #42 fetch meaning of life"
 
 func init() {
 	RootCmd.AddCommand(wrapupCmd)
+
+	wrapupCmd.Flags().BoolVar(&options.GlobalFlagHard, "hard", false, "Add all before commit")
 }
