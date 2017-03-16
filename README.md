@@ -27,14 +27,26 @@ git-phlows core features will include:
 To get started using the-phlow, read [praqmas](http://www.praqma.com/stories/a-pragmatic-workflow/) article about how the-phlow and the pragmatic workflow works, and how to configure waffle for your projects.
 
 ## installing the phlow
-To install the phlow, open your terminal and run the following commands. That will download and install the project. 
+### Using Homebrew  
+If you are a Mac user and have homebrew installed, you can tap our official repository.
+
+```shell
+#Tap our repository
+brew tap praqma/praqma-tap
+
+#Install git-phlow
+brew install git-phlow
+``` 
+### Alternative
+You can also install git-phlow running the following commands. That will download and install the project.
+Remember to use the latest version.  
 
 ```shell
 #For Mac
-wget https://github.com/Praqma/git-phlow/releases/download/v1.0.0/git-phlow-1.0.0-darwin-amd64.tar.gz && tar -xzf git-phlow-1.0.0-darwin-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/{$VERSION}/git-phlow-{$VERSION}-darwin-amd64.tar.gz && tar -xzf git-phlow-{$VERSION}-darwin-amd64.tar.gz && mv git-phlow /usr/local/bin
 
 #For linux
-wget https://github.com/Praqma/git-phlow/releases/download/v1.0.0/git-phlow-1.0.0-linux-amd64.tar.gz && tar -xzf git-phlow-1.0.0-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/v{$VERSION}/git-phlow-{$VERSION}-linux-amd64.tar.gz && tar -xzf git-phlow-{$VERSION}-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
 ```
 
 ### Using the Phlow
