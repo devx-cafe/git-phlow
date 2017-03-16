@@ -10,6 +10,8 @@ import (
 	"strconv"
 
 	"github.com/praqma/git-phlow/githandler"
+	"errors"
+	"github.com/praqma/git-phlow/options"
 )
 
 var (
@@ -57,10 +59,28 @@ func GetOpenIssues(url string) ([]Issues, error) {
 		return nil, err
 	}
 
+	if options.GlobalFlagVerbose {
+		fmt.Println(info)
+		fmt.Println(url + info.Organisation + "/" + info.Repository + "/issues")
+	}
+
 	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
 
 	if res.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("request did not respond 200 OK: %s", res.Status)
+		switch res.StatusCode {
+		case http.StatusUnprocessableEntity:
+			break
+			return nil, errors.New("Token with git-phlow signature already exists")
+		case http.StatusNotFound:
+			break
+			return nil, fmt.Errorf("responded with %s - Url is wrong", res.Status)
+		default:
+			return nil, fmt.Errorf("request did not respond 200 OK: %s", res.Status)
+		}
+	}
+
+	if res.StatusCode != http.StatusUnprocessableEntity {
+
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
@@ -84,13 +104,17 @@ func Authorize(user, pass, url string) (string, error) {
 	var auth Auth
 	client := &http.Client{}
 
+	if options.GlobalFlagVerbose {
+		fmt.Println(url)
+	}
+
 	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(authBody)))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.SetBasicAuth(user, pass)
 
 	resp, err := client.Do(req)
 	if resp.StatusCode != http.StatusCreated {
-		return "", fmt.Errorf("githup responses with %s", resp.Status)
+		return "", fmt.Errorf("githup responsed with %s", resp.Status)
 	}
 	if err != nil {
 		return "", err

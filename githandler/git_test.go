@@ -118,3 +118,22 @@ func TestStatus(t *testing.T) {
 		testfixture.RemoveTestRepository(t)
 	})
 }
+
+func TestRemoteUrlExtractor(t *testing.T) {
+	Convey("Running test on 'remoteUrlExtractor' function", t, func() {
+		Convey("https remote url should return", func() {
+			var https = "https://github.com/Org/sOme--repo.git"
+			info := remoteUrlExtractor(https)
+			So(info.Organisation, ShouldEqual, "Org")
+			So(info.Repository, ShouldEqual, "sOme--repo")
+
+		})
+
+		Convey("ssh remote url should return", func() {
+			var ssh = "git@github.com:Org/some-repo.git"
+			info := remoteUrlExtractor(ssh)
+			So(info.Organisation, ShouldEqual, "Org")
+			So(info.Repository, ShouldEqual, "some-repo")
+		})
+	})
+}

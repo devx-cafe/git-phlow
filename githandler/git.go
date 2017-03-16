@@ -8,27 +8,6 @@ import (
 	"github.com/praqma/git-phlow/executor"
 )
 
-//ConfigBranchRemote ...
-func ConfigBranchRemote(branch string) string {
-	configArg := fmt.Sprintf("branch.%s.remote", branch)
-	output, _ := executor.ExecuteCommand("git", "config", configArg)
-	return strings.Replace(output, "\n", "", -1)
-}
-
-//ConfigGet ...
-func ConfigGet(key, group string) string {
-	pair := fmt.Sprintf("%s.%s", group, key)
-	output, _ := executor.ExecuteCommand("git", "config", "--global", "--get", pair)
-	return strings.Replace(output, "\n", "", -1)
-}
-
-//ConfigSet ...
-func ConfigSet(key, value, group string) error {
-	pair := fmt.Sprintf("%s.%s", group, key)
-	_, err := executor.ExecuteCommand("git", "config", "--global", pair, value)
-	return err
-}
-
 //CheckOut ...
 func CheckOut(branch string) error {
 	_, err := executor.ExecuteCommand("git", "checkout", branch)
@@ -103,7 +82,6 @@ type RemoteInfo struct {
 
 //Remote ...
 func Remote(defaultBranch string) (*RemoteInfo, error) {
-	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
 	var res string
 	var err error
 
@@ -111,10 +89,29 @@ func Remote(defaultBranch string) (*RemoteInfo, error) {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")
-	if res, err = executor.ExecuteCommand("git", "config", "--get", fmt.Sprintf("remote.%s.url", res)); err != nil {
+	if res, err = executor.ExecuteCommand("git", "ls-remote", "--get-url", res); err != nil {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")
-	match := re.FindStringSubmatch(res)
-	return &RemoteInfo{match[1], match[2]}, nil
+	return remoteUrlExtractor(res), nil
+}
+
+func remoteUrlExtractor(url string) (*RemoteInfo) {
+	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
+
+	//Extracts repo and org from ssh url format
+	if strings.HasPrefix(url, "git@") {
+		match := re.FindStringSubmatch(url)
+		return &RemoteInfo{match[1], match[2]}
+	}
+	//Extracts repo and org from http url format
+	if strings.HasPrefix(url, "http") {
+		splitUrl := strings.Split(strings.TrimSuffix(url, ".git"), "/")
+		org := splitUrl[len(splitUrl)-2]
+		repo := splitUrl[len(splitUrl)-1]
+		return &RemoteInfo{org, repo}
+	}
+
+	//Clone from local repo
+	return &RemoteInfo{}
 }
