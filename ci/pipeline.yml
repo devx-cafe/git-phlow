@@ -93,7 +93,6 @@ jobs:
       params: {bump: patch}
     - get: git-phlow 
       passed: [integration-tests]
-      trigger: true
     - put: resource-version
       params: {file: resource-version/version}
     - task: create-release 
@@ -109,8 +108,10 @@ jobs:
   - get: git-phlow
   - get: phlow-artifact-linux-s3
     passed: [create-patch]
+    trigger: true
   - get: phlow-artifact-darwin-s3
     passed: [create-patch]
+    trigger: true
   - put: gh-release
     params:
       name: resource-version/version 

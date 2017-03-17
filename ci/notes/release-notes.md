@@ -1,7 +1,4 @@
-This release brings better distribution possibilities
-
-#### Features
-- git-phlow is now a brew package @groenborg
+Fixed a bug where issues would not be located from your repository
 
 #### Bug fixes
 - now finds remote issues #64 (both ssh and https urls now work) @groenborg
