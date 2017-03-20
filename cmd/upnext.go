@@ -7,8 +7,8 @@ import (
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // upNextCmd represents the upnext command
@@ -22,7 +22,7 @@ The branch created first, is the branch thats up next.
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
+		defaultBranch, _ := plugins.GitHub.Branch.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)
 
 		phlow.UpNext(remote)

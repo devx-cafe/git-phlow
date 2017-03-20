@@ -12,7 +12,7 @@ func TestRemote(t *testing.T) {
 	SkipConvey("Running tests on 'Remote' function (runs in project)", t, func() {
 
 		Convey("Remote should return organisation and repo name", func() {
-			remote, _ := Remote("master")
+			remote, _ := Remote()
 
 			So(remote.Repository, ShouldEqual, "git-phlow")
 			So(remote.Organisation, ShouldEqual, "Praqma")
@@ -135,5 +135,15 @@ func TestRemoteUrlExtractor(t *testing.T) {
 			So(info.Organisation, ShouldEqual, "Org")
 			So(info.Repository, ShouldEqual, "some-repo")
 		})
+
+		Convey("ssh remote url with dot should return", func() {
+			var ssh = "git@github.com:Praqma/praqma.com.git"
+			info := remoteUrlExtractor(ssh)
+			t.Log(info.Organisation)
+			t.Log(info.Repository)
+			So(info.Organisation, ShouldEqual, "Praqma")
+			So(info.Repository, ShouldEqual, "praqma.com")
+		})
+
 	})
 }

@@ -19,6 +19,15 @@ func TestGetIssueFromBranch(t *testing.T) {
 	})
 }
 
+func TestIssues(t *testing.T) {
+	Convey("Running tests on 'Issues' command", t, func() {
+		Convey("testing output", func() {
+			IssueList()
+
+		})
+	})
+}
+
 func TestUpNext(t *testing.T) {
 	Convey("Running tests on 'GetNextBranch' function", t, func() {
 

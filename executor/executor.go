@@ -12,7 +12,7 @@ import (
 //VerboseOutput ...
 //prints the commands being run by the program
 func VerboseOutput(application string, argv ...string) {
-	fmt.Print(application)
+	fmt.Print("Exec: ", application)
 	for _, arg := range argv {
 		fmt.Print(" " + arg)
 	}

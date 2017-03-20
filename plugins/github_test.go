@@ -5,9 +5,6 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"strings"
-
-	"github.com/praqma/git-phlow/githandler"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -28,7 +25,9 @@ func TestAuthorize(t *testing.T) {
 			}))
 
 			defer ts.Close()
-			token, err := Authorize("simon", "password", ts.URL+"/authorizations")
+			GitHub.Auth.URL = ts.URL + "/authorizations"
+			token, err := GitHub.Auth.Auth("simon", "password")
+			t.Log(err)
 			So(token, ShouldEqual, "abcdefgh12345678")
 			So(err, ShouldBeNil)
 		})
@@ -36,45 +35,60 @@ func TestAuthorize(t *testing.T) {
 }
 
 func TestGetDefaultBranch(t *testing.T) {
-	SkipConvey("Runnign tests on 'GetDefaultBranch' request", t, func() {
+	Convey("Runnign tests on 'GetDefaultBranch' request", t, func() {
 		Convey("GetDefaultBranch should return master", func() {
+			var repo = "i-am-a-REPO"
+			var org = "this-org"
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != "GET" {
 					t.Errorf("Expected Request 'GET', got '%s'", r.Method)
 				}
-				if strings.Contains(r.URL.EscapedPath(), "/repos/") {
-					t.Errorf("Expected request to 'repo', got '%s'", r.URL.EscapedPath())
+				if r.URL.EscapedPath() == "repos/"+org+"/"+repo {
+					t.Errorf("Expected got '%s'", r.URL.EscapedPath())
 				}
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(repoResponse))
 
 			}))
-
 			defer ts.Close()
-			defaultBranch, err := GetDefaultBranch(ts.URL + "/repo/")
-			So(defaultBranch, ShouldEqual, "master")
+			GitHub.Branch.URL = ts.URL + "/repos/%s/%s"
+			GitHub.Branch.org = org
+			GitHub.Branch.repo = repo
+			def, err := GitHub.Branch.Default()
+			t.Log(GitHub.Branch.URL)
+			t.Log(GitHub.Branch)
+			So(def, ShouldEqual, "master")
 			So(err, ShouldBeNil)
 		})
 	})
 }
 
-func TestGetOpenIssues(t *testing.T) {
-	SkipConvey("Running tests on 'GetOpenIssues' request", t, func() {
-		Convey("GetOpenIssues should return array of issues", func() {
+func TestGetIssues(t *testing.T) {
+	Convey("Running tests on 'GetIssues' request", t, func() {
+		Convey("GetIssues should return array of issues", func() {
+			var org = "org"
+			var repo = "some-repo-name"
 
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != "GET" {
 					t.Errorf("Expected Request 'GET', got '%s'", r.Method)
 				}
+				if r.URL.EscapedPath() != "/repos/"+org+"/"+repo+"/issues" {
+					t.Errorf("expected %s but got %s", issueURL, r.URL.EscapedPath())
+				}
+
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(issueResponse))
 
 			}))
-
 			defer ts.Close()
-			repo, err := GetOpenIssues(ts.URL + "/issues/")
+			GitHub.Issue.URL = ts.URL + "/repos/%s/%s/issues"
+			GitHub.Issue.org = org
+			GitHub.Issue.repo = repo
+			issues, err := GitHub.Issue.Get()
 
-			So(len(repo), ShouldEqual, 1)
+			So(issues[0].Assignees[0].Login, ShouldEqual, "groenborg")
+			So(issues, ShouldHaveLength, 1)
 			So(err, ShouldBeNil)
 		})
 	})
@@ -84,6 +98,8 @@ func TestSetLabel(t *testing.T) {
 	Convey("Running tests on 'SetLabel' request", t, func() {
 
 		Convey("SetLabel should return array of labels", func() {
+			var org = "org"
+			var repo = "some-repo-name"
 
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != "POST" {
@@ -94,20 +110,22 @@ func TestSetLabel(t *testing.T) {
 					t.Errorf("Authorization error, was '%s'", r.Header.Get("Authorization"))
 				}
 
-				if r.URL.EscapedPath() != "/issues/org/phlow-repo/issues/1/labels" {
+				if r.URL.EscapedPath() != "/repos/"+org+"/"+repo+"/issues/1/labels" {
 					t.Errorf("Expected request to '/issues/org/phlow-repo/issues/1/labels', got '%s'", r.URL.EscapedPath())
 				}
 
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(labelResponse))
-
 			}))
 
 			defer ts.Close()
-			info := githandler.RemoteInfo{Organisation: "org", Repository: "phlow-repo"}
-
-			labels, err := SetLabel(LabelStatusInProgress, ts.URL+"/issues/", "abc", 1, &info)
-			So(len(labels), ShouldEqual, 4)
+			GitHub.Label.URL = ts.URL + "/repos/%s/%s/issues/%d/labels"
+			GitHub.Label.token = "abc"
+			GitHub.Label.org = org
+			GitHub.Label.repo = repo
+			labels, err := GitHub.Label.Set("Status - in progress", 1)
+			t.Log(err)
+			So(labels, ShouldHaveLength, 4)
 			So(err, ShouldBeNil)
 		})
 
@@ -117,7 +135,8 @@ func TestSetLabel(t *testing.T) {
 func TestSetAssignee(t *testing.T) {
 	Convey("Runnig tests on 'SetAssignee' function", t, func() {
 		Convey("SetAssignee should not return error", func() {
-
+			var org = "org"
+			var repo = "some-repo-name"
 			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if r.Method != "POST" {
 					t.Errorf("Expected Request 'POST', got '%s'", r.Method)
@@ -127,19 +146,21 @@ func TestSetAssignee(t *testing.T) {
 					t.Errorf("Authorization error, was '%s'", r.Header.Get("Authorization"))
 				}
 
-				if r.URL.EscapedPath() != "/issues/org/phlow-repo/issues/1/assignees" {
-					t.Errorf("Expected request to '/issues/org/phlow-repo/issues/1/assignees', got '%s'", r.URL.EscapedPath())
+				if r.URL.EscapedPath() != "/repos/"+org+"/"+repo+"/issues/1/assignees" {
+					t.Errorf("Expected request to 'issues/"+org+"/"+repo+"/issues/1/assignees', got '%s'", r.URL.EscapedPath())
 				}
 
 				w.WriteHeader(http.StatusCreated)
 				w.Write([]byte(labelResponse))
 
 			}))
-
 			defer ts.Close()
 
-			info := githandler.RemoteInfo{Organisation: "org", Repository: "phlow-repo"}
-			err := SetAssignee("john markom", ts.URL+"/issues/", "abc", 1, &info)
+			GitHub.Assignee.URL = ts.URL + "/repos/%s/%s/issues/%d/assignees"
+			GitHub.Assignee.org = org
+			GitHub.Assignee.repo = repo
+			GitHub.Assignee.token = "abc"
+			err := GitHub.Assignee.Set("john markom", 1)
 			So(err, ShouldBeNil)
 		})
 	})

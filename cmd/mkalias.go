@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/praqma/git-phlow/phlow"
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // mkaliasCmd represents the mkalias command

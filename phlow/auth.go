@@ -31,7 +31,7 @@ func Auth() {
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	token, err := plugins.Authorize(username, password, plugins.AuthURL)
+	token, err := plugins.GitHub.Auth.Auth(username, password)
 	if err != nil {
 		fmt.Println(err)
 		return

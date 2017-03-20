@@ -5,8 +5,8 @@ import (
 
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // integrateCmd represents the integrate command
@@ -19,7 +19,10 @@ with your default branch and pushed to the remote.
 `, ui.Bold("integrate")),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
+		defaultBranch, err := plugins.GitHub.Branch.Default()
+		if err != nil {
+			fmt.Println(err)
+		}
 		phlow.LocalDeliver(defaultBranch)
 	},
 }

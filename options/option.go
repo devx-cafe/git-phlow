@@ -11,6 +11,9 @@ var (
 	//GlobalFlagLocal ...
 	GlobalFlagLocal = false
 
+	//GlobalFlagMine ...
+	GlobalFlagMine = false
+
 	//GlobalFlagVersion ...
 	GlobalFlagVersion = false
 

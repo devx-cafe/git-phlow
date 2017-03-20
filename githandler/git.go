@@ -81,22 +81,20 @@ type RemoteInfo struct {
 }
 
 //Remote ...
-func Remote(defaultBranch string) (*RemoteInfo, error) {
+//Must have either origin or upstream
+//THIS NEEDS TO BE REVISITED
+func Remote() (*RemoteInfo, error) {
 	var res string
 	var err error
-
-	if res, err = executor.ExecuteCommand("git", "config", fmt.Sprintf("branch.%s.remote", defaultBranch)); err != nil {
-		return nil, err
-	}
 	res = strings.Trim(res, "\n")
-	if res, err = executor.ExecuteCommand("git", "ls-remote", "--get-url", res); err != nil {
+	if res, err = executor.ExecuteCommand("git", "ls-remote", "--get-url", "origin"); err != nil {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")
 	return remoteUrlExtractor(res), nil
 }
 
-func remoteUrlExtractor(url string) (*RemoteInfo) {
+func remoteUrlExtractor(url string) *RemoteInfo {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
 
 	//Extracts repo and org from ssh url format

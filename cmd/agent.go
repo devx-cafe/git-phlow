@@ -5,8 +5,8 @@ import (
 
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // agentCmd represents the agent command

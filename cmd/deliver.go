@@ -7,8 +7,8 @@ import (
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // deliverCmd represents the deliver command
@@ -27,7 +27,7 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GetDefaultBranch(plugins.RepoURL)
+		defaultBranch, _ := plugins.GitHub.Branch.Default()
 
 		//Run tests before deliver
 		if len(args) > 0 {

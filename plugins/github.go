@@ -3,213 +3,268 @@ package plugins
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 	"io/ioutil"
 	"net/http"
-
-	"strconv"
-
-	"github.com/praqma/git-phlow/githandler"
-	"errors"
-	"github.com/praqma/git-phlow/options"
 )
 
-var (
-	authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
-	//AuthURL ...
-	AuthURL = "https://api.github.com/authorizations"
-	//RepoURL ...
-	RepoURL = "https://api.github.com/repos/"
-)
+var GitHub GitHubRequest
 
-//Auth ...
-type Auth struct {
-	Token string `json:"token"`
+//AuthURL ...
+var authURL = "https://api.github.com/authorizations"
+
+//RepoURL ...
+var repoURL = "https://api.github.com/repos/%s/%s"
+
+//IssueUrl
+var issueURL = "https://api.github.com/repos/%s/%s/issues"
+
+//labelURL
+var labelURL = "https://api.github.com/repos/%s/%s/issues/%d/labels"
+
+var assigneeURL = "https://api.github.com/repos/%s/%s/issues/%d/assignees"
+
+//GitHubRequest ...
+//request object for github
+type GitHubRequest struct {
+	Assignee AssigneeRequest
+	Issue    IssueRequest
+	Label    LabelRequest
+	Branch   BranchRequest
+	Auth     AuthRequest
 }
 
-//Repo ...
-type Repo struct {
-	DefaultBranch string `json:"default_branch"`
+type requestData struct {
+	URL    string
+	repo   string
+	org    string
+	client *http.Client
 }
 
-//Issues ...
-type Issues struct {
-	Title  string `json:"title"`
-	Number int    `json:"number"`
+//IssueRequest ...
+//request for GitHub issues
+type IssueRequest struct {
+	requestData
 }
 
-//Label ...
-type Label struct {
-	ID    int    `json:"id"`
-	URL   string `json:"url"`
-	Name  string `json:"name"`
-	Color string `json:"color"`
+//AssigneeRequest ...
+//request for assignees on GitHub
+type AssigneeRequest struct {
+	requestData
+	token string
 }
 
-//Assignee ...
-type Assignee struct {
-	Assignees []string `json:"assignees"`
+//BranchRequest ...
+//request for default branch on GitHub repository
+type BranchRequest struct {
+	requestData
 }
 
-//GetOpenIssues ...
-func GetOpenIssues(url string) ([]Issues, error) {
+//LabelRequest ...
+//request for getting and setting labels on GitHub issues
+type LabelRequest struct {
+	requestData
+	token string
+}
 
-	info, err := githandler.Remote("master")
-	if err != nil {
+//AuthRequest ...
+//request for authentication on GitHub
+type AuthRequest struct {
+	requestData
+}
+
+func init() {
+	info, _ := githandler.Remote()
+	org := info.Organisation
+	repo := info.Repository
+	token := githandler.ConfigGet("token", "phlow")
+
+	GitHub.Issue = IssueRequest{requestData{issueURL, repo, org, http.DefaultClient}}
+	GitHub.Branch = BranchRequest{requestData{repoURL, repo, org, http.DefaultClient}}
+	GitHub.Label = LabelRequest{requestData{labelURL, repo, org, http.DefaultClient}, token}
+	GitHub.Assignee = AssigneeRequest{requestData{assigneeURL, repo, org, http.DefaultClient}, token}
+	GitHub.Auth = AuthRequest{requestData{authURL, repo, org, http.DefaultClient}}
+}
+
+//Get ...
+//Get All Issues from GitHub
+func (i *IssueRequest) Get() ([]Issues, error) {
+	var resp *http.Response
+	var err error
+	var body []byte
+
+	i.URL = fmt.Sprintf(i.URL, i.org, i.repo)
+	if options.GlobalFlagVerbose {
+		fmt.Println("github uri: " + i.URL)
+	}
+
+	if resp, err = i.client.Get(i.URL); err != nil {
+		return nil, err
+	}
+	if err := requestStatus(resp); err != nil {
 		return nil, err
 	}
 
-	if options.GlobalFlagVerbose {
-		fmt.Println(info)
-		fmt.Println(url + info.Organisation + "/" + info.Repository + "/issues")
-	}
+	defer resp.Body.Close()
 
-	res, _ := http.Get(url + info.Organisation + "/" + info.Repository + "/issues")
-
-	if res.StatusCode != http.StatusOK {
-		switch res.StatusCode {
-		case http.StatusUnprocessableEntity:
-			break
-			return nil, errors.New("Token with git-phlow signature already exists")
-		case http.StatusNotFound:
-			break
-			return nil, fmt.Errorf("responded with %s - Url is wrong", res.Status)
-		default:
-			return nil, fmt.Errorf("request did not respond 200 OK: %s", res.Status)
+	if body, err = ioutil.ReadAll(resp.Body); err == nil {
+		re := []Issues{}
+		if err = json.Unmarshal(body, &re); err != nil {
+			return nil, err
 		}
+		return re, nil
 	}
-
-	if res.StatusCode != http.StatusUnprocessableEntity {
-
-	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
-
-	if err != nil {
-		return nil, err
-	}
-
-	re := []Issues{}
-	err = json.Unmarshal(body, &re)
-
-	if err != nil {
-		return nil, err
-	}
-	return re, nil
-
+	return nil, err
 }
 
-//Authorize ...
-func Authorize(user, pass, url string) (string, error) {
+func (a *AuthRequest) Auth(user, pass string) (string, error) {
 	var auth Auth
-	client := &http.Client{}
+	var authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
 
 	if options.GlobalFlagVerbose {
-		fmt.Println(url)
+		fmt.Println(a.URL)
 	}
-
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer([]byte(authBody)))
+	req, err := http.NewRequest("POST", a.URL, bytes.NewBuffer([]byte(authBody)))
+	if err != nil {
+		return "", err
+	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	req.SetBasicAuth(user, pass)
 
-	resp, err := client.Do(req)
-	if resp.StatusCode != http.StatusCreated {
-		return "", fmt.Errorf("githup responsed with %s", resp.Status)
-	}
+	resp, err := a.client.Do(req)
 	if err != nil {
+		return "", err
+	}
+	if err = requestStatus(resp); err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
-	output, _ := ioutil.ReadAll(resp.Body)
 
-	err = json.Unmarshal(output, &auth)
-	if err != nil {
-		return "", err
+	if output, err := ioutil.ReadAll(resp.Body); err == nil {
+		if err = json.Unmarshal(output, &auth); err != nil {
+			return "", err
+		}
+		return auth.Token, nil
 	}
-	return auth.Token, nil
+
+	return "", errors.New("Could not parse json request")
 }
 
-//GetDefaultBranch ...
-func GetDefaultBranch(url string) (string, error) {
-	info, err := githandler.Remote("master")
-	if err != nil {
-		return "", err
-	}
-	res, _ := http.Get(url + info.Organisation + "/" + info.Repository)
-	if res.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("request did not respond 200 OK: %s", res.Status)
-	}
-	defer res.Body.Close()
-	body, err := ioutil.ReadAll(res.Body)
+//Set ...
+//Set assignee on a GitHub Issue
+func (a *AssigneeRequest) Set(assignee string, issue int) error {
+	var resp *http.Response
+	var err error
+	a.URL = fmt.Sprintf(a.URL, a.org, a.repo, issue)
 
-	if err != nil {
-		return "", err
-	}
-
-	re := Repo{}
-	err = json.Unmarshal(body, &re)
-
-	if err != nil {
-		return "", err
-	}
-	return re.DefaultBranch, nil
-}
-
-//SetLabel ...
-func SetLabel(label, url, token string, number int, info *githandler.RemoteInfo) ([]Label, error) {
-	client := &http.Client{}
-	var body = `[ "` + label + `" ]`
-	var uri = url + info.Organisation + "/" + info.Repository + "/issues/" + strconv.Itoa(number) + "/labels" //"/repos/:owner/:repo/issues/:number/labels"
-
-	req, _ := http.NewRequest("POST", uri, bytes.NewBuffer([]byte(body)))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "token "+token)
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("githup responses with %s", resp.Status)
-	}
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	re := []Label{}
-	output, _ := ioutil.ReadAll(resp.Body)
-
-	err = json.Unmarshal(output, &re)
-	if err != nil {
-		return nil, err
-	}
-	return re, nil
-
-}
-
-//SetAssignee ...
-//Sets you as an assignee
-func SetAssignee(assignee, url, token string, number int, info *githandler.RemoteInfo) error {
-	client := &http.Client{}
-
-	var apiURL = fmt.Sprintf(url+"%s/%s/issues/%s/assignees", info.Organisation, info.Repository, strconv.Itoa(number))
 	jsonBytes, _ := json.Marshal(Assignee{Assignees: []string{assignee}})
-
-	req, _ := http.NewRequest("POST", apiURL, bytes.NewBuffer(jsonBytes))
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "token "+token)
-
-	resp, err := client.Do(req)
-
+	req, err := http.NewRequest("POST", a.URL, bytes.NewBuffer(jsonBytes))
 	if err != nil {
 		return err
 	}
 
-	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("githup responses with %s", resp.Status)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "token "+a.token)
+
+	if resp, err = a.client.Do(req); err != nil {
+		return err
+	}
+	if err = requestStatus(resp); err != nil {
+		return err
+	}
+	return nil
+}
+
+//Set ...
+//Set label on a GitHub issue
+func (l *LabelRequest) Set(label string, issue int) ([]Label, error) {
+	client := &http.Client{}
+	var body = `[ "` + label + `" ]`
+	var err error
+	var resp *http.Response
+	var req *http.Request
+
+	l.URL = fmt.Sprintf(l.URL, l.org, l.repo, issue)
+	if options.GlobalFlagVerbose {
+		fmt.Println("github uri: " + l.URL)
 	}
 
-	return nil
+	if req, err = http.NewRequest("POST", l.URL, bytes.NewBuffer([]byte(body))); err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "token "+l.token)
+
+	resp, err = client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	if err = requestStatus(resp); err != nil {
+		return nil, err
+	}
+
+	var output []byte
+	if output, err = ioutil.ReadAll(resp.Body); err == nil {
+		re := []Label{}
+		if err = json.Unmarshal(output, &re); err == nil {
+			return re, nil
+		}
+	}
+	return nil, err
+}
+
+//Default ...
+//Get default branch of a GitHub issue
+func (b *BranchRequest) Default() (string, error) {
+	var resp *http.Response
+	var err error
+	var body []byte
+
+	b.URL = fmt.Sprintf(b.URL, b.org, b.repo)
+	if options.GlobalFlagVerbose {
+		fmt.Println("github uri: " + b.URL)
+	}
+	if resp, err = http.Get(b.URL); err != nil {
+		return "", err
+	}
+	if err := requestStatus(resp); err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+
+	if body, err = ioutil.ReadAll(resp.Body); err == nil {
+		re := Repo{}
+		if err = json.Unmarshal(body, &re); err != nil {
+			return "", err
+		}
+		return re.DefaultBranch, nil
+	}
+	return "", err
+
+}
+
+//requestStatus ...
+//Determines the status of the request
+func requestStatus(res *http.Response) error {
+	switch res.StatusCode {
+	case http.StatusCreated:
+		return nil
+	case http.StatusOK:
+		return nil
+	case http.StatusUnprocessableEntity:
+		//For POST requests
+		return errors.New("git-phlow token already exists")
+	case http.StatusNotFound:
+		//For GET and POST
+		return fmt.Errorf("responded with %s - malformed url", res.Status)
+	default:
+		//Default behaviour if status is not OK
+		return fmt.Errorf("request did not respond with 200 OK, but %s", res.Status)
+	}
 }

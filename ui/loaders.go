@@ -1,8 +1,8 @@
 package ui
 
 import (
-	"time"
 	"github.com/briandowns/spinner"
+	"time"
 )
 
 //PhlowSpinner ...
