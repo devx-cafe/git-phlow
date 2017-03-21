@@ -123,7 +123,7 @@ func TestRemoteUrlExtractor(t *testing.T) {
 	Convey("Running test on 'remoteUrlExtractor' function", t, func() {
 		Convey("https remote url should return", func() {
 			var https = "https://github.com/Org/sOme--repo.git"
-			info := remoteUrlExtractor(https)
+			info := remoteURLExtractor(https)
 			So(info.Organisation, ShouldEqual, "Org")
 			So(info.Repository, ShouldEqual, "sOme--repo")
 
