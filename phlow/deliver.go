@@ -2,11 +2,12 @@ package phlow
 
 import (
 	"fmt"
+	"os"
+	"strings"
+
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"os"
-	"strings"
 
 	"github.com/praqma/git-phlow/ui"
 )
@@ -76,7 +77,7 @@ func LocalDeliver(defaultBranch string) {
 	//Push changes to github
 	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.BranchFormat(defaultBranch))
 	ui.PhlowSpinner.Start("Pushing changes")
-	output, err = githandler.Push()
+	_, err = githandler.Push()
 	if err != nil {
 		fmt.Println(err.Error())
 		return

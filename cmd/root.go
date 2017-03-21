@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/spf13/cobra"
 )
@@ -17,13 +16,6 @@ var RootCmd = &cobra.Command{
 git-phlow is a git extension that provides an extra set of commands, enabling you to:
 workon, deliver and create new tasks.
 	`,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		//Move as before check
-		if err := githandler.Status(); err != nil {
-			fmt.Fprintln(os.Stdout, err)
-			os.Exit(0)
-		}
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if options.GlobalFlagVersion != false {
 			fmt.Println("phlow specification")
@@ -34,7 +26,6 @@ workon, deliver and create new tasks.
 		}
 
 		fmt.Println(cmd.UsageString())
-
 	},
 }
 

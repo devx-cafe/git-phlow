@@ -131,14 +131,14 @@ func TestRemoteUrlExtractor(t *testing.T) {
 
 		Convey("ssh remote url should return", func() {
 			var ssh = "git@github.com:Org/some-repo.git"
-			info := remoteUrlExtractor(ssh)
+			info := remoteURLExtractor(ssh)
 			So(info.Organisation, ShouldEqual, "Org")
 			So(info.Repository, ShouldEqual, "some-repo")
 		})
 
 		Convey("ssh remote url with dot should return", func() {
 			var ssh = "git@github.com:Praqma/praqma.com.git"
-			info := remoteUrlExtractor(ssh)
+			info := remoteURLExtractor(ssh)
 			t.Log(info.Organisation)
 			t.Log(info.Repository)
 			So(info.Organisation, ShouldEqual, "Praqma")

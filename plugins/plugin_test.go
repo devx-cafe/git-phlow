@@ -62,3 +62,14 @@ func TestStringConcat(t *testing.T) {
 		})
 	})
 }
+
+func TestGetIssueFromBranch(t *testing.T) {
+	Convey("Running tests on 'GetIssuesFromBranch'", t, func() {
+
+		Convey("GetIssueSFromBranch should return 1", func() {
+
+			i := IssueFromBranchName("39-enable---Add-sign-in-function")
+			So(i, ShouldEqual, 39)
+		})
+	})
+}

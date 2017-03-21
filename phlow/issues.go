@@ -2,14 +2,17 @@ package phlow
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/plugins"
-	"github.com/praqma/git-phlow/ui"
 	"os"
 	"strconv"
-	"github.com/praqma/git-phlow/options"
+
 	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/ui"
 )
 
+//IssueList ...
+//List open issues from github
 func IssueList() {
 
 	ui.PhlowSpinner.Start("")
@@ -20,6 +23,7 @@ func IssueList() {
 	}
 	ui.PhlowSpinner.Stop()
 
+	//Nested function for finding user issues
 	var userIssue = func(issue []plugins.AssigneeIssue) bool {
 		user := githandler.ConfigGet("user", "phlow")
 		for _, u := range issue {
@@ -29,7 +33,7 @@ func IssueList() {
 		}
 		return false
 	}
-
+	//Nested print function - only used for pretty output
 	var printIssue = func(issue plugins.Issues) {
 		issStr := strconv.Itoa(issue.Number)
 

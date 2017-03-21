@@ -1,13 +1,16 @@
 package phlow
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
-	"fmt"
-	"os"
 )
 
+//Web ...
+//opens the browser on the current or specified issue
 func Web(userIssue int) {
 
 	var issueListURL = "https://github.com/%s/%s/issues"

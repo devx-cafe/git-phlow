@@ -3,6 +3,7 @@ package phlow
 import (
 	"fmt"
 	"os"
+
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"

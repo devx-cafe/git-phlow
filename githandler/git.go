@@ -86,15 +86,14 @@ type RemoteInfo struct {
 func Remote() (*RemoteInfo, error) {
 	var res string
 	var err error
-	res = strings.Trim(res, "\n")
 	if res, err = executor.ExecuteCommand("git", "ls-remote", "--get-url", "origin"); err != nil {
 		return nil, err
 	}
 	res = strings.Trim(res, "\n")
-	return remoteUrlExtractor(res), nil
+	return remoteURLExtractor(res), nil
 }
 
-func remoteUrlExtractor(url string) *RemoteInfo {
+func remoteURLExtractor(url string) *RemoteInfo {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
 
 	//Extracts repo and org from ssh url format
@@ -104,9 +103,9 @@ func remoteUrlExtractor(url string) *RemoteInfo {
 	}
 	//Extracts repo and org from http url format
 	if strings.HasPrefix(url, "http") {
-		splitUrl := strings.Split(strings.TrimSuffix(url, ".git"), "/")
-		org := splitUrl[len(splitUrl)-2]
-		repo := splitUrl[len(splitUrl)-1]
+		splitURL := strings.Split(strings.TrimSuffix(url, ".git"), "/")
+		org := splitURL[len(splitURL)-2]
+		repo := splitURL[len(splitURL)-1]
 		return &RemoteInfo{org, repo}
 	}
 

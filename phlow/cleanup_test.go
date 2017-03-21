@@ -1,10 +1,11 @@
 package phlow
 
 import (
+	"testing"
+
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/testfixture"
 	. "github.com/smartystreets/goconvey/convey"
-	"testing"
 )
 
 func TestClean(t *testing.T) {

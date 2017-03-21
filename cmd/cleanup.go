@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/praqma/git-phlow/cmdcheck"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
@@ -19,6 +20,9 @@ var cleanCmd = &cobra.Command{
 %s removes all branches prefixed with 'delivered/'.
 It deletes safely by running 'git branch -d'. By default, both local and remote branches are deleted.
 `, ui.Bold("phlow clean")),
+	PreRun: func(cmd *cobra.Command, args []string) {
+		checks.IsRepository()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		defaultBranch, _ := plugins.GitHub.Branch.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)

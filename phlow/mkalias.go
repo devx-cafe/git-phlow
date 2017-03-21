@@ -17,6 +17,9 @@ func MkAlias() {
 	aliases["deliver"] = "phlow deliver"
 	aliases["cleanup"] = "phlow cleanup"
 	aliases["agent"] = "phlow agent"
+	aliases["web"] = "phlow web"
+	aliases["issues"] = "phlow issues"
+	aliases["auth"] = "phlow auth"
 
 	for key, value := range aliases {
 		str := githandler.ConfigGet(key, group)

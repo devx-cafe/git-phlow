@@ -5,12 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/options"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 )
 
+//GitHub ...
 var GitHub GitHubRequest
 
 //AuthURL ...
@@ -104,7 +106,7 @@ func (i *IssueRequest) Get() ([]Issues, error) {
 	if resp, err = i.client.Get(i.URL); err != nil {
 		return nil, err
 	}
-	if err := requestStatus(resp); err != nil {
+	if err = requestStatus(resp); err != nil {
 		return nil, err
 	}
 
@@ -120,6 +122,8 @@ func (i *IssueRequest) Get() ([]Issues, error) {
 	return nil, err
 }
 
+//Auth ...
+//Auth request to github
 func (a *AuthRequest) Auth(user, pass string) (string, error) {
 	var auth Auth
 	var authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
@@ -232,7 +236,7 @@ func (b *BranchRequest) Default() (string, error) {
 	if resp, err = http.Get(b.URL); err != nil {
 		return "", err
 	}
-	if err := requestStatus(resp); err != nil {
+	if err = requestStatus(resp); err != nil {
 		return "", err
 	}
 

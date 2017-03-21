@@ -2,8 +2,9 @@ package githandler
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/executor"
 	"strings"
+
+	"github.com/praqma/git-phlow/executor"
 )
 
 //ConfigBranchRemote ...

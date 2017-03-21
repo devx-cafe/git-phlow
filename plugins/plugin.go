@@ -2,17 +2,18 @@ package plugins
 
 import (
 	"bytes"
-	"github.com/fatih/color"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/fatih/color"
 )
 
-//PhlowLabels
+//PhlowLabels ...
 //Map of labels in the phlow
 var PhlowLabels map[string]*PhlowLabel
 
-//PhlowLabel
+//PhlowLabel ...
 //label struct for storing GitHub labels
 type PhlowLabel struct {
 	Title string
@@ -39,7 +40,7 @@ func init() {
 	PhlowLabels["Status - up next"] = &PhlowLabel{"Status - up next", 4, 15}
 }
 
-//Colorizer
+//Colorizer ...
 //Determines color based on label group
 func Colorizer(label string) string {
 	if l := PhlowLabels[label]; l != nil {
@@ -59,11 +60,12 @@ func Colorizer(label string) string {
 	return color.New(color.FgBlack).Add(color.Bold).Add(color.BgWhite).SprintFunc()(label)
 }
 
+//MilestoneColor ...
 func MilestoneColor(milestone string) string {
 	return color.New(color.FgGreen).SprintFunc()(milestone)
 }
 
-//BranchNameFromIssue
+//BranchNameFromIssue ...
 //Converts issues to branch names nby removing illegal characters and inserting hyphens
 func BranchNameFromIssue(issue int, name string) string {
 	var result string
@@ -79,8 +81,7 @@ func BranchNameFromIssue(issue int, name string) string {
 	return strconv.Itoa(issue) + "-" + result
 }
 
-
-//IssueFromBranchName
+//IssueFromBranchName ...
 //Extracts the issue number from the branch name
 func IssueFromBranchName(branch string) int {
 	iss, err := strconv.Atoi(strings.Split(branch, "-")[0])
@@ -89,7 +90,6 @@ func IssueFromBranchName(branch string) int {
 	}
 	return iss
 }
-
 
 //efficientConcatString
 //Concatenate strings in an effective way

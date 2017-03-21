@@ -1,8 +1,9 @@
 package ui
 
 import (
-	"github.com/fatih/color"
 	"strconv"
+
+	"github.com/fatih/color"
 )
 
 //Bold ...

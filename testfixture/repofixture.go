@@ -3,17 +3,23 @@ package testfixture
 import (
 	"errors"
 	"fmt"
-	"github.com/praqma/git-phlow/executor"
 	"os"
 	"testing"
+
+	"github.com/praqma/git-phlow/executor"
 )
 
 var (
-	GoPath      string
+	//GoPath ...
+	GoPath string
+	//ProjectPath ..
 	ProjectPath string
-	Script      string
-	Repo        string
-	Target      string
+	//Script ...
+	Script string
+	//Repo ...
+	Repo string
+	//Target ...
+	Target string
 )
 
 //init

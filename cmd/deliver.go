@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/praqma/git-phlow/cmdcheck"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
@@ -25,10 +26,12 @@ so integration services supporting the workflow can pick up the changes.
 if you deliver with local, the branch will be merged with your default branch,
 and pushed to your "remote default branch" and prefixed with "/delivered"
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		checks.IsRepository()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		defaultBranch, _ := plugins.GitHub.Branch.Default()
-
 		//Run tests before deliver
 		if len(args) > 0 {
 			if err := phlow.TestDeliver(args); err != nil {
@@ -44,10 +47,8 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 			phlow.LocalDeliver(defaultBranch)
 			return
 		}
-
 		//Deliver with ready branch
 		phlow.Deliver(defaultBranch)
-
 	},
 }
 

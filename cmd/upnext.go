@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/praqma/git-phlow/cmdcheck"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
@@ -19,7 +20,9 @@ var upNextCmd = &cobra.Command{
 %s gets the next branch ready for integration based on the branch creation time.
 The branch created first, is the branch thats up next.
 `, ui.Bold("upnext")),
-
+	PreRun: func(cmd *cobra.Command, args []string) {
+		checks.IsRepository()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 
 		defaultBranch, _ := plugins.GitHub.Branch.Default()

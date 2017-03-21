@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/praqma/git-phlow/cmdcheck"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
@@ -13,6 +14,9 @@ var issueCmd = &cobra.Command{
 	Long: `
 List all the open issues on GitHub with it's ID. Helps you locate what needs to be worked on
 `,
+	PreRun: func(cmd *cobra.Command, args []string) {
+		checks.IsRepository()
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.IssueList()
 	},
