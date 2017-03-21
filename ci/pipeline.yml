@@ -117,7 +117,7 @@ jobs:
       name: resource-version/version 
       tag: resource-version/version
       tag_prefix: v 
-      body: git-phlow/ci/notes/release-notes.md
+      body: git-phlow/ci/notes/CHANGELOG.md
       globs: 
         - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
         - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
@@ -137,7 +137,7 @@ jobs:
       name: resource-version/version 
       tag: resource-version/version
       tag_prefix: v 
-      body: git-phlow/ci/notes/release-notes.md
+      body: git-phlow/ci/notes/CHANGELOG.md
       globs: 
         - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
         - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
@@ -157,7 +157,7 @@ jobs:
       name: resource-version/version 
       tag: resource-version/version
       tag_prefix: v 
-      body: git-phlow/ci/notes/release-notes.md
+      body: git-phlow/ci/notes/CHANGELOG.md
       globs: 
         - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
         - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz

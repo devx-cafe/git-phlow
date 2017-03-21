@@ -79,6 +79,18 @@ func BranchNameFromIssue(issue int, name string) string {
 	return strconv.Itoa(issue) + "-" + result
 }
 
+
+//IssueFromBranchName
+//Extracts the issue number from the branch name
+func IssueFromBranchName(branch string) int {
+	iss, err := strconv.Atoi(strings.Split(branch, "-")[0])
+	if err != nil {
+		return -1
+	}
+	return iss
+}
+
+
 //efficientConcatString
 //Concatenate strings in an effective way
 func efficientConcatString(args ...string) string {

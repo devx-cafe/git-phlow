@@ -3,9 +3,6 @@ package phlow
 import (
 	"fmt"
 	"os"
-	"strconv"
-	"strings"
-
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
@@ -29,13 +26,13 @@ func WorkOn(issue int) {
 	}
 
 	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
-	if GetIssueFromBranch(branchInfo.Current) == issue {
+	if plugins.IssueFromBranchName(branchInfo.Current) == issue {
 		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.BranchFormat(branchInfo.Current))
 		return
 	}
 
 	for _, branch := range branchInfo.List {
-		if GetIssueFromBranch(branch) == issue {
+		if plugins.IssueFromBranchName(branch) == issue {
 			if err = githandler.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
@@ -95,14 +92,4 @@ func UpdateIssue(issue int) {
 	fmt.Fprintf(os.Stdout, "Assignee => %s \n", ui.AssigneeFormat(user))
 	fmt.Println("----------------------------------")
 	return
-}
-
-//GetIssueFromBranch ...
-//Extracts the issue number from the branch name
-func GetIssueFromBranch(branch string) int {
-	iss, err := strconv.Atoi(strings.Split(branch, "-")[0])
-	if err != nil {
-		return -1
-	}
-	return iss
 }
