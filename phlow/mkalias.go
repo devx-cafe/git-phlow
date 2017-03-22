@@ -24,10 +24,10 @@ func MkAlias() {
 	for key, value := range aliases {
 		str := githandler.ConfigGet(key, group)
 		if str == "" {
-			fmt.Printf("Creating alias %s \n", ui.AliasFormat(key))
+			fmt.Printf("Creating alias %s \n", ui.Format(key).Alias)
 			githandler.ConfigSet(key, value, group)
 		} else {
-			fmt.Printf("Alias %s already exists \n", ui.AliasFormat(key))
+			fmt.Printf("Alias %s already exists \n", ui.Format(key).Alias)
 		}
 	}
 

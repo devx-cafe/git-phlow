@@ -9,7 +9,7 @@ import (
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/spf13/cobra"
 
-	"github.com/praqma/git-phlow/cmdcheck"
+	"github.com/praqma/git-phlow/cmd/cmdperm"
 )
 
 // webCmd represents the web command
@@ -22,8 +22,8 @@ If no argument is passed, it tries to locate an issue on the current checked out
 if that fails it will simply open GitHubs issue list in your default browser
 `,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checks.IsRepository()
-		checks.IsAuthenticated()
+		cmdperm.RequiredCurDirRepository()
+		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {

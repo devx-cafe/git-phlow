@@ -37,7 +37,7 @@ func Deliver(defaultBranch string) {
 		fmt.Println(err)
 		return
 	}
-	fmt.Printf("Branch %s  is now delivered \n", ui.BranchFormat(branchInfo.Current))
+	fmt.Printf("Branch %s  is now delivered \n", ui.Format(branchInfo.Current).Branch)
 }
 
 //LocalDeliver ...
@@ -51,7 +51,7 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 
-	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", ui.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", ui.Format(defaultBranch).Branch)
 	//Checkout default branch: master
 	if err := githandler.CheckOut(defaultBranch); err != nil {
 		fmt.Println(err)
@@ -66,7 +66,7 @@ func LocalDeliver(defaultBranch string) {
 	}
 	fmt.Println(output)
 
-	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", ui.BranchFormat(branchInfo.Current), ui.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", ui.Format(branchInfo.Current).Branch, ui.Format(defaultBranch).Branch)
 	//Merge feature branch into default
 	if err = githandler.Merge(branchInfo.Current); err != nil {
 		fmt.Println(err)
@@ -75,7 +75,7 @@ func LocalDeliver(defaultBranch string) {
 	githandler.BranchRename(branchInfo.Current)
 
 	//Push changes to github
-	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.BranchFormat(defaultBranch))
+	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.Format(defaultBranch).Branch)
 	ui.PhlowSpinner.Start("Pushing changes")
 	_, err = githandler.Push()
 	if err != nil {
@@ -83,7 +83,7 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 	ui.PhlowSpinner.Stop()
-	fmt.Printf("Changes from %s delivered to %s \n", ui.BranchFormat(branchInfo.Current), ui.BranchFormat(defaultBranch))
+	fmt.Printf("Changes from %s delivered to %s \n", ui.Format(branchInfo.Current).Branch, ui.Format(defaultBranch).Branch)
 
 }
 

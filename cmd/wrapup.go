@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/cmdcheck"
+	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/ui"
@@ -16,9 +16,9 @@ var wrapupCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s adds all your work from the working area to the index, and makes an automatic close # commit,
 which closes an issue on github eg. commit message => "close #42 fetch meaning of life"
-`, ui.Bold("wrapup")),
+`, ui.Format("wrapup").Bold),
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checks.IsRepository()
+		cmdperm.RequiredCurDirRepository()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.WrapUp()

@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/praqma/git-phlow/cmdcheck"
+	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
@@ -20,10 +20,10 @@ var workonCmd = &cobra.Command{
 A branch will be created from your remote default branch and named after the title
 of the issue eg. branch => "42-calculate-meaning-of-life".
 From here you the work can start, and when finished run phlow wrapup.
-	`, ui.Bold("workon")),
+	`, ui.Format("workon").Bold),
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checks.IsRepository()
-		checks.IsAuthenticated()
+		cmdperm.RequiredCurDirRepository()
+		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 

@@ -1,4 +1,4 @@
-package checks
+package cmdperm
 
 import (
 	"fmt"
@@ -8,21 +8,21 @@ import (
 	"github.com/praqma/git-phlow/ui"
 )
 
-//IsAuthenticated ...
+//RequiredAuthentication ...
 //Validates if the user has logged in before running the command
-func IsAuthenticated() {
+func RequiredAuthentication() {
 	token := githandler.ConfigGet("token", "phlow")
 	user := githandler.ConfigGet("user", "phlow")
 
 	if token == "" || user == "" {
-		fmt.Printf("Please run %s to connect to github \n", ui.Bold("auth"))
+		fmt.Printf("Please run %s to connect to github \n", ui.Format("auth").Bold)
 		os.Exit(0)
 	}
 }
 
-//IsRepository ...
+//RequiredCurDirRepository ...
 //Validates if the command is runnign in a git repository
-func IsRepository() {
+func RequiredCurDirRepository() {
 	if err := githandler.Status(); err != nil {
 		fmt.Fprintln(os.Stdout, err)
 		os.Exit(0)

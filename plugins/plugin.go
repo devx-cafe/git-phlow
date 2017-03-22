@@ -5,8 +5,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	"github.com/fatih/color"
 )
 
 //PhlowLabels ...
@@ -40,29 +38,12 @@ func init() {
 	PhlowLabels["Status - up next"] = &PhlowLabel{"Status - up next", 4, 15}
 }
 
-//Colorizer ...
-//Determines color based on label group
-func Colorizer(label string) string {
-	if l := PhlowLabels[label]; l != nil {
-		switch l.Group {
-		case 1:
-			return color.New(color.FgHiGreen).Add(color.Bold).Add(color.BgGreen).SprintFunc()(label)
-		case 2:
-			return color.New(color.FgWhite).Add(color.Bold).Add(color.BgHiRed).SprintFunc()(label)
-		case 3:
-			return color.New(color.FgHiBlack).Add(color.Bold).Add(color.BgHiBlue).SprintFunc()(label)
-		case 4:
-			return color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite).SprintFunc()(label)
-		default:
-			return color.New(color.FgBlack).Add(color.Bold).Add(color.BgWhite).SprintFunc()(label)
-		}
+//GroupID ...
+func GroupID(name string) int {
+	if PhlowLabels[name] != nil {
+		return PhlowLabels[name].Group
 	}
-	return color.New(color.FgBlack).Add(color.Bold).Add(color.BgWhite).SprintFunc()(label)
-}
-
-//MilestoneColor ...
-func MilestoneColor(milestone string) string {
-	return color.New(color.FgGreen).SprintFunc()(milestone)
+	return 4
 }
 
 //BranchNameFromIssue ...

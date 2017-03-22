@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/praqma/git-phlow/cmdcheck"
+	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/plugins"
@@ -27,7 +27,7 @@ if you deliver with local, the branch will be merged with your default branch,
 and pushed to your "remote default branch" and prefixed with "/delivered"
 `,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		checks.IsRepository()
+		cmdperm.RequiredCurDirRepository()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
@@ -35,11 +35,11 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 		//Run tests before deliver
 		if len(args) > 0 {
 			if err := phlow.TestDeliver(args); err != nil {
-				fmt.Println(ui.ErrorFormat("!! Tests did not exit with code 0 !!"))
+				fmt.Println(ui.Format("!! Tests did not exit with code 0 !!").Error)
 				fmt.Println(err)
 				os.Exit(1)
 			}
-			fmt.Println(ui.SuccessFormat("Tests exited with code 0 - starting deliver process"))
+			fmt.Println(ui.Format("Tests exited with code 0 - starting deliver process").Success)
 		}
 
 		//If Run if local deliver

@@ -12,7 +12,7 @@ import (
 )
 
 //IssueList ...
-//List open issues from github
+//List open issues from GitHub
 func IssueList() {
 
 	ui.PhlowSpinner.Start("")
@@ -37,23 +37,23 @@ func IssueList() {
 	var printIssue = func(issue plugins.Issues) {
 		issStr := strconv.Itoa(issue.Number)
 
-		fmt.Print(ui.Bold(issStr + ": "))
+		fmt.Print(ui.Format(issStr + ": ").Bold)
 		fmt.Print(issue.Title)
 
 		for _, label := range issue.Labels {
 
-			fmt.Print(" " + plugins.Colorizer(label.Name))
+			fmt.Print(" " + ui.Format(label.Name).Label.FByG(plugins.GroupID(label.Name)))
 		}
 
 		for _, user := range issue.Assignees {
-			fmt.Print(" " + ui.AssigneeFormat(user.Login))
+			fmt.Print(" " + ui.Format(user.Login).Assignee)
 		}
-		fmt.Print(" " + plugins.MilestoneColor(issue.Milestone.Title))
+		fmt.Print(" " + ui.Format(issue.Milestone.Title).MileStone)
 
 		fmt.Println()
 	}
 
-	fmt.Println(plugins.MilestoneColor("# Issues"))
+	fmt.Println(ui.Format("# Issues").MileStone)
 
 	for _, issue := range issues {
 		assignees := issue.Assignees

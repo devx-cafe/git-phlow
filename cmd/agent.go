@@ -17,7 +17,7 @@ var agentCmd = &cobra.Command{
 %s commands are a set of subcommands available for ci/cd services. They are meant as a way of services to easily
 be compatible with %s.
 These are not meant to used locally as a part of your local workflow
-`, ui.Bold("agent"), ui.Bold("the praqmatic workflow")),
+`, ui.Format("agent").Bold, ui.Format("the praqmatic workflow").Bold),
 }
 
 func init() {
