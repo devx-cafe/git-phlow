@@ -20,7 +20,6 @@ with your default branch and pushed to the remote.
 `, ui.Bold("integrate")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		checks.IsRepository()
-		checks.IsAuthenticated()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
