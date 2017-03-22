@@ -100,11 +100,21 @@ func (i *IssueRequest) Get() ([]Issues, error) {
 	var body []byte
 
 	i.URL = fmt.Sprintf(i.URL, i.org, i.repo)
+
+	token := githandler.ConfigGet("token", "phlow")
+	request, err := http.NewRequest("GET", i.URL, nil)
+	if err != nil {
+		return nil, err
+	}
+	q := request.URL.Query()
+	q.Add("access_token", token)
+	request.URL.RawQuery = q.Encode()
+
 	if options.GlobalFlagVerbose {
-		fmt.Println("github uri: " + i.URL)
+		fmt.Println("github uri: " + request.URL.String())
 	}
 
-	if resp, err = i.client.Get(i.URL); err != nil {
+	if resp, err = i.client.Do(request); err != nil {
 		return nil, err
 	}
 	if err = requestStatus(resp); err != nil {
@@ -143,7 +153,7 @@ func createPermissions() (string, error) {
 	}
 
 	perm := Permissions{
-		Scopes: []string{"public_repo", "repo", "repo_deployment"},
+		Scopes: []string{"public_repo", "repo", "repo_deployment", "repo:status"},
 		Note:   note,
 	}
 	b2b, err := json.Marshal(&perm)
