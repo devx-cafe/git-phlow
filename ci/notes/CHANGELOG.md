@@ -1,8 +1,7 @@
-Last release brought some unexpected problems with our authentication og permissions to github, whoops.
-We have made a fix for theses problems, so just go ahead and get the update and these problems should be a part of the past.
-To re-authenticate you need to delete the old 'git phlow' token on github.com and delete your phlow settings in your global .gitconfig file.
+We have changed to agent upnext command so automation becomes easier, this is a quickfix and non critical
+for users who uses do not use the agent commandset.
 
-#### Bug fixes
-- phlow can be authenticated on multiple machines #72 @groenborg
-- list issues should now work on private repositories #71 @groenborg
-- build environment should work on newest go version #73 @groenborg
+
+#### Patch
+- upnext returns a name ready for checkout #79 @groenborg
+

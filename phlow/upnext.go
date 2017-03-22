@@ -7,6 +7,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"strings"
 )
 
 //UpNext ...
@@ -58,7 +59,20 @@ func getNextBranch(branches []string) string {
 	sort.Ints(keys)
 
 	if len(keys) > 0 {
-		return m[keys[0]]
+		res := removeRemoteFromUpNext(m[keys[0]])
+		return res
 	}
 	return ""
+}
+
+//remoteRemoteFromUpNext ...
+func removeRemoteFromUpNext(name string) string {
+
+	remote := githandler.ConfigBranchRemote("master")
+
+	if strings.HasPrefix(name, remote+"/") {
+		name = strings.TrimPrefix(name, remote+"/")
+		return name
+	}
+	return name
 }
