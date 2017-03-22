@@ -306,7 +306,7 @@ func requestStatus(res *http.Response) error {
 		return nil
 	case http.StatusOK:
 		return nil
-	case http.StatusUnprocessableEntity:
+	case 422: //StatusUnprocessableEntity
 		//For POST requests
 		return errors.New("git-phlow token already exists")
 	case http.StatusNotFound:
