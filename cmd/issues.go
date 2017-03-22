@@ -16,6 +16,7 @@ List all the open issues on GitHub with it's ID. Helps you locate what needs to 
 `,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		checks.IsRepository()
+		checks.IsAuthenticated()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.IssueList()

@@ -10,6 +10,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"os"
 )
 
 //GitHub ...
@@ -122,16 +123,50 @@ func (i *IssueRequest) Get() ([]Issues, error) {
 	return nil, err
 }
 
+//Permissions ...
+//data struct for permissions
+type Permissions struct {
+	Scopes []string `json:"scopes"`
+	Note   string   `json:"note"`
+}
+
+//createPermissions ...
+func createPermissions() (string, error) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "", err
+	}
+
+	note := "git phlow " + hostname
+	if options.GlobalFlagVerbose {
+		fmt.Println("github plugin: " + note)
+	}
+
+	perm := Permissions{
+		Scopes: []string{"public_repo", "repo", "repo_deployment"},
+		Note:   note,
+	}
+	b2b, err := json.Marshal(&perm)
+	if err != nil {
+		return "", err
+	}
+	return string(b2b), nil
+}
+
 //Auth ...
 //Auth request to github
 func (a *AuthRequest) Auth(user, pass string) (string, error) {
 	var auth Auth
-	var authBody = `{"scopes": ["public_repo"],"note": "git phlow"}`
+
+	perm, err := createPermissions()
+	if err != nil {
+		return "", err
+	}
 
 	if options.GlobalFlagVerbose {
 		fmt.Println(a.URL)
 	}
-	req, err := http.NewRequest("POST", a.URL, bytes.NewBuffer([]byte(authBody)))
+	req, err := http.NewRequest("POST", a.URL, bytes.NewBuffer([]byte(perm)))
 	if err != nil {
 		return "", err
 	}

@@ -23,6 +23,7 @@ if that fails it will simply open GitHubs issue list in your default browser
 `,
 	PreRun: func(cmd *cobra.Command, args []string) {
 		checks.IsRepository()
+		checks.IsAuthenticated()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {

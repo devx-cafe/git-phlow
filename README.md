@@ -6,7 +6,7 @@ maintainer: groenborg
 
 | build | goreport |
 | ------------- | ----------------- |
-| [build status](https://concourse.code.praqma.com/api/v1/teams/main/pipelines/git-phlow/jobs/integration/badge) | [![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow)       |
+| ![build status](https://concourse.kubernetes.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/integration-tests/badge) | [![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow)       |
 
 
 git-phlow (pronounced _"git flow"_), is a CLI extension for git, which provides an extra set of commands to easily use our pragmatic workflow called **the phlow**.  It has an automatic branching model, which compliant CI/CD services can use for full automation.  It also provides automatic issue tracking using [github](https://github.com) issues with [waffle](https://waffle.io/).

@@ -34,6 +34,19 @@ func TestAuthorize(t *testing.T) {
 	})
 }
 
+func TestCreatePermissions(t *testing.T) {
+	Convey("Running tests on 'createPermissions' function", t, func() {
+		Convey("should return json permissions as string", func() {
+			str, err := createPermissions()
+
+			t.Log(str)
+			So(str, ShouldContainSubstring, "repo")
+			So(err, ShouldBeNil)
+
+		})
+	})
+}
+
 func TestGetDefaultBranch(t *testing.T) {
 	Convey("Runnign tests on 'GetDefaultBranch' request", t, func() {
 		Convey("GetDefaultBranch should return master", func() {
