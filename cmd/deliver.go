@@ -31,7 +31,7 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GitHub.Branch.Default()
+		defaultBranch, _ := plugins.GitHub.Default()
 		//Run tests before deliver
 		if len(args) > 0 {
 			if err := phlow.TestDeliver(args); err != nil {

@@ -4,6 +4,10 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"bytes"
+	"os/exec"
+	"io"
+	"os"
 )
 
 func TestRunCommand(t *testing.T) {
@@ -20,6 +24,25 @@ func TestRunCommand(t *testing.T) {
 			output, err := ExecuteCommand("lsk", "-lah")
 			So(output, ShouldBeBlank)
 			So(err, ShouldNotBeNil)
+		})
+	})
+}
+
+func TestExecutePipe(t *testing.T) {
+	Convey("Running tests on 'ExecutePipe', function ", t, func() {
+		Convey("piping commands should not return error", func() {
+
+			var output bytes.Buffer
+
+			err := ExecutePipe(&output,
+				exec.Command("ls", "-lah"),
+				exec.Command("grep","."),
+				exec.Command("sort", "-r"),
+			)
+
+			io.Copy(os.Stdout, &output)
+
+			t.Log(err)
 		})
 	})
 }

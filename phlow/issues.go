@@ -16,7 +16,7 @@ import (
 func IssueList() {
 
 	ui.PhlowSpinner.Start("")
-	issues, err := plugins.GitHub.Issue.Get()
+	issues, err := plugins.GitHub.GetIssues()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)

@@ -15,7 +15,7 @@ import (
 )
 
 //Auth ...
-//Authenticates the user with github
+//Authenticates the user with gh
 func Auth() {
 	token := githandler.ConfigGet("token", "phlow")
 	user := githandler.ConfigGet("user", "phlow")
@@ -32,7 +32,7 @@ func Auth() {
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	token, err := plugins.GitHub.Auth.Auth(username, password)
+	token, err := plugins.GitHub.Auth(username, password)
 	if err != nil {
 		fmt.Println()
 		fmt.Println(err)

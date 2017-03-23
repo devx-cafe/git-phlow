@@ -1,0 +1,45 @@
+{
+	"ImportPath": "github.com/praqma/git-phlow",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v79",
+	"Deps": [
+		{
+			"ImportPath": "github.com/briandowns/spinner",
+			"Rev": "ec599f41a86d9a71c359e224bd71a2df3e909a3d"
+		},
+		{
+			"ImportPath": "github.com/fatih/color",
+			"Comment": "v1.3.0",
+			"Rev": "5ec5d9d3c2cf82e9688b34e9bc27a94d616a7193"
+		},
+		{
+			"ImportPath": "github.com/inconshreveable/mousetrap",
+			"Rev": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-colorable",
+			"Comment": "v0.0.7-1-g5411d3e",
+			"Rev": "5411d3eea5978e6cdc258b30de592b60df6aba96"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-isatty",
+			"Rev": "281032e84ae07510239465db46bf442aa44b953a"
+		},
+		{
+			"ImportPath": "github.com/spf13/cobra",
+			"Rev": "c29ece4386f74084680e5e6d02d7b943ae630f63"
+		},
+		{
+			"ImportPath": "github.com/spf13/pflag",
+			"Rev": "a9a634f3de0a7529baded7ad6b0c7467d5c6eca7"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "453249f01cfeb54c3d549ddb75ff152ca243f9d8"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "d75a52659825e75fff6158388dddc6a5b04f9ba5"
+		}
+	]
+}

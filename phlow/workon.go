@@ -42,16 +42,16 @@ func WorkOn(issue int) {
 			return
 		}
 	}
-	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", ui.Format.Bold("issue-branches"))
+	fmt.Fprintf(os.Stdout, "No local %s found. Searching gh \n", ui.Format.Bold("issue-branches"))
 
-	//Get list of github issues
-	gitHubIssues, err := plugins.GitHub.Issue.Get()
+	//Get list of gh issues
+	gitHubIssues, err := plugins.GitHub.GetIssues()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	//Get the default branch - eg. master
-	defaultBranch, err := plugins.GitHub.Branch.Default()
+	defaultBranch, err := plugins.GitHub.Default()
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -81,11 +81,11 @@ func UpdateIssue(issue int) {
 	//Retrieve token
 	user := githandler.ConfigGet("user", "phlow")
 
-	if _, err := plugins.GitHub.Label.Set(plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
+	if _, err := plugins.GitHub.SetLabel(plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := plugins.GitHub.Assignee.Set(user, issue); err != nil {
+	if err := plugins.GitHub.SetAssignee(user, issue); err != nil {
 		fmt.Println(err)
 	}
 

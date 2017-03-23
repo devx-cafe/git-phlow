@@ -119,3 +119,18 @@ func TestBranchTime(t *testing.T) {
 
 	})
 }
+
+func Test(t *testing.T) {
+	Convey("Running test on 'BranchRemote' function", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("should return origin/master", func() {
+			output, err := branchRemote()
+			t.Log(err)
+			So(output, ShouldEqual, "origin/master")
+		})
+
+		testfixture.RemoveTestRepository(t)
+	})
+}

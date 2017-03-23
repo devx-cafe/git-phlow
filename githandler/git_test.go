@@ -122,7 +122,7 @@ func TestStatus(t *testing.T) {
 func TestRemoteUrlExtractor(t *testing.T) {
 	Convey("Running test on 'remoteUrlExtractor' function", t, func() {
 		Convey("https remote url should return", func() {
-			var https = "https://github.com/Org/sOme--repo.git"
+			var https = "https://gh.com/Org/sOme--repo.git"
 			info := remoteURLExtractor(https)
 			So(info.Organisation, ShouldEqual, "Org")
 			So(info.Repository, ShouldEqual, "sOme--repo")
@@ -130,14 +130,14 @@ func TestRemoteUrlExtractor(t *testing.T) {
 		})
 
 		Convey("ssh remote url should return", func() {
-			var ssh = "git@github.com:Org/some-repo.git"
+			var ssh = "git@gh.com:Org/some-repo.git"
 			info := remoteURLExtractor(ssh)
 			So(info.Organisation, ShouldEqual, "Org")
 			So(info.Repository, ShouldEqual, "some-repo")
 		})
 
 		Convey("ssh remote url with dot should return", func() {
-			var ssh = "git@github.com:Praqma/praqma.com.git"
+			var ssh = "git@gh.com:Praqma/praqma.com.git"
 			info := remoteURLExtractor(ssh)
 			t.Log(info.Organisation)
 			t.Log(info.Repository)
@@ -145,5 +145,37 @@ func TestRemoteUrlExtractor(t *testing.T) {
 			So(info.Repository, ShouldEqual, "praqma.com")
 		})
 
+	})
+}
+
+func TestStatusPorcelain(t *testing.T) {
+
+	Convey("Running test on 'StatusPorcelain' function", t, func() {
+
+		Convey("Status should return one of behind and forward", func() {
+
+			out, err := StatusPorcelain()
+			t.Log(out)
+			t.Log(err)
+			So(out, ShouldEqual, "## 52-implement-a-park-feature...origin/master [ahead 1]")
+		})
+	})
+}
+
+func TestFormatPatch(t *testing.T) {
+
+	Convey("Running tests on 'FormatPatch' function", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("checking output", func() {
+			out, err := FormatPatch("origin/master")
+
+			t.Log(out)
+			t.Log(err)
+
+		})
+
+		testfixture.RemoveTestRepository(t)
 	})
 }

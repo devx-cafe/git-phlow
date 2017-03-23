@@ -25,5 +25,4 @@ only acces to manage issues for public repositories'`, ui.Format.Bold("auth")),
 
 func init() {
 	RootCmd.AddCommand(authCmd)
-
 }

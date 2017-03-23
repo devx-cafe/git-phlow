@@ -25,8 +25,8 @@ func TestAuthorize(t *testing.T) {
 			}))
 
 			defer ts.Close()
-			GitHub.Auth.URL = ts.URL + "/authorizations"
-			token, err := GitHub.Auth.Auth("simon", "password")
+			GitHub.base = ts.URL
+			token, err := GitHub.Auth("simon", "password")
 			t.Log(err)
 			So(token, ShouldEqual, "abcdefgh12345678")
 			So(err, ShouldBeNil)
@@ -35,9 +35,9 @@ func TestAuthorize(t *testing.T) {
 }
 
 func TestCreatePermissions(t *testing.T) {
-	Convey("Running tests on 'createPermissions' function", t, func() {
+	Convey("Running tests on 'createGHPermissions' function", t, func() {
 		Convey("should return json permissions as string", func() {
-			str, err := createPermissions()
+			str, err := createGHPermissions()
 
 			t.Log(str)
 			So(str, ShouldContainSubstring, "repo")
@@ -59,17 +59,18 @@ func TestGetDefaultBranch(t *testing.T) {
 				if r.URL.EscapedPath() == "repos/"+org+"/"+repo {
 					t.Errorf("Expected got '%s'", r.URL.EscapedPath())
 				}
+
+				t.Log(r.URL.String())
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(repoResponse))
 
 			}))
 			defer ts.Close()
-			GitHub.Branch.URL = ts.URL + "/repos/%s/%s"
-			GitHub.Branch.org = org
-			GitHub.Branch.repo = repo
-			def, err := GitHub.Branch.Default()
-			t.Log(GitHub.Branch.URL)
-			t.Log(GitHub.Branch)
+			GitHub.base = ts.URL
+			GitHub.org = org
+			GitHub.repo = repo
+			def, err := GitHub.Default()
+			t.Log(def)
 			So(def, ShouldEqual, "master")
 			So(err, ShouldBeNil)
 		})
@@ -86,8 +87,9 @@ func TestGetIssues(t *testing.T) {
 				if r.Method != "GET" {
 					t.Errorf("Expected Request 'GET', got '%s'", r.Method)
 				}
+				t.Log(r.URL.EscapedPath())
 				if r.URL.EscapedPath() != "/repos/"+org+"/"+repo+"/issues" {
-					t.Errorf("expected %s but got %s", issueURL, r.URL.EscapedPath())
+					t.Errorf("expected %s but got %s", GitHub.issueURL, r.URL.EscapedPath())
 				}
 
 				w.WriteHeader(http.StatusOK)
@@ -95,11 +97,11 @@ func TestGetIssues(t *testing.T) {
 
 			}))
 			defer ts.Close()
-			GitHub.Issue.URL = ts.URL + "/repos/%s/%s/issues"
-			GitHub.Issue.org = org
-			GitHub.Issue.repo = repo
-			issues, err := GitHub.Issue.Get()
+			GitHub.org = org
+			GitHub.repo = repo
+			GitHub.base = ts.URL
 
+			issues, err := GitHub.GetIssues()
 			So(issues[0].Assignees[0].Login, ShouldEqual, "groenborg")
 			So(issues, ShouldHaveLength, 1)
 			So(err, ShouldBeNil)
@@ -132,11 +134,11 @@ func TestSetLabel(t *testing.T) {
 			}))
 
 			defer ts.Close()
-			GitHub.Label.URL = ts.URL + "/repos/%s/%s/issues/%d/labels"
-			GitHub.Label.token = "abc"
-			GitHub.Label.org = org
-			GitHub.Label.repo = repo
-			labels, err := GitHub.Label.Set("Status - in progress", 1)
+			GitHub.base = ts.URL
+			GitHub.token = "abc"
+			GitHub.org = org
+			GitHub.repo = repo
+			labels, err := GitHub.SetLabel("Status - in progress", 1)
 			t.Log(err)
 			So(labels, ShouldHaveLength, 4)
 			So(err, ShouldBeNil)
@@ -169,11 +171,11 @@ func TestSetAssignee(t *testing.T) {
 			}))
 			defer ts.Close()
 
-			GitHub.Assignee.URL = ts.URL + "/repos/%s/%s/issues/%d/assignees"
-			GitHub.Assignee.org = org
-			GitHub.Assignee.repo = repo
-			GitHub.Assignee.token = "abc"
-			err := GitHub.Assignee.Set("john markom", 1)
+			GitHub.base = ts.URL
+			GitHub.org = org
+			GitHub.repo = repo
+			GitHub.token = "abc"
+			err := GitHub.SetAssignee("john markom", 1)
 			So(err, ShouldBeNil)
 		})
 	})
@@ -185,28 +187,28 @@ var labelResponse = `
 [
   {
     "id": 544302811,
-    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Action%20-%20awaiting%20feed-back",
+    "url": "https://api.gh.com/repos/Praqma/phlow-test/labels/Action%20-%20awaiting%20feed-back",
     "name": "Action - awaiting feed-back",
     "color": "6eb82c",
     "default": false
   },
   {
     "id": 545150499,
-    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Label1",
+    "url": "https://api.gh.com/repos/Praqma/phlow-test/labels/Label1",
     "name": "Label1",
     "color": "ededed",
     "default": false
   },
   {
     "id": 545150500,
-    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Label2",
+    "url": "https://api.gh.com/repos/Praqma/phlow-test/labels/Label2",
     "name": "Label2",
     "color": "ededed",
     "default": false
   },
   {
     "id": 544302897,
-    "url": "https://api.github.com/repos/Praqma/phlow-test/labels/Size%202%20-%20medium",
+    "url": "https://api.gh.com/repos/Praqma/phlow-test/labels/Size%202%20-%20medium",
     "name": "Size 2 - medium",
     "color": "208fe5",
     "default": false
@@ -219,7 +221,7 @@ var repoResponse = `
    "name":"git-phlow",
    "full_name":"Praqma/git-phlow",
    "private":false,
-   "html_url":"https://github.com/Praqma/git-phlow",
+   "html_url":"https://gh.com/Praqma/git-phlow",
    "description":"The official repository for the git-phlow extension",
    "language":"Go",
    "has_issues":true,
@@ -237,7 +239,7 @@ var repoResponse = `
 var authResponse = `
 {
   "id": 1,
-  "url": "https://api.github.com/authorizations/1",
+  "url": "https://api.gh.com/authorizations/1",
   "scopes": [
     "public_repo"
   ],
@@ -245,8 +247,8 @@ var authResponse = `
   "token_last_eight": "12345678",
   "hashed_token": "25f94a2a5c7fbaf499c665bc73d67c1c87e496da8985131633ee0a95819db2e8",
   "app": {
-    "url": "http://my-github-app.com",
-    "name": "my github app",
+    "url": "http://my-gh-app.com",
+    "name": "my gh app",
     "client_id": "abcde12345fghij67890"
   },
   "note": "optional note",
@@ -258,12 +260,12 @@ var authResponse = `
 
 var issueResponse = `[
   {
-    "url": "https://api.github.com/repos/Praqma/git-phlow/issues/46",
-    "repository_url": "https://api.github.com/repos/Praqma/git-phlow",
-    "labels_url": "https://api.github.com/repos/Praqma/git-phlow/issues/46/labels{/name}",
-    "comments_url": "https://api.github.com/repos/Praqma/git-phlow/issues/46/comments",
-    "events_url": "https://api.github.com/repos/Praqma/git-phlow/issues/46/events",
-    "html_url": "https://github.com/Praqma/git-phlow/issues/46",
+    "url": "https://api.gh.com/repos/Praqma/git-phlow/issues/46",
+    "repository_url": "https://api.gh.com/repos/Praqma/git-phlow",
+    "labels_url": "https://api.gh.com/repos/Praqma/git-phlow/issues/46/labels{/name}",
+    "comments_url": "https://api.gh.com/repos/Praqma/git-phlow/issues/46/comments",
+    "events_url": "https://api.gh.com/repos/Praqma/git-phlow/issues/46/events",
+    "html_url": "https://gh.com/Praqma/git-phlow/issues/46",
     "id": 208421587,
     "number": 46,
     "title": "rewrite of repo",
@@ -272,38 +274,38 @@ var issueResponse = `[
       "id": 5576954,
       "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
       "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
+      "url": "https://api.gh.com/users/groenborg",
+      "html_url": "https://gh.com/groenborg",
+      "followers_url": "https://api.gh.com/users/groenborg/followers",
+      "following_url": "https://api.gh.com/users/groenborg/following{/other_user}",
+      "gists_url": "https://api.gh.com/users/groenborg/gists{/gist_id}",
+      "starred_url": "https://api.gh.com/users/groenborg/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.gh.com/users/groenborg/subscriptions",
+      "organizations_url": "https://api.gh.com/users/groenborg/orgs",
+      "repos_url": "https://api.gh.com/users/groenborg/repos",
+      "events_url": "https://api.gh.com/users/groenborg/events{/privacy}",
+      "received_events_url": "https://api.gh.com/users/groenborg/received_events",
       "type": "User",
       "site_admin": false
     },
     "labels": [
       {
         "id": 524293854,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Prio%201%20-%20must%20have",
+        "url": "https://api.gh.com/repos/Praqma/git-phlow/labels/Prio%201%20-%20must%20have",
         "name": "Prio 1 - must have",
         "color": "e83d0f",
         "default": false
       },
       {
         "id": 524293924,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Size%203%20-%20large",
+        "url": "https://api.gh.com/repos/Praqma/git-phlow/labels/Size%203%20-%20large",
         "name": "Size 3 - large",
         "color": "0052cc",
         "default": false
       },
       {
         "id": 524293956,
-        "url": "https://api.github.com/repos/Praqma/git-phlow/labels/Status%20-%20in%20progress",
+        "url": "https://api.gh.com/repos/Praqma/git-phlow/labels/Status%20-%20in%20progress",
         "name": "Status - in progress",
         "color": "ededed",
         "default": false
@@ -316,17 +318,17 @@ var issueResponse = `[
       "id": 5576954,
       "avatar_url": "https://avatars.githubusercontent.com/u/5576954?v=3",
       "gravatar_id": "",
-      "url": "https://api.github.com/users/groenborg",
-      "html_url": "https://github.com/groenborg",
-      "followers_url": "https://api.github.com/users/groenborg/followers",
-      "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-      "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-      "organizations_url": "https://api.github.com/users/groenborg/orgs",
-      "repos_url": "https://api.github.com/users/groenborg/repos",
-      "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/groenborg/received_events",
+      "url": "https://api.gh.com/users/groenborg",
+      "html_url": "https://gh.com/groenborg",
+      "followers_url": "https://api.gh.com/users/groenborg/followers",
+      "following_url": "https://api.gh.com/users/groenborg/following{/other_user}",
+      "gists_url": "https://api.gh.com/users/groenborg/gists{/gist_id}",
+      "starred_url": "https://api.gh.com/users/groenborg/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.gh.com/users/groenborg/subscriptions",
+      "organizations_url": "https://api.gh.com/users/groenborg/orgs",
+      "repos_url": "https://api.gh.com/users/groenborg/repos",
+      "events_url": "https://api.gh.com/users/groenborg/events{/privacy}",
+      "received_events_url": "https://api.gh.com/users/groenborg/received_events",
       "type": "User",
       "site_admin": false
     },
@@ -334,25 +336,25 @@ var issueResponse = `[
       {
         "login": "groenborg",
         "gravatar_id": "",
-        "url": "https://api.github.com/users/groenborg",
-        "html_url": "https://github.com/groenborg",
-        "followers_url": "https://api.github.com/users/groenborg/followers",
-        "following_url": "https://api.github.com/users/groenborg/following{/other_user}",
-        "gists_url": "https://api.github.com/users/groenborg/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/groenborg/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/groenborg/subscriptions",
-        "organizations_url": "https://api.github.com/users/groenborg/orgs",
-        "repos_url": "https://api.github.com/users/groenborg/repos",
-        "events_url": "https://api.github.com/users/groenborg/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/groenborg/received_events",
+        "url": "https://api.gh.com/users/groenborg",
+        "html_url": "https://gh.com/groenborg",
+        "followers_url": "https://api.gh.com/users/groenborg/followers",
+        "following_url": "https://api.gh.com/users/groenborg/following{/other_user}",
+        "gists_url": "https://api.gh.com/users/groenborg/gists{/gist_id}",
+        "starred_url": "https://api.gh.com/users/groenborg/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.gh.com/users/groenborg/subscriptions",
+        "organizations_url": "https://api.gh.com/users/groenborg/orgs",
+        "repos_url": "https://api.gh.com/users/groenborg/repos",
+        "events_url": "https://api.gh.com/users/groenborg/events{/privacy}",
+        "received_events_url": "https://api.gh.com/users/groenborg/received_events",
         "type": "User",
         "site_admin": false
       }
     ],
     "milestone": {
-      "url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3",
-      "html_url": "https://github.com/Praqma/git-phlow/milestone/3",
-      "labels_url": "https://api.github.com/repos/Praqma/git-phlow/milestones/3/labels",
+      "url": "https://api.gh.com/repos/Praqma/git-phlow/milestones/3",
+      "html_url": "https://gh.com/Praqma/git-phlow/milestone/3",
+      "labels_url": "https://api.gh.com/repos/Praqma/git-phlow/milestones/3/labels",
       "id": 2309002,
       "number": 3,
       "title": "Implement workon, init wrapup commands ",

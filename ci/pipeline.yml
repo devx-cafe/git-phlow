@@ -1,13 +1,51 @@
+resource_types:
+#PIP RESOURCE_TYPE
+- name: pip
+  type: docker-image
+  source:
+    repository: groenborg/concourse-git-phlow
+
+
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
+################# RESOURCE CONFIGURATION #################
 resources:
-    #GITHUB REPOSITORY
+
+#GITHUB GIT-PHLOW
     - name: git-phlow
       type: git
       source:
         uri: https://github.com/Praqma/git-phlow.git
         branch: master
+        username: {{github-username}}
+        password: {{github-password}}
 
-   #VERSION 
-    - name: resource-version
+#GITHUB PRAQMA-TAP
+    - name: praqma-tap
+      type: git
+      source:
+        uri: https://github.com/Praqma/homebrew-praqma-tap.git
+        branch: master
+        username: {{github-username}}
+        password: {{github-password}}
+
+#PRETESTED INTEGRATION
+    - name: pretested-integration
+      type: pip
+      source: 
+        prefixready: ready/
+        prefixwip: wip/
+        master: master
+        url: https://github.com/Praqma/git-phlow.git
+        username: {{github-username}}
+        password: {{github-password}}
+
+#VERSION 
+    - name: gp-version
       type: semver
       source:
         driver: git
@@ -16,14 +54,15 @@ resources:
         file: version
         private_key: {{github-private-key}} 
 
-    #GITHUB RELEASE
+#GITHUB RELEASE
     - name: gh-release
       type: github-release
       source:
         user: praqma
         repository: git-phlow
         access_token: {{github-token}}
-    #S3 BUCKET FOR ARTIFACTS
+
+#S3 BUCKET LINUX
     - name: phlow-artifact-linux-s3
       type: s3
       source: 
@@ -32,6 +71,8 @@ resources:
         access_key_id: {{s3-access-key-id}}
         region_name: eu-central-1
         secret_access_key: {{s3-secret-access-key}}
+
+#S3 BUCKET DARWIN
     - name: phlow-artifact-darwin-s3
       type: s3
       source: 
@@ -40,124 +81,89 @@ resources:
         access_key_id: {{s3-access-key-id}}
         region_name: eu-central-1
         secret_access_key: {{s3-secret-access-key}}
+
+#SLACK NOTIFICATION
+    - name: slack-alert
+      type: slack-notification
+      source:
+        url: {{slack-url}}
+
+
 ################# PIPELINE JOBS #################
 #INTEGRATION TEST JOB
 jobs:
-- name: integration-tests
+- name: integration-test
   plan:
   - get: git-phlow
-    trigger: true
+  - get: pretested-integration
+    #trigger: true
   - task: integration
     file: git-phlow/ci/tasks/run-tests.yml
-#VERSIONIGN JOB 
-- name: job-versioning
-  public: true
-  serial: true
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+            $BUILD_JOB_NAME nr. $BUILD_NAME failed 
+            https://concourse.kubernetes.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: pretested-integration
+    params:
+      repository: pretested-integration
+    timeout: 5m
+
+#BUILD ARTIFACT
+- name: build-phlow-artifacts
   plan:
-  - get: resource-version
-    
-#RELEASE MAJOR
-- name: create-major
-  plan:
-    - get: resource-version
-      params: {bump: major}
-    - get: git-phlow 
-      passed: [integration-tests]
-    - put: resource-version
-      params: {file: resource-version/version}
-    - task: create-release 
-      file: git-phlow/ci/tasks/gen-bin.yml
-    - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
-    - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}
-#RELEASE MINOR 
-- name: create-minor
-  plan:
-    - get: resource-version
-      params: {bump: minor}
-    - get: git-phlow 
-      passed: [integration-tests]
-    - put: resource-version
-      params: {file: resource-version/version}
-    - task: create-release 
-      file: git-phlow/ci/tasks/gen-bin.yml
-    - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
-    - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}
-#RELEASE PATCH
-- name: create-patch
-  plan:
-    - get: resource-version
+    - get: gp-version
       params: {bump: patch}
     - get: git-phlow 
-      passed: [integration-tests]
-    - put: resource-version
-      params: {file: resource-version/version}
+      passed: [integration-test]
+    - put: gp-version
+      params: {file: gp-version/version}
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
     - put: phlow-artifact-linux-s3
       params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
     - put: phlow-artifact-darwin-s3
       params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}                    
+      
+#PAC GOES HERE
+
 #CREATE A GITHUB RELEASE
-- name: shipit-patch
+- name: shipit
   plan:
-  - get: resource-version
+  - get: gp-version
   - get: git-phlow
+    passed: [integration-test]
   - get: phlow-artifact-linux-s3
-    passed: [create-patch]
+    passed: [build-phlow-artifacts]
     trigger: true
   - get: phlow-artifact-darwin-s3
-    passed: [create-patch]
+    passed: [build-phlow-artifacts]
     trigger: true
   - put: gh-release
     params:
-      name: resource-version/version 
-      tag: resource-version/version
+      name: gp-version/version 
+      tag: gp-version/version
       tag_prefix: v 
       body: git-phlow/ci/notes/CHANGELOG.md
       globs: 
         - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
         - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
-#CREATE A GITHUB RELEASE
-- name: shipit-minor
+- name: brew-release
   plan:
-  - get: resource-version
-  - get: git-phlow
-  - get: phlow-artifact-linux-s3
-    passed: [create-minor]
-    trigger: true
-  - get: phlow-artifact-darwin-s3
-    passed: [create-minor]
-    trigger: true
-  - put: gh-release
-    params:
-      name: resource-version/version 
-      tag: resource-version/version
-      tag_prefix: v 
-      body: git-phlow/ci/notes/CHANGELOG.md
-      globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
-#CREATE A GITHUB RELEASE
-- name: shipit-major
-  plan:
-  - get: resource-version
-  - get: git-phlow
-  - get: phlow-artifact-linux-s3
-    passed: [create-major]
-    trigger: true
-  - get: phlow-artifact-darwin-s3
-    passed: [create-major]
-    trigger: true
-  - put: gh-release
-    params:
-      name: resource-version/version 
-      tag: resource-version/version
-      tag_prefix: v 
-      body: git-phlow/ci/notes/CHANGELOG.md
-      globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
+  - aggregate:   
+    - get: praqma-tap
+    - get: git-phlow #contains the formula update script
+    - get: gp-version
+    - get: phlow-artifact-darwin-s3
+      #passed: [shipit, build-phlow-artifacts]
+      #trigger: true
+  - task: brew-release
+    file: git-phlow/ci/tasks/brew-release.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+            brew release failed
+            https://concourse.kubernetes.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: praqma-tap

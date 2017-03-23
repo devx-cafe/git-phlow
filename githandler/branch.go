@@ -77,6 +77,14 @@ func BranchDelivered(remote string) (localBranches []string, remoteBranches []st
 	return
 }
 
+func branchRemote() (string, error) {
+	output, err := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(output), nil
+}
+
 //BranchReady ...
 func BranchReady(remote string, prefix string) (remoteBranches []string) {
 	info, err := Branch()

@@ -7,7 +7,7 @@ ls -lah
 
 #GET VERSION AND PATH
 #STORE VERSION AND PATH FOR BUILD
-VERSION=$(cat resource-version/version)
+VERSION=$(cat gp-version/version)
 BUILDPATH=$(pwd)
 
 #CREATE GO DIRECTORY STRUCTURE

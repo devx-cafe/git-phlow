@@ -21,10 +21,31 @@ func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
 	return err
 }
 
+//FormatPatch ...
+//dry runs patch to see if we can auto merge
+func FormatPatch(remoteBranch string) (string, error) {
+	op, err := executor.ExecuteCommand("git", "format-patch", remoteBranch, "--stdout", "|", "git", "apply", "check")
+	if err != nil {
+		return "", err
+	}
+	return op, nil
+}
+
 //Status ...
+//git status
 func Status() error {
 	_, err := executor.ExecuteCommand("git", "status")
 	return err
+}
+
+//StatusPorcelain ...
+//generates behind and ahead status
+func StatusPorcelain() (string, error) {
+	out, err := executor.ExecuteCommand("git", "status", "short", "--branch", "--porcelain")
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(out), nil
 }
 
 //Add ...

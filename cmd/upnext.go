@@ -26,7 +26,7 @@ if no --prefix flag is set, the default prefix is ready/
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GitHub.Branch.Default()
+		defaultBranch, _ := plugins.GitHub.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)
 
 		phlow.UpNext(remote, options.GlobalFlagPrefixForReady)

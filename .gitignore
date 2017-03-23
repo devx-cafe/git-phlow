@@ -30,6 +30,8 @@ _testmain.go
 .LSOverride
 
 
+/vendor
+
 ### EDITORS ###
 .vscode/
 .idea/

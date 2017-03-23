@@ -23,7 +23,7 @@ with your default branch and pushed to the remote.
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, err := plugins.GitHub.Branch.Default()
+		defaultBranch, err := plugins.GitHub.Default()
 		if err != nil {
 			fmt.Println(err)
 		}

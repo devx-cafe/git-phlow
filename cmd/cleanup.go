@@ -24,7 +24,7 @@ It deletes safely by running 'git branch -d'. By default, both local and remote 
 		cmdperm.RequiredCurDirRepository()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		defaultBranch, _ := plugins.GitHub.Branch.Default()
+		defaultBranch, _ := plugins.GitHub.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)
 
 		phlow.Clean(remote)

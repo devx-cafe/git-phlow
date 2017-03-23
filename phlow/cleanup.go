@@ -39,6 +39,4 @@ func Clean(remoteName string) {
 			fmt.Println(remote)
 		}
 	}
-
-	fmt.Println("Workspace cleaned")
 }
