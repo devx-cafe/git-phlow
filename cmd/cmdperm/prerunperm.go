@@ -15,7 +15,7 @@ func RequiredAuthentication() {
 	user := githandler.ConfigGet("user", "phlow")
 
 	if token == "" || user == "" {
-		fmt.Printf("Please run %s to connect to github \n", ui.Format("auth").Bold)
+		fmt.Printf("Please run %s to connect to github \n", ui.Format.Bold("auth"))
 		os.Exit(0)
 	}
 }

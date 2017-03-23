@@ -29,7 +29,7 @@ func WorkOn(issue int) {
 
 	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
 	if plugins.IssueFromBranchName(branchInfo.Current) == issue {
-		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format(branchInfo.Current).Branch)
+		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format.Branch(branchInfo.Current))
 		return
 	}
 
@@ -38,11 +38,11 @@ func WorkOn(issue int) {
 			if err = githandler.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
-			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", ui.Format(branch).Branch)
+			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", ui.Format.Branch(branch))
 			return
 		}
 	}
-	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", ui.Format("issue-branches").Bold)
+	fmt.Fprintf(os.Stdout, "No local %s found. Searching github \n", ui.Format.Bold("issue-branches"))
 
 	//Get list of github issues
 	gitHubIssues, err := plugins.GitHub.Issue.Get()
@@ -64,7 +64,7 @@ func WorkOn(issue int) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", ui.Format(name).Branch)
+			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", ui.Format.Branch(name))
 
 			//Set labels and Assignee
 			UpdateIssue(issue)
@@ -90,9 +90,9 @@ func UpdateIssue(issue int) {
 	}
 
 	is := strconv.Itoa(issue)
-	fmt.Fprintf(os.Stdout, "\n-------- Issue %s updated --------  \n", ui.Format(is).Issue)
-	fmt.Fprintf(os.Stdout, "Label    => %s \n", ui.Format(plugins.PhlowLabels["Status - in progress"].Title).Label.G4Move)
-	fmt.Fprintf(os.Stdout, "Assignee => %s \n", ui.Format(user).Assignee)
+	fmt.Fprintf(os.Stdout, "\n-------- Issue %s updated --------  \n", ui.Format.Issue(is))
+	fmt.Fprintf(os.Stdout, "Label    => %s \n", ui.Format.Label.G4Move(plugins.PhlowLabels["Status - in progress"].Title))
+	fmt.Fprintf(os.Stdout, "Assignee => %s \n", ui.Format.Assignee(user))
 	fmt.Println("----------------------------------")
 	return
 }

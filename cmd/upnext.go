@@ -19,7 +19,7 @@ var upNextCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s gets the next branch ready for integration based on the branch creation time.
 The branch created first, is the branch thats up next.
-`, ui.Format("upnext").Bold),
+`, ui.Format.Bold("upnext")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 	},

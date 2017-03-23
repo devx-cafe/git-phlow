@@ -17,7 +17,7 @@ var integrateCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s delivers the changes in an agent version. The current branch if will be merged into the default branch
 with your default branch and pushed to the remote.
-`, ui.Format("integrate").Bold),
+`, ui.Format.Bold("integrate")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 	},

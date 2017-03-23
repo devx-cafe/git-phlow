@@ -37,23 +37,23 @@ func IssueList() {
 	var printIssue = func(issue plugins.Issues) {
 		issStr := strconv.Itoa(issue.Number)
 
-		fmt.Print(ui.Format(issStr + ": ").Bold)
+		fmt.Print(ui.Format.Bold(issStr + ": "))
 		fmt.Print(issue.Title)
 
 		for _, label := range issue.Labels {
 
-			fmt.Print(" " + ui.Format(label.Name).Label.FByG(plugins.GroupID(label.Name)))
+			fmt.Print(" " + ui.Format.FByG(plugins.GroupID(label.Name))(label.Name))
 		}
 
 		for _, user := range issue.Assignees {
-			fmt.Print(" " + ui.Format(user.Login).Assignee)
+			fmt.Print(" " + ui.Format.Assignee(user.Login))
 		}
-		fmt.Print(" " + ui.Format(issue.Milestone.Title).MileStone)
+		fmt.Print(" " + ui.Format.MileStone(issue.Milestone.Title))
 
 		fmt.Println()
 	}
 
-	fmt.Println(ui.Format("# Issues").MileStone)
+	fmt.Println(ui.Format.MileStone("# Issues"))
 
 	for _, issue := range issues {
 		assignees := issue.Assignees

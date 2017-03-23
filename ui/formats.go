@@ -4,71 +4,90 @@ import (
 	"github.com/fatih/color"
 )
 
-var cf *ColorFormat
+var Format *colorFormat
 var lsf *labelSubFormat
 
-//ColorFormat ...
+//colorFormat ...
 //color formats for terminal output
-type ColorFormat struct {
-	Bold      string
-	Success   string
-	Error     string
+type colorFormat struct {
+	Bold      func(in string) string
+	Success   func(in string) string
+	Error     func(in string) string
 	Label     *labelSubFormat
-	Assignee  string
-	Alias     string
-	Issue     string
-	Branch    string
-	MileStone string
+	Assignee  func(in string) string
+	Alias     func(in string) string
+	Issue     func(in string) string
+	Branch    func(in string) string
+	MileStone func(in string) string
 }
 
 //labelSubFormat ...
 //color formats for labels in terminal output
 type labelSubFormat struct {
-	G1Await    string
-	G2Priority string
-	G3Time     string
-	G4Move     string
+	G1Await    func(in string) string
+	G2Priority func(in string) string
+	G3Time     func(in string) string
+	G4Move     func(in string) string
+}
+
+func init() {
+	lsf = &labelSubFormat{
+		G1Await: func(in string) string {
+			return color.New(color.FgHiGreen).Add(color.Bold).Add(color.BgGreen).SprintFunc()(in)
+		},
+		G2Priority: func(in string) string {
+			return color.New(color.FgWhite).Add(color.Bold).Add(color.BgHiRed).SprintFunc()(in)
+		},
+		G3Time: func(in string) string {
+			return color.New(color.FgHiBlack).Add(color.Bold).Add(color.BgHiBlue).SprintFunc()(in)
+		},
+		G4Move: func(in string) string {
+			return color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite).SprintFunc()(in)
+		},
+	}
+
+	Format = &colorFormat{
+		Bold: func(in string) string {
+			return color.New(color.Bold).SprintFunc()(in)
+		},
+		Success: func(in string) string {
+			return color.New(color.FgHiGreen).SprintFunc()(in)
+		},
+		Error: func(in string) string {
+			return color.New(color.FgHiRed).SprintFunc()(in)
+		},
+		Branch: func(in string) string {
+			return color.New(color.FgHiGreen).Add(color.Bold).SprintFunc()(in)
+		},
+		Alias: func(in string) string {
+			return color.New(color.FgHiCyan).Add(color.Bold).SprintFunc()(in)
+		},
+		Assignee: func(in string) string {
+			return color.New(color.FgYellow).Add(color.Bold).SprintFunc()("@" + in)
+		},
+		Issue: func(in string) string {
+			return color.New(color.Bold).SprintFunc()("#" + in)
+		},
+		MileStone: func(in string) string {
+			return color.New(color.FgGreen).SprintFunc()(in)
+		},
+		Label: lsf,
+	}
 }
 
 //FByG ...
-//Format By Group return the format of the given group of the label
-func (l *labelSubFormat) FByG(g int) string {
-	switch g {
+//Format By Group return the Format of the given group of the label
+func (c *colorFormat) FByG(i int) (func(string) string) {
+	switch i {
 	case 1:
-		return l.G1Await
+		return c.Label.G1Await
 	case 2:
-		return l.G2Priority
+		return c.Label.G2Priority
 	case 3:
-		return l.G3Time
+		return c.Label.G3Time
 	case 4:
-		return l.G4Move
+		return c.Label.G4Move
 	default:
-		return l.G1Await
+		return c.Label.G1Await
 	}
-}
-
-//Format ...
-//returns the ColorFormat
-func Format(input string) *ColorFormat {
-	if cf == nil {
-		lsf = &labelSubFormat{
-			G1Await:    color.New(color.FgHiGreen).Add(color.Bold).Add(color.BgGreen).SprintFunc()(input),
-			G2Priority: color.New(color.FgWhite).Add(color.Bold).Add(color.BgHiRed).SprintFunc()(input),
-			G3Time:     color.New(color.FgHiBlack).Add(color.Bold).Add(color.BgHiBlue).SprintFunc()(input),
-			G4Move:     color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite).SprintFunc()(input),
-		}
-
-		cf = &ColorFormat{
-			Bold:      color.New(color.Bold).SprintFunc()(input),
-			Success:   color.New(color.FgHiGreen).SprintFunc()(input),
-			Error:     color.New(color.FgHiRed).SprintFunc()(input),
-			Branch:    color.New(color.FgHiGreen).Add(color.Bold).SprintFunc()(input),
-			Alias:     color.New(color.FgHiCyan).Add(color.Bold).SprintFunc()(input),
-			Assignee:  color.New(color.FgYellow).Add(color.Bold).SprintFunc()("@" + input),
-			Issue:     color.New(color.Bold).SprintFunc()("#" + input),
-			MileStone: color.New(color.FgGreen).SprintFunc()(input),
-			Label:     lsf,
-		}
-	}
-	return cf
 }

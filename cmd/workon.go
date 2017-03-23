@@ -20,7 +20,7 @@ var workonCmd = &cobra.Command{
 A branch will be created from your remote default branch and named after the title
 of the issue eg. branch => "42-calculate-meaning-of-life".
 From here you the work can start, and when finished run phlow wrapup.
-	`, ui.Format("workon").Bold),
+	`, ui.Format.Bold("workon")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 		cmdperm.RequiredAuthentication()

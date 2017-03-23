@@ -35,11 +35,11 @@ and pushed to your "remote default branch" and prefixed with "/delivered"
 		//Run tests before deliver
 		if len(args) > 0 {
 			if err := phlow.TestDeliver(args); err != nil {
-				fmt.Println(ui.Format("!! Tests did not exit with code 0 !!").Error)
+				fmt.Println(ui.Format.Error("!! Tests did not exit with code 0 !!"))
 				fmt.Println(err)
 				os.Exit(1)
 			}
-			fmt.Println(ui.Format("Tests exited with code 0 - starting deliver process").Success)
+			fmt.Println(ui.Format.Success("Tests exited with code 0 - starting deliver process"))
 		}
 
 		//If Run if local deliver
