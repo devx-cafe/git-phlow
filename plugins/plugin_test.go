@@ -23,13 +23,14 @@ type testCase struct {
  */
 
 func TestBranchNameFromIssue(t *testing.T) {
-	testsToRun := [6]testCase{
+	testsToRun := [7]testCase{
 		{issue: 12, branchName: "work on iss", expected: "12-work-on-iss", casedesc: "Test replaces whitespaces with dash '-'"},
 		{issue: 45, branchName: "Case SENsitivity", expected: "45-case-sensitivity", casedesc: "Test converts charecters to lowercase"},
 		{issue: 15, branchName: ".branch name", expected: "15-branch-name", casedesc: "Test removes . prefix"},
 		{issue: 220, branchName: "^^..:~:name", expected: "220-name", casedesc: "removes ASCII control characters"},
 		{issue: 2735, branchName: "name/", expected: "2735-name", casedesc: "test removes end / "},
 		{issue: 234567, branchName: ".NAME.is\"dotted", expected: "234567-name-is-dotted", casedesc: "test removes backslash"},
+		{issue: 672, branchName: "add big data blog /", expected: "672-add-big-data-blog", casedesc: "remove forward slash"},
 	}
 
 	Convey("Running tests on 'BranchNameFromIssue'", t, func() {
