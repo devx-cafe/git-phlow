@@ -37,6 +37,13 @@ func Deliver(defaultBranch string) {
 		fmt.Println(err)
 		return
 	}
+
+	githandler.CheckOut(defaultBranch)
+	if err != nil {
+		fmt.Printf("chould not switch to branch %s \n", defaultBranch)
+		return
+	}
+
 	fmt.Printf("Branch %s  is now delivered \n", ui.Format.Branch(branchInfo.Current))
 }
 
