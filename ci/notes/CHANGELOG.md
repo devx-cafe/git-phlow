@@ -1,7 +1,7 @@
-We have changed to agent upnext command so automation becomes easier, this is a quickfix and non critical
-for users who uses do not use the agent commandset.
+We have enhanced the phlow so it's better to use it when building pipelines supporting pretested integration
 
 
-#### Patch
-- upnext returns a name ready for checkout #79 @groenborg
+
+#### Features
+- upnext now has a prefix option #79 @groenborg
 

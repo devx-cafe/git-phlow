@@ -26,6 +26,9 @@ var (
 	//GlobalFlagHumanReadable ...
 	GlobalFlagHumanReadable bool
 
+	//GlobalFlagPrefixForReady ...
+	GlobalFlagPrefixForReady string
+
 	//GlobalFlagHard ...
 	GlobalFlagHard bool
 

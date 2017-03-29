@@ -78,14 +78,14 @@ func BranchDelivered(remote string) (localBranches []string, remoteBranches []st
 }
 
 //BranchReady ...
-func BranchReady(remote string) (remoteBranches []string) {
+func BranchReady(remote string, prefix string) (remoteBranches []string) {
 	info, err := Branch()
 	if err != nil {
 		return
 	}
 
 	for _, branch := range info.List {
-		if strings.HasPrefix(branch, "remotes/"+remote+"/ready") {
+		if strings.HasPrefix(branch, "remotes/"+remote+"/"+prefix) {
 			branch = strings.TrimPrefix(branch, "remotes/")
 			remoteBranches = append(remoteBranches, branch)
 		}

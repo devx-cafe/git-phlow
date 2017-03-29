@@ -13,9 +13,13 @@ import (
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
-func UpNext(remote string) {
+func UpNext(remote string, prefix string) {
 
-	branches := githandler.BranchReady(remote)
+	if prefix == "" {
+		prefix = "ready/"
+	}
+
+	branches := githandler.BranchReady(remote, prefix)
 
 	if len(branches) != 0 {
 		if options.GlobalFlagHumanReadable {
