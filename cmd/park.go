@@ -28,5 +28,5 @@ Think of it as a remote stash command.
 }
 
 func init() {
-	RootCmd.AddCommand(parkCmd)
+	//RootCmd.AddCommand(parkCmd)
 }
