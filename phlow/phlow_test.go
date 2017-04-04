@@ -24,7 +24,7 @@ func TestUpNext(t *testing.T) {
 
 		Convey("Testing output of clean function", func() {
 			branches := githandler.BranchReady("origin","ready/")
-			res := getNextBranch(branches)
+			res := getNextBranch(branches,"origin")
 			So(res, ShouldEqual, "ready/15-issue-branch")
 		})
 
@@ -40,8 +40,8 @@ func TestRemoveRemoteFromName(t *testing.T) {
 
 		Convey("origin should be removed", func() {
 			branches := githandler.BranchReady("origin","ready/")
-			res := getNextBranch(branches)
-			res = removeRemoteFromUpNext(res)
+			res := getNextBranch(branches,"origin")
+			res = removeRemoteFromUpNext(res,"origin")
 
 			t.Log(res)
 

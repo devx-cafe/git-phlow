@@ -5,9 +5,10 @@ import (
 	"os"
 	"sort"
 
+	"strings"
+
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"strings"
 )
 
 //UpNext ...
@@ -26,7 +27,7 @@ func UpNext(remote string, prefix string) {
 			fmt.Println("'ready/' branches found on remote")
 		}
 
-		next := getNextBranch(branches)
+		next := getNextBranch(branches, remote)
 		fmt.Fprint(os.Stdout, next)
 		return
 	}
@@ -39,7 +40,7 @@ func UpNext(remote string, prefix string) {
 
 //getNextBranch
 //Sort branches and returns the oldest ready branch
-func getNextBranch(branches []string) string {
+func getNextBranch(branches []string, origin string) string {
 	m := make(map[int]string)
 	var time int
 	var err error
@@ -63,19 +64,17 @@ func getNextBranch(branches []string) string {
 	sort.Ints(keys)
 
 	if len(keys) > 0 {
-		res := removeRemoteFromUpNext(m[keys[0]])
+		res := removeRemoteFromUpNext(m[keys[0]], origin)
 		return res
 	}
 	return ""
 }
 
 //remoteRemoteFromUpNext ...
-func removeRemoteFromUpNext(name string) string {
+func removeRemoteFromUpNext(name string, origin string) string {
 
-	remote := githandler.ConfigBranchRemote("master")
-
-	if strings.HasPrefix(name, remote+"/") {
-		name = strings.TrimPrefix(name, remote+"/")
+	if strings.HasPrefix(name, origin+"/") {
+		name = strings.TrimPrefix(name, origin+"/")
 		return name
 	}
 	return name
