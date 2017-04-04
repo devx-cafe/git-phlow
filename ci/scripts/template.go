@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"os"
 )
 
@@ -19,9 +18,9 @@ func main() {
 class GitPhlow < Formula
   desc "pragmatic workflow extension for git"
   homepage "https://github.com/Praqma/git-phlow"
-  url "{{.URL}}"
-  version "{{.Version}}"
-  sha256 "{{.Hash}}"
+  url "%s"
+  version "%s"
+  sha256 "%s"
 
   def install
     bin.install "git-phlow"
@@ -42,12 +41,6 @@ end
 	url := os.Getenv("URL")
 	hash := os.Getenv("HASH")
 
-	substitute := Formula{url, version, hash}
+	fmt.Fprintf(os.Stdout, msg, url, version, hash)
 
-	tmpl, err := template.New("msg").Parse(msg)
-	err = tmpl.Execute(os.Stdout, substitute)
-	if err != nil {
-		fmt.Println(err)
-
-	}
 }
