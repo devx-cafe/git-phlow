@@ -28,10 +28,10 @@ resources:
     - name: praqma-tap
       type: git
       source:
-        uri: https://github.com/Praqma/homebrew-praqma-tap.git
+        uri: git@github.com:Praqma/homebrew-praqma-tap.git
         branch: master
-        username: {{github-username}}
-        password: {{github-password}}
+        private_key: {{github-private-key}} 
+        
 
 #PRETESTED INTEGRATION
     - name: pretested-integration
@@ -167,3 +167,5 @@ jobs:
             brew release failed
             https://concourse.kubernetes.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: praqma-tap
+    params:
+      repository: updated-praqma-tap

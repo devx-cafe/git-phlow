@@ -15,15 +15,22 @@ echo $HASH
 echo $VERSION
 echo $URL
 
-go run template.go > praqma-tap/Formula/git-phlow.rb
+#CLONE REPO TO CC OUTPUT
+git clone praqma-tap updated-praqma-tap
 
-#FOR debugging purposes
-cat praqma-tap/Formula/git-phlow.rb
+#GO SCRIPT THAT GENERATES BREW FORMULA
+go run git-phlow/ci/scripts/template.go > updated-praqma-tap/Formula/git-phlow.rb
 
+#OUTPUT OF FORMULA FOR LOGGING
+cat updated-praqma-tap/Formula/git-phlow.rb
 
+cd updated-praqma-tap
+git status
 
+#ADD GIT USER
+git config --global user.email "concourse@praqma.net"
+git config --global user.name "concourse"
 
-
-
-
-
+#ADD NEW FORMULA AND COMMIT WITH RELEASE
+git add --all
+git commit -m "$VERSION released"
