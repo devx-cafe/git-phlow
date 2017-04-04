@@ -150,7 +150,7 @@ func TestRemoteUrlExtractor(t *testing.T) {
 
 func TestStatusPorcelain(t *testing.T) {
 
-	Convey("Running test on 'StatusPorcelain' function", t, func() {
+	SkipConvey("Running test on 'StatusPorcelain' function", t, func() {
 
 		Convey("Status should return one of behind and forward", func() {
 
@@ -164,7 +164,7 @@ func TestStatusPorcelain(t *testing.T) {
 
 func TestFormatPatch(t *testing.T) {
 
-	Convey("Running tests on 'FormatPatch' function", t, func() {
+	SkipConvey("Running tests on 'FormatPatch' function", t, func() {
 
 		testfixture.CreateTestRepository(t, false)
 

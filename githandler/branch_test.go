@@ -85,7 +85,7 @@ func TestBranchReady(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("BranchReady should return list of ready branches", func() {
-			remotes := BranchReady("origin")
+			remotes := BranchReady("origin","ready/")
 			t.Log(remotes)
 			So(remotes, ShouldHaveLength, 2)
 			So(remotes, ShouldContain, "origin/ready/99-issue-branch")

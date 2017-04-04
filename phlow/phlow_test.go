@@ -23,7 +23,7 @@ func TestUpNext(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("Testing output of clean function", func() {
-			branches := githandler.BranchReady("origin")
+			branches := githandler.BranchReady("origin","ready/")
 			res := getNextBranch(branches)
 			So(res, ShouldEqual, "ready/15-issue-branch")
 		})
@@ -39,7 +39,7 @@ func TestRemoveRemoteFromName(t *testing.T) {
 		testfixture.CreateTestRepository(t, false)
 
 		Convey("origin should be removed", func() {
-			branches := githandler.BranchReady("origin")
+			branches := githandler.BranchReady("origin","ready/")
 			res := getNextBranch(branches)
 			res = removeRemoteFromUpNext(res)
 

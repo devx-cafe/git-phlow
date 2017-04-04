@@ -7,9 +7,6 @@ import (
 	"os/exec"
 
 	"github.com/praqma/git-phlow/options"
-	"io"
-	"os"
-	"strconv"
 )
 
 //verboseOutput ...

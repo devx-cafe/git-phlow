@@ -4,10 +4,6 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
-	"bytes"
-	"os/exec"
-	"io"
-	"os"
 )
 
 func TestRunCommand(t *testing.T) {
