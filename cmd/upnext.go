@@ -29,7 +29,8 @@ if no --prefix flag is set, the default prefix is ready/
 		defaultBranch, _ := plugins.GitHub.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)
 
-		phlow.UpNext(remote, options.GlobalFlagPrefixForReady)
+		rdy := phlow.UpNext(remote, options.GlobalFlagPrefixForReady)
+		fmt.Println(rdy)
 	},
 }
 
