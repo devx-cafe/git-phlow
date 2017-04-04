@@ -96,7 +96,7 @@ jobs:
   plan:
   - get: git-phlow
   - get: pretested-integration
-    #trigger: true
+    trigger: true
   - task: integration
     file: git-phlow/ci/tasks/run-tests.yml
     on_failure:
@@ -156,8 +156,8 @@ jobs:
     - get: git-phlow #contains the formula update script
     - get: gp-version
     - get: phlow-artifact-darwin-s3
-      #passed: [shipit, build-phlow-artifacts]
-      #trigger: true
+      passed: [shipit, build-phlow-artifacts]
+      trigger: true
   - task: brew-release
     file: git-phlow/ci/tasks/brew-release.yml
     on_failure:
