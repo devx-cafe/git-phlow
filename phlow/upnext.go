@@ -13,7 +13,8 @@ import (
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
-func UpNext(remote string, prefix string) string {
+
+func UpNext(remote string, prefix string) (name string) {
 
 	if prefix == "" {
 		prefix = "ready/"
@@ -26,8 +27,8 @@ func UpNext(remote string, prefix string) string {
 			fmt.Println("'ready/' branches found on remote")
 		}
 
-		next := getNextBranch(branches, remote)
-		return next
+		name = getNextBranch(branches, remote)
+		return
 	}
 
 	if options.GlobalFlagHumanReadable {

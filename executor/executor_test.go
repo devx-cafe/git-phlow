@@ -4,6 +4,8 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"os/exec"
+	"bytes"
 )
 
 func TestRunCommand(t *testing.T) {
@@ -21,5 +23,44 @@ func TestRunCommand(t *testing.T) {
 			So(output, ShouldBeBlank)
 			So(err, ShouldNotBeNil)
 		})
+	})
+}
+
+func TestExecPipeCommand(t *testing.T) {
+
+	Convey("Runnig tests on 'ExecPipeCommand' function", t, func() {
+
+		Convey("should run with any number of commands", func() {
+
+			var buf bytes.Buffer
+			err := ExecPipeCommand(&buf,
+				exec.Command("ls", "-lah"),
+				exec.Command("grep", "c"),
+				exec.Command("sort", "-r"))
+
+			So(err, ShouldBeNil)
+			So(buf.String(), ShouldNotBeEmpty)
+		})
+
+		Convey("should run with two commands", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf,
+				exec.Command("ls", "-lah"),
+				exec.Command("grep", "c"))
+
+			So(err, ShouldBeNil)
+			So(buf.String(), ShouldNotBeEmpty)
+		})
+
+		Convey("should run with one command", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
+
+			So(err, ShouldBeNil)
+			So(buf.String(), ShouldNotBeEmpty)
+		})
+
 	})
 }
