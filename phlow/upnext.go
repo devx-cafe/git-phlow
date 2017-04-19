@@ -2,7 +2,6 @@ package phlow
 
 import (
 	"fmt"
-	"os"
 	"sort"
 
 	"strings"
@@ -14,7 +13,7 @@ import (
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
-func UpNext(remote string, prefix string) {
+func UpNext(remote string, prefix string) (name string) {
 
 	if prefix == "" {
 		prefix = "ready/"
@@ -27,15 +26,14 @@ func UpNext(remote string, prefix string) {
 			fmt.Println("'ready/' branches found on remote")
 		}
 
-		next := getNextBranch(branches, remote)
-		fmt.Fprint(os.Stdout, next)
+		name = getNextBranch(branches, remote)
 		return
 	}
 
 	if options.GlobalFlagHumanReadable {
 		fmt.Println("No 'ready/' branches found on remote")
 	}
-
+	return ""
 }
 
 //getNextBranch

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/githandler"
@@ -29,7 +30,8 @@ if no --prefix flag is set, the default prefix is ready/
 		defaultBranch, _ := plugins.GitHub.Default()
 		remote := githandler.ConfigBranchRemote(defaultBranch)
 
-		phlow.UpNext(remote, options.GlobalFlagPrefixForReady)
+		next := phlow.UpNext(remote, options.GlobalFlagPrefixForReady)
+		fmt.Fprint(os.Stdout, next)
 	},
 }
 
