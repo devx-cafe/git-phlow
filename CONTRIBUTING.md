@@ -61,12 +61,12 @@ The project uses other frameworks and libraries, it is recommend to read about t
 
 [GoConvey](https://github.com/smartystreets/goconvey) is the testing framework we use for unit tests, it provides and BDD expressions in your tests, like the nodejs [mocha](https://mochajs.org/) test framework
 
-###Get you shell configured for the-phlow
+### Get you shell configured for the-phlow
 
 **Get the latest release**
 Download the latest release for your platform and install it. You can follow the guidelines on the README page.
 
-###Get the project set up on your machine
+### Get the project set up on your machine
 
 Go to [get golang](https://golang.org/doc/install) and get the latest version and install it on your machine.
 it should be available on `brew` aswell.
@@ -88,7 +88,7 @@ go get -v github.com/praqma/git-phlow   #downloads the project to you gopath
 
 go get -d -t -v ./...		#resolves all dependencies                               
 ```
-###Running tests
+### Running tests
 Go has a great toolset for running rests. As a standard go runs the test from the current directory you are in, if you want to run tests from subdirectories or just all tests, run:
 
 `go test -v -p 1 ./...  # -p 1 makes sure to run test in one thread. Important for the project test fixture` 
@@ -98,7 +98,7 @@ For specific directories, run:
 `go test /folder`
 
 
-###Building
+### Building
 To build binaries go also comes with a pre installed tool, `go build`
 
 To build and drop a binary in the root directory of your project, run:
@@ -114,7 +114,7 @@ if you have exported GOBIN you can run the binary directly from the terminal
 `git phlow --help`
 
 
-###Tools
+### Tools
 IntelliJ has a [plugin](http://go-ide.com) for go development - I personally use this (groenborg)
 
 [Atom](https://atom.io) has a ton of packages for go development as well very useful
