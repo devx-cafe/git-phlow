@@ -21,6 +21,7 @@ func verboseOutput(argv ...string) {
 }
 
 //ExecuteCommand ...
+//Executes a single command from strings
 func ExecuteCommand(command string, argv ...string) (string, error) {
 	exe := exec.Command(command, argv...)
 
@@ -44,6 +45,8 @@ func ExecuteCommand(command string, argv ...string) (string, error) {
 	return stdOutBuffer.String(), nil
 }
 
+//ExecPipeCommand ...
+//Executes a series of commands
 func ExecPipeCommand(out *bytes.Buffer, execStack ...*exec.Cmd) (err error) {
 
 	var errBuf bytes.Buffer
@@ -76,6 +79,9 @@ func ExecPipeCommand(out *bytes.Buffer, execStack ...*exec.Cmd) (err error) {
 
 	return nil
 }
+
+//closer ...
+//helper function to ExecutePipeCommand
 func closer(pipes []*io.PipeWriter, execStack []*exec.Cmd) (err error) {
 	//Return if the command-stack is empty
 	if len(execStack) <= 0 {

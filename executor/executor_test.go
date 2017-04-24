@@ -62,5 +62,27 @@ func TestExecPipeCommand(t *testing.T) {
 			So(buf.String(), ShouldNotBeEmpty)
 		})
 
+		Convey("First function should error", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf,
+				exec.Command("argh", "blash"),
+				exec.Command("grep", "stuff"))
+
+			So(err, ShouldNotBeNil)
+			So(buf.String(), ShouldBeEmpty)
+		})
+
+		Convey("Second function should error", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf,
+				exec.Command("ls", "-lah"),
+				exec.Command("jklasd", "stuff"))
+
+			So(err, ShouldNotBeNil)
+			So(buf.String(), ShouldBeEmpty)
+		})
+
 	})
 }

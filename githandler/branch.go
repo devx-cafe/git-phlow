@@ -13,6 +13,14 @@ type BranchInfo struct {
 	List    []string
 }
 
+func RemoteBranch() (remote string) {
+	remote, err := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
+	if err != nil {
+		return ""
+	}
+	return
+}
+
 //Branch ...
 func Branch() (*BranchInfo, error) {
 	var err error
