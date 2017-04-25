@@ -13,7 +13,6 @@ import (
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
-
 func UpNext(remote string, prefix string) (name string) {
 
 	if prefix == "" {

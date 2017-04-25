@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/praqma/git-phlow/executor"
+	"bytes"
+	"os/exec"
 )
 
 //CheckOut ...
@@ -21,14 +23,16 @@ func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
 	return err
 }
 
+
+
 //FormatPatch ...
 //dry runs patch to see if we can auto merge
-func FormatPatch(remoteBranch string) (string, error) {
-	op, err := executor.ExecuteCommand("git", "format-patch", remoteBranch, "--stdout", "|", "git", "apply", "check")
-	if err != nil {
-		return "", err
-	}
-	return op, nil
+func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
+	err = executor.ExecPipeCommand(buf,
+		exec.Command("git", "format-patch", remoteBranch, "--stdout"),
+		exec.Command("git", "apply", "check"),
+	)
+	return
 }
 
 //Status ...

@@ -30,7 +30,7 @@ func TestExecPipeCommand(t *testing.T) {
 
 	Convey("Runnig tests on 'ExecPipeCommand' function", t, func() {
 
-		Convey("should run with any number of commands", func() {
+		SkipConvey("should run with any number of commands", func() {
 
 			var buf bytes.Buffer
 			err := ExecPipeCommand(&buf,
@@ -42,7 +42,7 @@ func TestExecPipeCommand(t *testing.T) {
 			So(buf.String(), ShouldNotBeEmpty)
 		})
 
-		Convey("should run with two commands", func() {
+		SkipConvey("should run with two commands", func() {
 			var buf bytes.Buffer
 
 			err := ExecPipeCommand(&buf,
@@ -53,13 +53,35 @@ func TestExecPipeCommand(t *testing.T) {
 			So(buf.String(), ShouldNotBeEmpty)
 		})
 
-		Convey("should run with one command", func() {
+		SkipConvey("should run with one command", func() {
 			var buf bytes.Buffer
 
 			err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
 
 			So(err, ShouldBeNil)
 			So(buf.String(), ShouldNotBeEmpty)
+		})
+
+		Convey("First function should error", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf,
+				exec.Command("argh", "blash"),
+				exec.Command("grep", "stuff"))
+
+			So(err, ShouldNotBeNil)
+			So(buf.String(), ShouldBeEmpty)
+		})
+
+		Convey("Second function should error", func() {
+			var buf bytes.Buffer
+
+			err := ExecPipeCommand(&buf,
+				exec.Command("ls", "-lah"),
+				exec.Command("jklasd", "stuff"))
+
+			So(err, ShouldNotBeNil)
+			So(buf.String(), ShouldBeEmpty)
 		})
 
 	})
