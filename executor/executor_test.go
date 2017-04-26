@@ -30,7 +30,7 @@ func TestExecPipeCommand(t *testing.T) {
 
 	Convey("Runnig tests on 'ExecPipeCommand' function", t, func() {
 
-		SkipConvey("should run with any number of commands", func() {
+		Convey("should run with any number of commands", func() {
 
 			var buf bytes.Buffer
 			err := ExecPipeCommand(&buf,
@@ -42,7 +42,7 @@ func TestExecPipeCommand(t *testing.T) {
 			So(buf.String(), ShouldNotBeEmpty)
 		})
 
-		SkipConvey("should run with two commands", func() {
+		Convey("should run with two commands", func() {
 			var buf bytes.Buffer
 
 			err := ExecPipeCommand(&buf,
@@ -53,7 +53,7 @@ func TestExecPipeCommand(t *testing.T) {
 			So(buf.String(), ShouldNotBeEmpty)
 		})
 
-		SkipConvey("should run with one command", func() {
+		Convey("should run with one command", func() {
 			var buf bytes.Buffer
 
 			err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
