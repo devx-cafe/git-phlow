@@ -6,6 +6,7 @@ image_resource:
   source: {repository: golang, tag: "1.7"}
 
 inputs:
+- name: tollgate
 - name: git-phlow
 
 run:

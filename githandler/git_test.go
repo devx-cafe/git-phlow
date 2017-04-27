@@ -161,21 +161,3 @@ func TestStatusPorcelain(t *testing.T) {
 		})
 	})
 }
-
-func TestFormatPatch(t *testing.T) {
-
-	SkipConvey("Running tests on 'FormatPatch' function", t, func() {
-
-		testfixture.CreateTestRepository(t, false)
-
-		Convey("checking output", func() {
-			out, err := FormatPatch("origin/master")
-
-			t.Log(out)
-			t.Log(err)
-
-		})
-
-		testfixture.RemoveTestRepository(t)
-	})
-}

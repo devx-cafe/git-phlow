@@ -13,7 +13,7 @@ import (
 //WorkOn ...
 func WorkOn(issue int) {
 
-	ui.PhlowSpinner.Start("Fetching form remote")
+	ui.PhlowSpinner.Start("Fetching from remote")
 	if err := githandler.Fetch(); err != nil {
 		fmt.Println(err)
 		return
