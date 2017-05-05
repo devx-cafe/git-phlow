@@ -4,7 +4,7 @@ maintainer: groenborg
 
 # git phlow 
 
-| integration | build | goreport | codeclimate | Issues |
+| tollgate | build | goreport | code climate | Issues |
 | ------------- | --- | ----------------- | ----- | ----- |
 | ![integration status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/integration-test/badge) | ![build status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/shipit/badge)  |[![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow) | [![Code Climate](https://codeclimate.com/github/Praqma/git-phlow/badges/gpa.svg)](https://codeclimate.com/github/Praqma/git-phlow) | [![Stories in Ready](https://badge.waffle.io/Praqma/git-phlow.svg?label=ready&title=Ready)](http://waffle.io/Praqma/git-phlow) |
 
