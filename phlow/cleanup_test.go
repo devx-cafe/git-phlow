@@ -10,7 +10,7 @@ import (
 
 func TestClean(t *testing.T) {
 
-	Convey("Runnign tests on 'Clean' function", t, func() {
+	Convey("Running tests on 'Clean' function", t, func() {
 
 		testfixture.CreateTestRepository(t, false)
 
@@ -27,11 +27,11 @@ func TestClean(t *testing.T) {
 
 func TestCleanRemote(t *testing.T) {
 
-	Convey("Runnign tests on 'Clean' function", t, func() {
+	Convey("Running tests on 'Clean' function", t, func() {
 
 		testfixture.CreateTestRepository(t, false)
 
-		Convey("Testing output of clean function", func() {
+		Convey("Testing output of remote clean function", func() {
 			options.GlobalFlagLocal = false
 			Clean("origin")
 

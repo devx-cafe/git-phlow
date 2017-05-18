@@ -23,7 +23,7 @@ func UpNext(remote string, prefix string) (name string) {
 
 	if len(branches) != 0 {
 		if options.GlobalFlagHumanReadable {
-			fmt.Println("'ready/' branches found on remote")
+			fmt.Println("Found 'ready/' branches on remote")
 		}
 
 		name = getNextBranch(branches, remote)

@@ -11,13 +11,11 @@ import (
 var parkCmd = &cobra.Command{
 	Use:   "park",
 	Short: "park the branch on the remote repo for sharing or storing",
-	Long: `
-park pushes to current branch to the remote repository and prefixes it with share/, so others can do a workon
-on the branch.
-Following the flow you should not work on it simultaniously; either pair program on one computer, or let the other person
-take over for either reviwing the work or taking over the work.
-Think of it as a remote stash command.
-`,
+	Long: fmt.Sprintf(`
+%s pushes the current branch to the remote repository and prefixes it with 'share/'.
+This allows others to 'workon' your branch, think of it as a 'remote stash' command.
+To follow the phlow, don't work on it simultaneously, either pair program or let the other person take over.
+`, ui.Format.Bold("park")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 	},

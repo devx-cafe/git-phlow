@@ -19,7 +19,7 @@ func WorkOn(issue int) {
 		return
 	}
 	ui.PhlowSpinner.Stop()
-	fmt.Println("Updates fetched")
+	fmt.Println("Fetch successful")
 
 	branchInfo, err := githandler.Branch()
 	if err != nil {
@@ -42,7 +42,7 @@ func WorkOn(issue int) {
 			return
 		}
 	}
-	fmt.Fprintf(os.Stdout, "No local %s found. Searching gh \n", ui.Format.Bold("issue-branches"))
+	fmt.Fprintf(os.Stdout, "No local %s found. Checking GitHub \n", ui.Format.Bold("issue-branches"))
 
 	//Get list of gh issues
 	gitHubIssues, err := plugins.GitHub.GetIssues()
@@ -64,7 +64,7 @@ func WorkOn(issue int) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "branch %s created and checked out \n", ui.Format.Branch(name))
+			fmt.Fprintf(os.Stdout, "Created and checked out branch %s \n", ui.Format.Branch(name))
 
 			//Set labels and Assignee
 			UpdateIssue(issue)
@@ -72,7 +72,7 @@ func WorkOn(issue int) {
 		}
 	}
 
-	fmt.Println("No issues matches you input")
+	fmt.Println("Found no issues matching your input")
 }
 
 //UpdateIssue ...

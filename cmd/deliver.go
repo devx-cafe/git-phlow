@@ -16,16 +16,13 @@ import (
 var deliverCmd = &cobra.Command{
 	Use:   "deliver [test args]",
 	Short: "deliver changes to remote master",
-	Long: `
-[deliver] fetches the latest changes and tries to push the committed changes
-to the remote repository. Deliver only runs if you are located on an issue branch
-created with workon, or a branch which if not your default (typically master).
-the delivered branch will prefix the branchname with "ready/",
-so integration services supporting the workflow can pick up the changes.
+	Long: fmt.Sprintf(`
+%s pushes your committed changes to the remote repository.
+Deliver only runs if you are located on an issue branch created with workon.
+The delivered branch's name will prefixed 'ready/', so the integration services supporting the workflow can pick up your changes.
 
-if you deliver with local, the branch will be merged with your default branch,
-and pushed to your "remote default branch" and prefixed with "/delivered"
-`,
+If you deliver with the 'local' option, the issue branch will be merged with your default branch, pushed to your remote's default branch and prefixed with 'delivered/'.
+`, ui.Format.Bold("deliver")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 	},

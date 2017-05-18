@@ -16,11 +16,10 @@ import (
 var webCmd = &cobra.Command{
 	Use:   "web [issue]",
 	Short: "open your issues on github",
-	Long: `
-web opens a github issue or githubs issue list based on it's arguments'
-If no argument is passed, it tries to locate an issue on the current checked out branch,
-if that fails it will simply open GitHubs issue list in your default browser
-`,
+	Long: fmt.Sprintf(`
+%s opens a GitHub issue or GitHub issue list based on it's arguments.
+If no argument is given, it tries to find the issue of the currently checked out branch, if that fails it simply opens the GitHub issue list in your default browser.
+`, ui.Format.Bold("web")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 		cmdperm.RequiredAuthentication()
@@ -30,7 +29,7 @@ if that fails it will simply open GitHubs issue list in your default browser
 			if val, err := strconv.Atoi(args[0]); err == nil {
 				phlow.Web(val)
 			} else {
-				fmt.Println("argument must be a number")
+				fmt.Println("Argument must be a number")
 				os.Exit(0)
 			}
 		} else {

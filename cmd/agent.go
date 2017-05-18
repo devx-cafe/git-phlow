@@ -14,9 +14,9 @@ var agentCmd = &cobra.Command{
 	Use:   "agent",
 	Short: "commands for automated services",
 	Long: fmt.Sprintf(`
-%s commands are a set of subcommands available for ci/cd services. They are meant as a way of services to easily
-be compatible with %s.
-These are not meant to used locally as a part of your local workflow
+%s commands are a set of commands available for ci/cd services. They are meant as a way of services to easily be compatible with %s.
+
+These are not meant to used as part of your local workflow.
 `, ui.Format.Bold("agent"), ui.Format.Bold("the praqmatic workflow")),
 }
 

@@ -21,11 +21,11 @@ func Auth() {
 	user := githandler.ConfigGet("user", "phlow")
 
 	if token != "" && user != "" {
-		fmt.Println("you are already signed in")
+		fmt.Println("You are already signed in")
 		return
 	}
 
-	fmt.Fprintf(os.Stdout, "enter credentials for %s \n", "github")
+	fmt.Fprintf(os.Stdout, "Enter credentials for %s \n", "GitHub")
 
 	//Read user input username
 	username := ReadInput("username: ")
@@ -42,7 +42,7 @@ func Auth() {
 	githandler.ConfigSet("token", token, "phlow")
 	githandler.ConfigSet("user", username, "phlow")
 
-	fmt.Println("Success fully authorized: 'git phlow' is now enabled  ")
+	fmt.Println("Successfully authorized: 'git phlow' is now enabled")
 }
 
 //ReadInput ...

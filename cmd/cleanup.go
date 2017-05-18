@@ -19,7 +19,7 @@ var cleanCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s removes all branches prefixed with 'delivered/'.
 It deletes safely by running 'git branch -d'. By default, both local and remote branches are deleted.
-`, ui.Format.Bold("phlow clean")),
+`, ui.Format.Bold("cleanup")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
 	},

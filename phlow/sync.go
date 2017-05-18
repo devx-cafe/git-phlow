@@ -21,21 +21,21 @@ func Sync() {
 	behind, ahead := isBehindOrAhead(status)
 
 	if behind {
-		fmt.Fprintf(os.Stdout, "your branch is behind %s\n", remote)
+		fmt.Fprintf(os.Stdout, "Your branch is behind %s\n", remote)
 
 		if ahead {
-			fmt.Fprintf(os.Stdout, "your branch is behind %s \n", remote)
+			fmt.Fprintf(os.Stdout, "Your branch is behind %s \n", remote)
 
 			var buf bytes.Buffer
 			ms := githandler.FormatPatch(&buf, remote)
-			conflict := strings.Contains(ms.Error(), "patch failed")
+			conflict := strings.Contains(ms.Error(), "Patch failed")
 
 			if conflict {
-				fmt.Println("you have a merge conflict")
+				fmt.Println("You have a merge conflict")
 				fmt.Println(ms.Error())
 
 			} else {
-				fmt.Println("no merge conflicts indentified")
+				fmt.Println("No merge conflicts indentified")
 			}
 		}
 

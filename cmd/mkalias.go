@@ -11,10 +11,11 @@ import (
 // mkaliasCmd represents the mkalias command
 var mkaliasCmd = &cobra.Command{
 	Use:   "mkalias",
-	Short: "create alias for phlow commands",
+	Short: "create aliases for phlow commands",
 	Long: fmt.Sprintf(`
-%s creates all the alias for your git phlow commands, so you can type 'git workon' in stead of
-'git phlow workon', the alias will be created in your global .gitconfig file
+%s creates aliases for the git phlow commands.
+This allows you to use 'git workon', rather than 'git phlow workon'.
+The aliases are added to your global .gitconfig file.
 `, ui.Format.Bold("mkalias")),
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.MkAlias()

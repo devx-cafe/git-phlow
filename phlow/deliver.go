@@ -24,14 +24,14 @@ func Deliver(defaultBranch string) {
 		return
 	}
 
-	ui.PhlowSpinner.Start("pushing")
+	ui.PhlowSpinner.Start("Pushing")
 	_, err := githandler.PushRename(branchInfo.Current, defaultBranch)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	ui.PhlowSpinner.Stop()
-	fmt.Println("Changes pushed")
+	fmt.Println("Push successful")
 
 	if err := githandler.BranchRename(branchInfo.Current); err != nil {
 		fmt.Println(err)
@@ -40,11 +40,11 @@ func Deliver(defaultBranch string) {
 
 	githandler.CheckOut(defaultBranch)
 	if err != nil {
-		fmt.Printf("chould not switch to branch %s \n", defaultBranch)
+		fmt.Printf("Could not switch to branch %s \n", defaultBranch)
 		return
 	}
 
-	fmt.Printf("Branch %s  is now delivered \n", ui.Format.Branch(branchInfo.Current))
+	fmt.Printf("Delivered branch %s \n", ui.Format.Branch(branchInfo.Current))
 }
 
 //LocalDeliver ...
@@ -64,8 +64,9 @@ func LocalDeliver(defaultBranch string) {
 		fmt.Println(err)
 		return
 	}
+
 	//Pull rebase latest changes
-	fmt.Fprintln(os.Stdout, "Trying to pull latest changes")
+	fmt.Fprintln(os.Stdout, "Pulling latest changes")
 	output, err := githandler.Pull()
 	if err != nil {
 		fmt.Println(err)
@@ -81,7 +82,7 @@ func LocalDeliver(defaultBranch string) {
 	//Rename default branch to delivered
 	githandler.BranchRename(branchInfo.Current)
 
-	//Push changes to github
+	//Push changes to GitHub
 	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.Format.Branch(defaultBranch))
 	ui.PhlowSpinner.Start("Pushing changes")
 	_, err = githandler.Push()
@@ -90,8 +91,7 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 	ui.PhlowSpinner.Stop()
-	fmt.Printf("Changes from %s delivered to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
-
+	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
 }
 
 //TestDeliver ...
@@ -115,6 +115,7 @@ func TestDeliver(args []string) error {
 //ConvertCommand ...
 //Formats the command to ExecutorCommand
 func convertCommand(args []string) (string, []string) {
+
 	//Command with extra arguments
 	if len(args) > 1 {
 		return args[0], args[1:]

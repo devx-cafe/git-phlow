@@ -31,5 +31,5 @@ func MkAlias() {
 		}
 	}
 
-	fmt.Fprintln(os.Stdout, "Alias's updated")
+	fmt.Fprintln(os.Stdout, "Aliases updated")
 }

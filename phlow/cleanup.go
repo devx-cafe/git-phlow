@@ -18,7 +18,7 @@ func Clean(remoteName string) {
 		if _, err = githandler.BranchDelete(branch, "", false, options.GlobalFlagForce); err != nil {
 			fmt.Printf("Could not delete branch %s \n", branch)
 		} else {
-			fmt.Printf("Local branch %s deleted \n", ui.Format.Branch(branch))
+			fmt.Printf("Deleted local branch %s \n", ui.Format.Branch(branch))
 		}
 	}
 
@@ -27,7 +27,7 @@ func Clean(remoteName string) {
 			if _, err = githandler.BranchDelete(branch, remoteName, true, false); err != nil {
 				fmt.Printf("Could not delete branch %s \n", branch)
 			} else {
-				fmt.Printf("Remote branch %s deleted \n", ui.Format.Branch(branch))
+				fmt.Printf("Deleted remote branch %s \n", ui.Format.Branch(branch))
 			}
 		}
 		githandler.FetchPrune()

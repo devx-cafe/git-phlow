@@ -12,11 +12,11 @@ import (
 
 // integrateCmd represents the integrate command
 var integrateCmd = &cobra.Command{
-	Use:   "deliver",
-	Short: "deliver work in agent version",
+	Use:   "integrate",
+	Short: "integrate work in agent version",
 	Long: fmt.Sprintf(`
-%s delivers the changes in an agent version. The current branch if will be merged into the default branch
-with your default branch and pushed to the remote.
+%s delivers the changes as the agent.
+The current branch will be merged into the default branch and pushed to the remote.
 `, ui.Format.Bold("integrate")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

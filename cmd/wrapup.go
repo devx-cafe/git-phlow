@@ -14,8 +14,8 @@ var wrapupCmd = &cobra.Command{
 	Use:   "wrapup",
 	Short: "add changes and make auto-commit",
 	Long: fmt.Sprintf(`
-%s adds all your work from the working area to the index, and makes an automatic close # commit,
-which closes an issue on github eg. commit message => "close #42 fetch meaning of life"
+%s commits the currently staged files with a 'close issue' commit message, e.g. "close #42 fetch meaning of life".
+The commit message will cause the corresponding issue to be closed when the commit is integrated.
 `, ui.Format.Bold("wrapup")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
@@ -28,5 +28,5 @@ which closes an issue on github eg. commit message => "close #42 fetch meaning o
 func init() {
 	RootCmd.AddCommand(wrapupCmd)
 
-	wrapupCmd.Flags().BoolVar(&options.GlobalFlagHard, "hard", false, "Add all before commit")
+	wrapupCmd.Flags().BoolVar(&options.GlobalFlagHard, "hard", false, "Add all changes before committing")
 }

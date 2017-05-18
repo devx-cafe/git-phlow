@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -12,10 +13,10 @@ import (
 var RootCmd = &cobra.Command{
 	Use:   "git-phlow",
 	Short: "git extension for phlow workflow",
-	Long: `
-git-phlow is a git extension that provides an extra set of commands, enabling you to:
-workon, deliver and create new tasks.
-	`,
+	Long: fmt.Sprintf(`
+%s is a git extension that provides an extra set of commands, enabling you to:
+create, work on and deliver tasks.
+`, ui.Format.Bold("git-phlow")),
 	Run: func(cmd *cobra.Command, args []string) {
 		if options.GlobalFlagVersion != false {
 			fmt.Println("phlow specification")
@@ -41,5 +42,5 @@ func init() {
 	RootCmd.PersistentFlags()
 	RootCmd.Flags().BoolVar(&options.GlobalFlagVersion, "version", false, "current version")
 
-	RootCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose printers")
+	RootCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose output")
 }

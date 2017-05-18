@@ -18,9 +18,9 @@ var upNextCmd = &cobra.Command{
 	Use:   "upnext",
 	Short: "get the chronologically next branch",
 	Long: fmt.Sprintf(`
-%s gets the next branch ready for integration based on the branch creation time.
-The branch created first, is the branch thats up next.
-if no --prefix flag is set, the default prefix is ready/
+%s gets the next branch for integration based on its creation time.
+The oldest branch is the branch that's up next.
+When no --prefix flag is set, the default prefix is 'ready/'.
 `, ui.Format.Bold("upnext")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
@@ -41,5 +41,5 @@ func init() {
 
 	upNextCmd.Flags().BoolVar(&options.GlobalFlagHumanReadable, "human", false, "output human readable info")
 
-	upNextCmd.Flags().StringVarP(&options.GlobalFlagPrefixForReady, "prefix", "p", "", "prefix branches ready for integration")
+	upNextCmd.Flags().StringVarP(&options.GlobalFlagPrefixForReady, "prefix", "p", "", "branch prefix to look for")
 }

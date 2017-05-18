@@ -17,7 +17,7 @@ func WrapUp() {
 	if options.GlobalFlagHard {
 		fmt.Fprintln(os.Stdout, "Adding files to index")
 		if err := githandler.Add(); err != nil {
-			fmt.Println("project files could not be added: " + err.Error())
+			fmt.Println("Project files could not be added: " + err.Error())
 			return
 		}
 	}
