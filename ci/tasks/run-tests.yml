@@ -10,4 +10,4 @@ inputs:
 - name: git-phlow
 
 run:
-  path: git-phlow/ci/scripts/tests.sh
+  path: tollgate/ci/scripts/tests.sh

@@ -4,7 +4,7 @@ resource_types:
   type: docker-image
   source:
     repository: groenborg/concourse-git-phlow
-    tag: '0.2.14'
+    tag: '1.0.0'
 
 
 - name: slack-notification
@@ -35,7 +35,7 @@ resources:
         
 
 #PRETESTED INTEGRATION
-    - name: pretested-integration
+    - name: tollgate
       type: pip
       source: 
         prefixready: ready/
@@ -96,19 +96,20 @@ jobs:
 - name: integration-test
   plan:
   - get: git-phlow
-  - get: pretested-integration
+  - get: tollgate
     trigger: true
   - task: integration
-    file: git-phlow/ci/tasks/run-tests.yml
+    file: tollgate/ci/tasks/run-tests.yml
     on_failure:
       put: slack-alert
       params:
         text: |
             $BUILD_JOB_NAME nr. $BUILD_NAME failed 
-            https://concourse.kubernetes.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  - put: pretested-integration
+            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+            
+  - put: tollgate
     params:
-      repository: pretested-integration
+      repository: tollgate
     timeout: 5m
 
 #BUILD ARTIFACT
@@ -166,7 +167,7 @@ jobs:
       params:
         text: |
             brew release failed
-            https://concourse.kubernetes.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
   - put: praqma-tap
     params:
       repository: updated-praqma-tap

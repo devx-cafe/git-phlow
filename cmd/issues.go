@@ -1,11 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
+	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
-	"fmt"
 )
 
 // issueCmd represents the issue command

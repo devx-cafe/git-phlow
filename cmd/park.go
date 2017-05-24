@@ -3,8 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/cmd/cmdperm"
+	"github.com/praqma/git-phlow/ui"
+	"github.com/spf13/cobra"
 )
 
 // parkCmd represents the park command
