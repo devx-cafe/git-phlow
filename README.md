@@ -4,7 +4,7 @@ maintainer: groenborg
 
 # git phlow 
 
-| tollgate | build | goreport | code climate | Issues |
+| tollgate | build | goreport | code climate | Issues | 
 | ------------- | --- | ----------------- | ----- | ----- |
 | ![integration status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/integration-test/badge) | ![build status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/shipit/badge)  |[![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow) | [![Code Climate](https://codeclimate.com/github/Praqma/git-phlow/badges/gpa.svg)](https://codeclimate.com/github/Praqma/git-phlow) | [![Stories in Ready](https://badge.waffle.io/Praqma/git-phlow.svg?label=ready&title=Ready)](http://waffle.io/Praqma/git-phlow) |
 
@@ -104,3 +104,6 @@ To understand the-phlow read praqmas great story about what is is and how it wor
 
 ### Contribution
 To contribute to the project, I refer to reading our [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
+
+### CodeScene Analysis
+[![](https://codescene.io/projects/1345/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/1345/jobs/latest-successful/results)
