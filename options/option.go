@@ -29,6 +29,9 @@ var (
 	//GlobalFlagPrefixForReady ...
 	GlobalFlagPrefixForReady string
 
+	//GlobalFlagForce ...
+	GlobalFlagForceMessage string
+
 	//Sha1 git commit hash
 	Sha1 string
 

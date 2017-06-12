@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 )
 
 //WrapUp ...
@@ -20,11 +21,17 @@ func WrapUp() {
 
 	//Retrieve branch info - current branch
 	info, _ := githandler.Branch()
-	commitMessage := "close #" + strings.Replace(info.Current, "-", " ", -1)
+	var cmsg string
 
-	if _, err := githandler.Commit(commitMessage); err != nil {
+	if options.GlobalFlagForceMessage != "" {
+		cmsg = "close #" + strings.Split(info.Current, "-")[0] + " " + options.GlobalFlagForceMessage
+	} else {
+		cmsg = "close #" + strings.Replace(info.Current, "-", " ", -1)
+	}
+
+	if _, err := githandler.Commit(cmsg); err != nil {
 		fmt.Println("Nothing to commit!")
 		return
 	}
-	fmt.Fprintln(os.Stdout, commitMessage)
+	fmt.Fprintln(os.Stdout, cmsg)
 }
