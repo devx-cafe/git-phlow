@@ -31,5 +31,4 @@ func WrapUp() {
 		return
 	}
 	fmt.Fprintln(os.Stdout, commitMessage)
-	fmt.Println("Remember to squash your commits")
 }
