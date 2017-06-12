@@ -2,7 +2,6 @@ package phlow
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/praqma/git-phlow/executor"
@@ -15,6 +14,9 @@ import (
 //Deliver ...
 func Deliver(defaultBranch string) {
 
+	ui.PhlowSpinner.Start("delivering")
+	defer ui.PhlowSpinner.Stop()
+
 	branchInfo, _ := githandler.Branch()
 	githandler.Fetch()
 
@@ -24,14 +26,11 @@ func Deliver(defaultBranch string) {
 		return
 	}
 
-	ui.PhlowSpinner.Start("Pushing")
 	_, err := githandler.PushRename(branchInfo.Current, defaultBranch)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	ui.PhlowSpinner.Stop()
-	fmt.Println("Push successful")
 
 	if err := githandler.BranchRename(branchInfo.Current); err != nil {
 		fmt.Println(err)
@@ -58,7 +57,6 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 
-	fmt.Fprintf(os.Stdout, "Checking out default branch %s \n", ui.Format.Branch(defaultBranch))
 	//Checkout default branch: master
 	if err := githandler.CheckOut(defaultBranch); err != nil {
 		fmt.Println(err)
@@ -66,31 +64,30 @@ func LocalDeliver(defaultBranch string) {
 	}
 
 	//Pull rebase latest changes
-	fmt.Fprintln(os.Stdout, "Pulling latest changes")
-	output, err := githandler.Pull()
+	ui.PhlowSpinner.Start("delivering")
+	defer ui.PhlowSpinner.Stop()
+
+	_, err := githandler.Pull()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(output)
 
-	fmt.Fprintf(os.Stdout, "Merging changes from branch %s into branch %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
 	//Merge feature branch into default
 	if err = githandler.Merge(branchInfo.Current); err != nil {
 		fmt.Println(err)
+		return
 	}
 	//Rename default branch to delivered
 	githandler.BranchRename(branchInfo.Current)
 
 	//Push changes to GitHub
-	fmt.Fprintf(os.Stdout, "Pushing changes to remote %s \n", ui.Format.Branch(defaultBranch))
-	ui.PhlowSpinner.Start("Pushing changes")
 	_, err = githandler.Push()
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
-	ui.PhlowSpinner.Stop()
+
 	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
 }
 
