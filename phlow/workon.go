@@ -4,22 +4,21 @@ import (
 	"fmt"
 	"os"
 
+	"strconv"
+
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
-	"strconv"
 )
 
 //WorkOn ...
 func WorkOn(issue int) {
-
-	ui.PhlowSpinner.Start("Fetching from remote")
+	ui.PhlowSpinner.Start("Setting up workspace")
+	defer ui.PhlowSpinner.Stop()
 	if err := githandler.Fetch(); err != nil {
 		fmt.Println(err)
 		return
 	}
-	ui.PhlowSpinner.Stop()
-	fmt.Println("Fetch successful")
 
 	branchInfo, err := githandler.Branch()
 	if err != nil {
@@ -27,7 +26,6 @@ func WorkOn(issue int) {
 		return
 	}
 
-	fmt.Fprintln(os.Stdout, "Locating existing issue branches")
 	if plugins.IssueFromBranchName(branchInfo.Current) == issue {
 		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format.Branch(branchInfo.Current))
 		return
@@ -38,11 +36,11 @@ func WorkOn(issue int) {
 			if err = githandler.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
-			fmt.Fprintf(os.Stdout, "Switched to branch %s \n", ui.Format.Branch(branch))
+			ui.PhlowSpinner.Stop()
+			fmt.Fprintf(os.Stdout, "Resuming to workspace:  %s \n", ui.Format.Branch(branch))
 			return
 		}
 	}
-	fmt.Fprintf(os.Stdout, "No local %s found. Checking GitHub \n", ui.Format.Bold("issue-branches"))
 
 	//Get list of gh issues
 	gitHubIssues, err := plugins.GitHub.GetIssues()
@@ -64,15 +62,16 @@ func WorkOn(issue int) {
 				fmt.Println(err)
 				return
 			}
-			fmt.Fprintf(os.Stdout, "Created and checked out branch %s \n", ui.Format.Branch(name))
+			ui.PhlowSpinner.Stop()
+			fmt.Fprintf(os.Stdout, "Created workspace:  %s \n", ui.Format.Branch(name))
 
 			//Set labels and Assignee
 			UpdateIssue(issue)
 			return
 		}
 	}
-
-	fmt.Println("Found no issues matching your input")
+	ui.PhlowSpinner.Stop()
+	fmt.Println("No matching issues")
 }
 
 //UpdateIssue ...
