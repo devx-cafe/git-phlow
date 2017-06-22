@@ -90,7 +90,7 @@ func LocalDeliver(defaultBranch string) {
 		fmt.Println(err.Error())
 		return
 	}
-
+	ui.PhlowSpinner.Stop()
 	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
 }
 
