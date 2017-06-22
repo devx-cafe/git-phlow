@@ -96,8 +96,12 @@ jobs:
 - name: integration-test
   plan:
   - get: git-phlow
+  - get: gp-version
+    params: {bump: patch}
   - get: tollgate
     trigger: true
+  - put: gp-version
+    params: {file: gp-version/version}
   - task: integration
     file: tollgate/ci/tasks/run-tests.yml
     on_failure:
@@ -116,11 +120,9 @@ jobs:
 - name: build-phlow-artifacts
   plan:
     - get: gp-version
-      params: {bump: patch}
     - get: git-phlow 
       passed: [integration-test]
-    - put: gp-version
-      params: {file: gp-version/version}
+      trigger: true
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml
     - put: phlow-artifact-linux-s3
@@ -135,13 +137,10 @@ jobs:
   plan:
   - get: gp-version
   - get: git-phlow
-    passed: [integration-test]
   - get: phlow-artifact-linux-s3
     passed: [build-phlow-artifacts]
-    trigger: true
   - get: phlow-artifact-darwin-s3
     passed: [build-phlow-artifacts]
-    trigger: true
   - put: gh-release
     params:
       name: gp-version/version 
@@ -158,7 +157,7 @@ jobs:
     - get: git-phlow #contains the formula update script
     - get: gp-version
     - get: phlow-artifact-darwin-s3
-      passed: [shipit, build-phlow-artifacts]
+      passed: [shipit]
       trigger: true
   - task: brew-release
     file: git-phlow/ci/tasks/brew-release.yml

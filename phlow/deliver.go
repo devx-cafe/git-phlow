@@ -33,16 +33,19 @@ func Deliver(defaultBranch string) {
 	}
 
 	if err := githandler.BranchRename(branchInfo.Current); err != nil {
-		fmt.Println(err)
+		//Conflicting branch name
+		fmt.Printf("branch delivered/%s already exists in you local workspace \n", branchInfo.Current)
 		return
 	}
 
 	githandler.CheckOut(defaultBranch)
 	if err != nil {
-		fmt.Printf("Could not switch to branch %s \n", defaultBranch)
+		fmt.Printf("There are still changes in your workspace %s \n", defaultBranch)
+		fmt.Println("try: 'git status' to see the changes")
 		return
 	}
 
+	ui.PhlowSpinner.Stop()
 	fmt.Printf("Delivered branch %s \n", ui.Format.Branch(branchInfo.Current))
 }
 
