@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/praqma/git-phlow/githandler"
 
@@ -42,6 +43,7 @@ func Auth() {
 	githandler.ConfigSet("token", token, "phlow")
 	githandler.ConfigSet("user", username, "phlow")
 
+	fmt.Println("")
 	fmt.Println("Successfully authorized: 'git phlow' is now enabled")
 }
 
@@ -49,10 +51,10 @@ func Auth() {
 //Reads input from user
 func ReadInput(messageToUser string) string {
 	fmt.Print(messageToUser)
+	ds, db := GetOSLineBreak()
 	scanner := bufio.NewReader(os.Stdin)
-	text, _ := scanner.ReadString('\n')
-
-	return strings.Replace(text, "\n", "", -1)
+	text, _ := scanner.ReadString(db)
+	return strings.Replace(text, ds, "", -1)
 }
 
 //ReadPassword ...
@@ -61,4 +63,12 @@ func ReadPassword(messageToUser string) string {
 	fmt.Print(messageToUser)
 	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))
 	return strings.TrimSpace(string(bytePassword))
+}
+
+func GetOSLineBreak() (string, byte) {
+	if runtime.GOOS == "windows" {
+		return "\r",'\r'
+	} else {
+		return "\n",'\n'
+	}
 }

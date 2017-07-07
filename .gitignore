@@ -39,3 +39,7 @@ _testmain.go
 ### TEST ###
 /phlow-test-pkg
 /debug
+
+### Build ###
+build/
+git-phlow

@@ -94,6 +94,11 @@ git phlow deliver --local
 For automation systems we use, travis CI, Concourse CI and Jenkins. They can all be configured to follow the phlow and listen for ready branches. 
 You can see the concourse pipeline configured for this project [here](https://concourse.kubernetes.praqma.cloud/teams/main/pipelines/git-phlow) 
 
+### git-phlow on Windows
+
+We recommend running git-phlow using _PowerShell_.
+There are known issues with _cmd_ rendering formatted text incorrectly, and _git bash_'s input being handled incorrectly.
+
 ## Project status
 This is the official repository for the git-phlow extension. The project is currently under development and many additions are still to come. but version 0.1.5 is available and stable for both linux and Mac. 
 
