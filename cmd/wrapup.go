@@ -27,5 +27,5 @@ var wrapupCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(wrapupCmd)
 
-	wrapupCmd.Flags().StringVar(&options.GlobalFlagForceMessage, "force", "", "use a custom commit message in stead")
+	wrapupCmd.Flags().StringVar(&options.GlobalFlagForceMessage, "force", "", "use a custom commit message instead")
 }
