@@ -39,6 +39,7 @@ func Auth() {
 		fmt.Println(err)
 		return
 	}
+	plugins.GitHub.LOL()
 
 	githandler.ConfigSet("token", token, "phlow")
 	githandler.ConfigSet("user", username, "phlow")

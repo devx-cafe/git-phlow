@@ -119,14 +119,20 @@ jobs:
       repository: tollgate
     timeout: 5m
 #STATIC GOES HERE
-
+- name: static-analysis
+  plan:
+    - get: git-phlow
+      passed: [integration-test]
+    - get: gp-version
+    - task: static-analysis
+      file: git-phlow/ci/tasks/static-analysis.yml
 
 #BUILD ARTIFACT
 - name: build-phlow-artifacts
   plan:
     - get: gp-version
     - get: git-phlow 
-      passed: [integration-test]
+      passed: [static-analysis]
       trigger: true
     - task: create-release 
       file: git-phlow/ci/tasks/gen-bin.yml

@@ -1,26 +1,34 @@
-package lol
+package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"strconv"
+	"strings"
 )
 
-func lol() {
-	args := os.Args
-	if len(args) <= 0 {
-		fmt.Println("Not enough arguments")
-		return
+func main() {
+
+	file, err := os.Open("coverfiles/percentage")
+	if err != nil {
+		log.Panicln(err)
 	}
 
-	percentage, _ := strconv.Atoi(args[1])
-	fmt.Println(percentage)
+	data, err := ioutil.ReadAll(file)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	if percentage >= 40 {
-		fmt.Println("above threshold")
+	percentage, _ := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
+	fmt.Printf("%g", percentage)
+
+	if percentage >= 40.0 {
+		fmt.Printf("%g above threshold \n", percentage)
 		os.Exit(0)
 	} else {
-		fmt.Println("below threshold")
+		fmt.Printf("%g below threshold \n", percentage)
 		os.Exit(1)
 	}
 
