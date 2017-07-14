@@ -34,6 +34,25 @@ func TestAuthorize(t *testing.T) {
 	})
 }
 
+func TestCheckAuth(t *testing.T) {
+	Convey("Running tests on 'CheckAuth' request", t, func() {
+
+		Convey("CheckAuth should return true on status 200", func() {
+			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.WriteHeader(http.StatusOK)
+				w.Write([]byte(checkAuthResponse))
+			}))
+
+			defer ts.Close()
+			GitHub.base = ts.URL
+			isAuthorized, err := GitHub.CheckAuth()
+			So(isAuthorized, ShouldBeTrue)
+			So(err, ShouldBeNil)
+
+		})
+	})
+}
+
 func TestCreatePermissions(t *testing.T) {
 	Convey("Running tests on 'createGHPermissions' function", t, func() {
 		Convey("should return json permissions as string", func() {
@@ -257,6 +276,103 @@ var authResponse = `
   "created_at": "2011-09-06T17:26:27Z",
   "fingerprint": ""
 }`
+
+var checkAuthResponse = `
+{
+  "id": 75939914,
+  "name": "pj",
+  "full_name": "Andrey9kin/pj",
+  "owner": {
+    "login": "Andrey9kin",
+    "id": 1671664,
+    "avatar_url": "https://avatars3.githubusercontent.com/u/1671664?v=3",
+    "gravatar_id": "",
+    "url": "https://api.github.com/users/Andrey9kin",
+    "html_url": "https://github.com/Andrey9kin",
+    "followers_url": "https://api.github.com/users/Andrey9kin/followers",
+    "following_url": "https://api.github.com/users/Andrey9kin/following{/other_user}",
+    "gists_url": "https://api.github.com/users/Andrey9kin/gists{/gist_id}",
+    "starred_url": "https://api.github.com/users/Andrey9kin/starred{/owner}{/repo}",
+    "subscriptions_url": "https://api.github.com/users/Andrey9kin/subscriptions",
+    "organizations_url": "https://api.github.com/users/Andrey9kin/orgs",
+    "repos_url": "https://api.github.com/users/Andrey9kin/repos",
+    "events_url": "https://api.github.com/users/Andrey9kin/events{/privacy}",
+    "received_events_url": "https://api.github.com/users/Andrey9kin/received_events",
+    "type": "User",
+    "site_admin": false
+  },
+  "private": false,
+  "html_url": "https://github.com/Andrey9kin/pj",
+  "description": "Jenkins voice message generator (p - polly, j - jenkins)",
+  "fork": false,
+  "url": "https://api.github.com/repos/Andrey9kin/pj",
+  "forks_url": "https://api.github.com/repos/Andrey9kin/pj/forks",
+  "keys_url": "https://api.github.com/repos/Andrey9kin/pj/keys{/key_id}",
+  "collaborators_url": "https://api.github.com/repos/Andrey9kin/pj/collaborators{/collaborator}",
+  "teams_url": "https://api.github.com/repos/Andrey9kin/pj/teams",
+  "hooks_url": "https://api.github.com/repos/Andrey9kin/pj/hooks",
+  "issue_events_url": "https://api.github.com/repos/Andrey9kin/pj/issues/events{/number}",
+  "events_url": "https://api.github.com/repos/Andrey9kin/pj/events",
+  "assignees_url": "https://api.github.com/repos/Andrey9kin/pj/assignees{/user}",
+  "branches_url": "https://api.github.com/repos/Andrey9kin/pj/branches{/branch}",
+  "tags_url": "https://api.github.com/repos/Andrey9kin/pj/tags",
+  "blobs_url": "https://api.github.com/repos/Andrey9kin/pj/git/blobs{/sha}",
+  "git_tags_url": "https://api.github.com/repos/Andrey9kin/pj/git/tags{/sha}",
+  "git_refs_url": "https://api.github.com/repos/Andrey9kin/pj/git/refs{/sha}",
+  "trees_url": "https://api.github.com/repos/Andrey9kin/pj/git/trees{/sha}",
+  "statuses_url": "https://api.github.com/repos/Andrey9kin/pj/statuses/{sha}",
+  "languages_url": "https://api.github.com/repos/Andrey9kin/pj/languages",
+  "stargazers_url": "https://api.github.com/repos/Andrey9kin/pj/stargazers",
+  "contributors_url": "https://api.github.com/repos/Andrey9kin/pj/contributors",
+  "subscribers_url": "https://api.github.com/repos/Andrey9kin/pj/subscribers",
+  "subscription_url": "https://api.github.com/repos/Andrey9kin/pj/subscription",
+  "commits_url": "https://api.github.com/repos/Andrey9kin/pj/commits{/sha}",
+  "git_commits_url": "https://api.github.com/repos/Andrey9kin/pj/git/commits{/sha}",
+  "comments_url": "https://api.github.com/repos/Andrey9kin/pj/comments{/number}",
+  "issue_comment_url": "https://api.github.com/repos/Andrey9kin/pj/issues/comments{/number}",
+  "contents_url": "https://api.github.com/repos/Andrey9kin/pj/contents/{+path}",
+  "compare_url": "https://api.github.com/repos/Andrey9kin/pj/compare/{base}...{head}",
+  "merges_url": "https://api.github.com/repos/Andrey9kin/pj/merges",
+  "archive_url": "https://api.github.com/repos/Andrey9kin/pj/{archive_format}{/ref}",
+  "downloads_url": "https://api.github.com/repos/Andrey9kin/pj/downloads",
+  "issues_url": "https://api.github.com/repos/Andrey9kin/pj/issues{/number}",
+  "pulls_url": "https://api.github.com/repos/Andrey9kin/pj/pulls{/number}",
+  "milestones_url": "https://api.github.com/repos/Andrey9kin/pj/milestones{/number}",
+  "notifications_url": "https://api.github.com/repos/Andrey9kin/pj/notifications{?since,all,participating}",
+  "labels_url": "https://api.github.com/repos/Andrey9kin/pj/labels{/name}",
+  "releases_url": "https://api.github.com/repos/Andrey9kin/pj/releases{/id}",
+  "deployments_url": "https://api.github.com/repos/Andrey9kin/pj/deployments",
+  "created_at": "2016-12-08T13:25:04Z",
+  "updated_at": "2016-12-09T10:46:29Z",
+  "pushed_at": "2016-12-09T11:24:52Z",
+  "git_url": "git://github.com/Andrey9kin/pj.git",
+  "ssh_url": "git@github.com:Andrey9kin/pj.git",
+  "clone_url": "https://github.com/Andrey9kin/pj.git",
+  "svn_url": "https://github.com/Andrey9kin/pj",
+  "homepage": "",
+  "size": 17,
+  "stargazers_count": 0,
+  "watchers_count": 0,
+  "language": "Python",
+  "has_issues": true,
+  "has_projects": true,
+  "has_downloads": true,
+  "has_wiki": true,
+  "has_pages": false,
+  "forks_count": 0,
+  "mirror_url": null,
+  "open_issues_count": 0,
+  "forks": 0,
+  "open_issues": 0,
+  "watchers": 0,
+  "default_branch": "master",
+  "permissions": {
+    "admin": false,
+    "push": true,
+    "pull": true
+  }
+}
+`
 
 var issueResponse = `[
   {

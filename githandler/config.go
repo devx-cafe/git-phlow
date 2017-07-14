@@ -27,3 +27,10 @@ func ConfigSet(key, value, group string) error {
 	_, err := executor.ExecuteCommand("git", "config", "--global", pair, value)
 	return err
 }
+
+//ConfigUnset ...
+func ConfigUnset(key, group string) error {
+	pair := fmt.Sprintf("%s.%s", group, key)
+	_, err := executor.ExecuteCommand("git", "config", "--global", "--unset", pair)
+	return err
+}

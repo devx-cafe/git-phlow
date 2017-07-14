@@ -1,10 +1,11 @@
 package plugins
 
 import (
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"net/http"
-	"fmt"
-	"errors"
+
 	"github.com/praqma/git-phlow/options"
 )
 
@@ -17,6 +18,7 @@ type pluginWebURL struct {
 	labelURL    string
 	assigneeURL string
 	repo        string
+	userRepo    string
 }
 
 //pluginWebRequest ...
@@ -72,10 +74,13 @@ func requestStatus(res *http.Response) error {
 		return nil
 	case 422: //StatusUnprocessableEntity
 		//For POST requests
-		return errors.New("git-phlow token already exists")
+		return errors.New("git-phlow token already exists - go to GitHub and delete your git-phlow Personal Access Token")
 	case http.StatusNotFound:
 		//For GET and POST
 		return fmt.Errorf("responded with %s - malformed url", res.Status)
+	case http.StatusUnauthorized:
+		//For 401 unauthorized
+		return fmt.Errorf("Request returned 401 unauthorized. Please run 'git phlow auth' and reauthenticate")
 	default:
 		//Default behaviour if status is not OK
 		return fmt.Errorf("request did not respond with 200 OK, but %s", res.Status)

@@ -22,7 +22,21 @@ func Auth() {
 	user := githandler.ConfigGet("user", "phlow")
 
 	if token != "" && user != "" {
-		fmt.Println("You are already signed in")
+		fmt.Println("Checking token validity...")
+		isAuthenticated, err := plugins.GitHub.CheckAuth()
+		if !isAuthenticated {
+			fmt.Println("Token test expected HTTP code 200 but received " + err.Error())
+			if ReadInput("Delete local token and reauthenticate? (y/n): ") == "y" {
+				fmt.Println("Deleting local token and reauthenticating...")
+				githandler.ConfigUnset("token", "phlow")
+				githandler.ConfigUnset("user", "phlow")
+				Auth()
+			} else {
+				fmt.Println("Aborting...")
+			}
+			return
+		}
+		fmt.Println("Token successfully validated. You are already signed in")
 		return
 	}
 

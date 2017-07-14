@@ -15,7 +15,7 @@ var authCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s is required to enable 'workon' with issue management.
 Auth will prompt you for a GitHub username and password to generate a token.
-Don't worry, the token does not include admininstrator rights, only acces to manage issues for public repositories.
+Don't worry, the token does not include admininstrator rights, only access to manage issues for public repositories.
 `, ui.Format.Bold("auth")),
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.Auth()

@@ -3,12 +3,15 @@ package plugins
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
+
+	"os"
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"os"
 )
 
 var GitHub *GitHubImpl
@@ -33,6 +36,7 @@ func init() {
 		issueURL:    "/repos/%s/%s/issues",
 		labelURL:    "/repos/%s/%s/issues/%d/labels",
 		repo:        "/repos/%s/%s",
+		userRepo:    "/user/repos",
 	}
 
 	info, _ := githandler.Remote()
@@ -188,4 +192,26 @@ func (g *GitHubImpl) Auth(user, pass string) (token string, err error) {
 		return "", err
 	}
 	return re.Token, nil
+}
+
+//CheckAuth ...
+//Checks personal access token validity by requesting private repositories and checking status code
+func (g *GitHubImpl) CheckAuth() (bool, error) {
+
+	URL := fmt.Sprintf(g.URLNoEsc(urls.userRepo))
+
+	req, _ := http.NewRequest("GET", URL, nil)
+	q := req.URL.Query()
+	q.Add("access_token", g.token)
+	req.URL.RawQuery = q.Encode()
+
+	client := http.DefaultClient
+	res, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+	if res.StatusCode != http.StatusOK {
+		return false, errors.New(strconv.Itoa(res.StatusCode))
+	}
+	return true, nil
 }
