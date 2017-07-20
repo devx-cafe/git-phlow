@@ -30,7 +30,7 @@ func WrapUp() {
 	}
 
 	if _, err := githandler.Commit(cmsg); err != nil {
-		fmt.Println("Nothing to commit!")
+		fmt.Println(err)
 		return
 	}
 	fmt.Fprintln(os.Stdout, cmsg)
