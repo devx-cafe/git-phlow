@@ -14,7 +14,6 @@ import (
 //WorkOn ...
 func WorkOn(issue int) {
 	ui.PhlowSpinner.Start("Setting up workspace")
-
 	defer ui.PhlowSpinner.Stop()
 	if err := githandler.Fetch(); err != nil {
 		fmt.Println(err)
@@ -71,7 +70,7 @@ func WorkOn(issue int) {
 			return
 		}
 	}
-
+	ui.PhlowSpinner.Stop()
 	fmt.Println("No matching issues")
 }
 
