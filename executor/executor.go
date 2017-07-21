@@ -39,6 +39,9 @@ func ExecuteCommand(command string, argv ...string) (string, error) {
 	}
 
 	if err := exe.Wait(); err != nil {
+		if out := stdOutBuffer.String(); stdErrBuffer.String() == "" {
+			return "", errors.New(out)
+		}
 		return "", errors.New(stdErrBuffer.String())
 	}
 
