@@ -6,11 +6,8 @@ image_resource:
   source: {repository: golang, tag: "1.8"}
 
 inputs:
-- name: gp-version
+- name: tollgate
 - name: git-phlow
 
-outputs:
-- name: build-artifacts
-
 run:
-  path: git-phlow/ci/scripts/build.sh
+  path: tollgate/ci/tollgate/tollgate.sh

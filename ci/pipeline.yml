@@ -1,3 +1,120 @@
+################# PIPELINE JOBS #################
+#INTEGRATION TEST JOB
+jobs:
+- name: checkin
+  plan:
+  - get: git-phlow
+  - get: gp-version
+    params: {bump: patch}
+  - get: tollgate
+    trigger: true
+  - put: gp-version
+    params: {file: gp-version/version}
+  - task: integration
+    file: tollgate/ci/test/test.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+            $BUILD_JOB_NAME nr. $BUILD_NAME failed 
+            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+            
+  - put: tollgate
+    params:
+      repository: tollgate
+    timeout: 5m
+
+#- name: static-analysis
+#  plan:
+#    - get: git-phlow
+#      passed: [integration-test]
+#   - get: gp-version
+#    - task: static-analysis
+#      file: git-phlow/ci/tasks/static-analysis.yml
+
+- name: heating-engines
+  plan: 
+    - get: git-phlow
+      passed: [checkin]
+      trigger: true
+    - get: gp-version
+      passed: [checkin]
+    - task: windows-test
+      file: git-phlow/ci/windows/windows.yml
+
+
+- name: deploying-flaps
+  plan:
+    - get: git-phlow
+      passed: [checkin]
+      trigger: true
+    - get: gp-version
+      passed: [checkin]
+    - task: unix-test
+      file: git-phlow/ci/test/test.yml
+
+
+#BUILD ARTIFACT
+- name: construction
+  plan:
+    - get: gp-version
+    - get: git-phlow 
+      passed: [heating-engines, deploying-flaps]
+      trigger: true
+    - task: create-release 
+      file: git-phlow/ci/build/build.yml
+    - put: phlow-artifact-linux-s3
+      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
+    - put: phlow-artifact-darwin-s3
+      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}                    
+    #- put: phlow-artifact-windows-s3
+    #  params: {file: build-artifacts/git-phlow-*-windows-amd64.tar.gz}                    
+
+#PAC GOES HERE
+
+#CREATE A GITHUB RELEASE
+- name: takeoff
+  plan:
+  - get: gp-version
+  - get: git-phlow
+  - get: phlow-artifact-linux-s3
+    passed: [construction]
+  - get: phlow-artifact-darwin-s3
+    passed: [construction]
+  - put: gh-release
+    params:
+      name: gp-version/version 
+      tag: gp-version/version
+      tag_prefix: v 
+      body: git-phlow/ci/CHANGELOG.md
+      globs: 
+        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
+        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
+
+
+- name: afterburner
+  plan:
+  - aggregate:   
+    - get: praqma-tap
+    - get: git-phlow #contains the formula update script
+    - get: gp-version
+    - get: phlow-artifact-darwin-s3
+      passed: [takeoff]
+      trigger: true
+  - task: brew-release
+    file: git-phlow/ci/brew/brew.yml
+    on_failure:
+      put: slack-alert
+      params:
+        text: |
+            brew release failed
+            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
+  - put: praqma-tap
+    params:
+      repository: updated-praqma-tap
+
+
+
 resource_types:
 #PIP RESOURCE_TYPE
 - name: pip
@@ -93,91 +210,3 @@ resources:
         url: {{slack-url}}
 
 
-################# PIPELINE JOBS #################
-#INTEGRATION TEST JOB
-jobs:
-- name: integration-test
-  plan:
-  - get: git-phlow
-  - get: gp-version
-    params: {bump: patch}
-  - get: tollgate
-    trigger: true
-  - put: gp-version
-    params: {file: gp-version/version}
-  - task: integration
-    file: tollgate/ci/tasks/run-tests.yml
-    on_failure:
-      put: slack-alert
-      params:
-        text: |
-            $BUILD_JOB_NAME nr. $BUILD_NAME failed 
-            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-            
-  - put: tollgate
-    params:
-      repository: tollgate
-    timeout: 5m
-#STATIC GOES HERE
-- name: static-analysis
-  plan:
-    - get: git-phlow
-      passed: [integration-test]
-    - get: gp-version
-    - task: static-analysis
-      file: git-phlow/ci/tasks/static-analysis.yml
-
-#BUILD ARTIFACT
-- name: build-phlow-artifacts
-  plan:
-    - get: gp-version
-    - get: git-phlow 
-      passed: [static-analysis]
-      trigger: true
-    - task: create-release 
-      file: git-phlow/ci/tasks/gen-bin.yml
-    - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
-    - put: phlow-artifact-darwin-s3
-      params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}                    
-      
-#PAC GOES HERE
-
-#CREATE A GITHUB RELEASE
-- name: shipit
-  plan:
-  - get: gp-version
-  - get: git-phlow
-  - get: phlow-artifact-linux-s3
-    passed: [build-phlow-artifacts]
-  - get: phlow-artifact-darwin-s3
-    passed: [build-phlow-artifacts]
-  - put: gh-release
-    params:
-      name: gp-version/version 
-      tag: gp-version/version
-      tag_prefix: v 
-      body: git-phlow/ci/notes/CHANGELOG.md
-      globs: 
-        - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
-        - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
-- name: brew-release
-  plan:
-  - aggregate:   
-    - get: praqma-tap
-    - get: git-phlow #contains the formula update script
-    - get: gp-version
-    - get: phlow-artifact-darwin-s3
-      passed: [shipit]
-      trigger: true
-  - task: brew-release
-    file: git-phlow/ci/tasks/brew-release.yml
-    on_failure:
-      put: slack-alert
-      params:
-        text: |
-            brew release failed
-            https://concourse.bosh.praqma.cloud/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME
-  - put: praqma-tap
-    params:
-      repository: updated-praqma-tap

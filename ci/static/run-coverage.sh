@@ -16,8 +16,6 @@ go get -d -t -v ./...
 #Run the coverage
 ci/cover/gencover.sh $(go list ./...)
 
-
-
 cat coverfiles/percentage
 ./cover
 

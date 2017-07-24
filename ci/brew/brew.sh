@@ -19,7 +19,7 @@ echo $URL
 git clone praqma-tap updated-praqma-tap
 
 #GO SCRIPT THAT GENERATES BREW FORMULA
-go run git-phlow/ci/scripts/template.go > updated-praqma-tap/Formula/git-phlow.rb
+go run git-phlow/ci/brew/template.go > updated-praqma-tap/Formula/git-phlow.rb
 
 #OUTPUT OF FORMULA FOR LOGGING
 cat updated-praqma-tap/Formula/git-phlow.rb

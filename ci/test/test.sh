@@ -6,7 +6,7 @@ set -e -u -x
 # 'build' AND 'get' WILL FAIL
 
 mkdir -p $GOPATH/src/github.com/praqma
-cp -R tollgate/ $GOPATH/src/github.com/praqma/git-phlow
+cp -R git-phlow/ $GOPATH/src/github.com/praqma
 
 # RESOLVE DEPENDENCIES - TEST AND PRODUCTION
 cd $GOPATH/src/github.com/praqma/git-phlow

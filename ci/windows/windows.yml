@@ -1,0 +1,12 @@
+---
+platform: windows
+
+inputs: 
+  - name: git-phlow
+
+run:
+
+  path: powershell.exe 
+  args:
+  - -File
+  - '.\git-phlow\ci\windows\go-test-windows.ps1'
