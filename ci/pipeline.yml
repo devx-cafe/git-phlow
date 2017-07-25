@@ -55,19 +55,27 @@ jobs:
 
 
 #BUILD ARTIFACT
-- name: unix-pilot-check
+- name: darwin-pilot-check
   plan:
     - get: gp-version
     - get: git-phlow 
       passed: [heating-engines, deploying-flaps]
       trigger: true
     - task: create-release 
-      file: git-phlow/ci/build/build.yml
-    - put: phlow-artifact-linux-s3
-      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}
+      file: git-phlow/ci/build/darwin.yml  
     - put: phlow-artifact-darwin-s3
       params: {file: build-artifacts/git-phlow-*-darwin-amd64.tar.gz}                    
-    
+
+- name: linux-pilot-check
+  plan:
+    - get: gp-version
+    - get: git-phlow 
+      passed: [heating-engines, deploying-flaps]
+      trigger: true
+    - task: create-release 
+      file: git-phlow/ci/build/linux.yml
+    - put: phlow-artifact-linux-s3
+      params: {file: build-artifacts/git-phlow-*-linux-amd64.tar.gz}                 
   
 - name: windows-pilot-check
   plan:
@@ -76,28 +84,26 @@ jobs:
       passed: [heating-engines, deploying-flaps]
       trigger: true
     - task: create-release 
-      file: git-phlow/ci/build/build-w.yml
+      file: git-phlow/ci/build/windows.yml
     - put: phlow-artifact-windows-s3
       params: {file: build-artifacts/git-phlow-*-windows-amd64.tar.gz}                    
 
-
-
 #PAC GOES HERE
+    
+
+
 
 #CREATE A GITHUB RELEASE
 - name: takeoff
   plan:
-  
   - get: phlow-artifact-darwin-s3
-    passed: [unix-pilot-check]
-  
+    passed: [darwin-pilot-check]
   - get: phlow-artifact-linux-s3
-    passed: [unix-pilot-check]
-  
+    passed: [linux-pilot-check]
   - get: phlow-artifact-windows-s3
     passed: [windows-pilot-check] 
-
   - get: gp-version
+    passed: [darwin-pilot-check,linux-pilot-check,windows-pilot-check]
   - get: git-phlow
 
   - put: gh-release
