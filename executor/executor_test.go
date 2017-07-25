@@ -1,88 +1,97 @@
-package executor
+package executor_test
 
 import (
-	"testing"
-
-	. "github.com/smartystreets/goconvey/convey"
-	"os/exec"
+	. "github.com/praqma/git-phlow/executor"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"bytes"
+	"os/exec"
 )
 
-func TestRunCommand(t *testing.T) {
+var _ = Describe("Executor", func() {
 
-	Convey("Runnig tests on 'ExecuteCommand' function", t, func() {
+	Describe("The ExecuteCommand function", func() {
 
-		Convey("running ls should not return an error and stdout", func() {
-			output, err := ExecuteCommand("ls", "-lah")
-			So(output, ShouldNotBeBlank)
-			So(err, ShouldBeNil)
+		Context("called with valid command ls", func() {
+			It("should not return an error", func() {
+				output, err := ExecuteCommand("ls", "-lah")
+
+				Ω(output).ShouldNot(BeEmpty())
+				Ω(err).Should(BeNil())
+			})
 		})
 
-		Convey("running lsk should return an error and stderr", func() {
-			output, err := ExecuteCommand("lsk", "-lah")
-			So(output, ShouldBeBlank)
-			So(err, ShouldNotBeNil)
-		})
-	})
-}
+		Context("called with invalid command", func() {
+			It("should fail", func() {
+				output, err := ExecuteCommand("lsk", "-lah")
+				Ω(output).Should(BeEmpty())
+				Ω(err).ShouldNot(BeNil())
+			})
 
-func TestExecPipeCommand(t *testing.T) {
-
-	Convey("Runnig tests on 'ExecPipeCommand' function", t, func() {
-
-		Convey("should run with any number of commands", func() {
-
-			var buf bytes.Buffer
-			err := ExecPipeCommand(&buf,
-				exec.Command("ls", "-lah"),
-				exec.Command("grep", "c"),
-				exec.Command("sort", "-r"))
-
-			So(err, ShouldBeNil)
-			So(buf.String(), ShouldNotBeEmpty)
-		})
-
-		Convey("should run with two commands", func() {
-			var buf bytes.Buffer
-
-			err := ExecPipeCommand(&buf,
-				exec.Command("ls", "-lah"),
-				exec.Command("grep", "c"))
-
-			So(err, ShouldBeNil)
-			So(buf.String(), ShouldNotBeEmpty)
-		})
-
-		Convey("should run with one command", func() {
-			var buf bytes.Buffer
-
-			err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
-
-			So(err, ShouldBeNil)
-			So(buf.String(), ShouldNotBeEmpty)
-		})
-
-		Convey("First function should error", func() {
-			var buf bytes.Buffer
-
-			err := ExecPipeCommand(&buf,
-				exec.Command("argh", "blash"),
-				exec.Command("grep", "stuff"))
-
-			So(err, ShouldNotBeNil)
-			So(buf.String(), ShouldBeEmpty)
-		})
-
-		Convey("Second function should error", func() {
-			var buf bytes.Buffer
-
-			err := ExecPipeCommand(&buf,
-				exec.Command("ls", "-lah"),
-				exec.Command("jklasd", "stuff"))
-
-			So(err, ShouldNotBeNil)
-			So(buf.String(), ShouldBeEmpty)
 		})
 
 	})
-}
+
+	Describe("The ExecPipeCommand function", func() {
+		Context("should run", func() {
+			It("with 3 commands", func() {
+
+				var buf bytes.Buffer
+				err := ExecPipeCommand(&buf,
+					exec.Command("ls", "-lah"),
+					exec.Command("grep", "c"),
+					exec.Command("sort", "-r"))
+
+				Ω(err).Should(BeNil())
+				Ω(buf.String()).ShouldNot(BeEmpty())
+			})
+		})
+
+		Context("should run", func() {
+			It("with 2 commands", func() {
+				var buf bytes.Buffer
+
+				err := ExecPipeCommand(&buf,
+					exec.Command("ls", "-lah"),
+					exec.Command("grep", "c"))
+
+				Ω(err).Should(BeNil())
+				Ω(buf.String()).ShouldNot(BeEmpty())
+			})
+		})
+
+		Context("should run", func() {
+			It("with 1 command", func() {
+				var buf bytes.Buffer
+
+				err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
+				Ω(err).Should(BeNil())
+				Ω(buf.String()).ShouldNot(BeEmpty())
+			})
+		})
+
+		Context("should fail", func() {
+			It("in first function", func() {
+				var buf bytes.Buffer
+
+				err := ExecPipeCommand(&buf,
+					exec.Command("argh", "blash"),
+					exec.Command("grep", "stuff"))
+
+				Ω(err).ShouldNot(BeNil())
+			})
+		})
+
+		Context("should fail", func() {
+			It("in second function", func() {
+				var buf bytes.Buffer
+
+				err := ExecPipeCommand(&buf,
+					exec.Command("ls", "-lah"),
+					exec.Command("jklasd", "stuff"))
+				Ω(err).ShouldNot(BeNil())
+			})
+		})
+	})
+
+})

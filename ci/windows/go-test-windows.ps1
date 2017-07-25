@@ -11,4 +11,6 @@ go get -d -t -v ./...
 #RUN TESTS
 go test -p 1 ./...
 
-exit 1
+# USES THE LATEST EXITCODE, WHICH IS FROM GO TEST, AND EXITS WITH THAT. THIS FIXIS 
+# ISSUE #152
+exit $lastexitcode
