@@ -3,6 +3,7 @@
 jobs:
 - name: checkin
   plan:
+  - get: git-phlow
   - get: tollgate
     trigger: true
   - get: gp-version
@@ -34,9 +35,9 @@ jobs:
 - name: heating-engines
   plan: 
     - get: git-phlow
-    - get: gp-version
-      passed: [checkin]
       trigger: true
+      passed: [checkin]
+    - get: gp-version
       passed: [checkin]
     - task: windows-test
       file: git-phlow/ci/windows/windows.yml
@@ -45,10 +46,9 @@ jobs:
 - name: deploying-flaps
   plan:
     - get: git-phlow
-    - get: gp-version
-      passed: [checkin]
       trigger: true
       passed: [checkin]
+    - get: gp-version
     - task: unix-test
       file: git-phlow/ci/test/test.yml
 
