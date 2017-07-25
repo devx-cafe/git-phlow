@@ -41,7 +41,7 @@ var _ = Describe("Executor", func() {
 					exec.Command("sort", "-r"))
 
 				Ω(err).Should(BeNil())
-				Ω(buf.String()).ShouldNot(BeEmpty())
+				Ω(buf.String()).Should(BeEmpty())
 			})
 		})
 
@@ -53,7 +53,7 @@ var _ = Describe("Executor", func() {
 					exec.Command("grep", "c"))
 
 				Ω(err).Should(BeNil())
-				Ω(buf.String()).ShouldNot(BeEmpty())
+				Ω(buf.String()).Should(BeEmpty())
 			})
 		})
 
