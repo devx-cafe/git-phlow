@@ -14,7 +14,7 @@ var _ = Describe("Executor", func() {
 
 		Context("called with valid command ls", func() {
 			It("should not return an error", func() {
-				_, err := ExecuteCommand("echo", "hello")
+				_, err := ExecuteCommand("git", "--version")
 
 				Ω(err).Should(BeNil())
 			})
@@ -36,7 +36,7 @@ var _ = Describe("Executor", func() {
 			It("with 3 commands", func() {
 				var buf bytes.Buffer
 				err := ExecPipeCommand(&buf,
-					exec.Command("echo", "cyan read yellow"),
+					exec.Command("git", "--version"),
 					exec.Command("grep", "c"),
 					exec.Command("sort", "-r"))
 
@@ -49,7 +49,7 @@ var _ = Describe("Executor", func() {
 			It("with 2 commands", func() {
 				var buf bytes.Buffer
 				err := ExecPipeCommand(&buf,
-					exec.Command("echo", "cyan"),
+					exec.Command("git", "--version"),
 					exec.Command("grep", "c"))
 
 				Ω(err).Should(BeNil())
@@ -60,7 +60,7 @@ var _ = Describe("Executor", func() {
 		Context("should run", func() {
 			It("with 1 command", func() {
 				var buf bytes.Buffer
-				err := ExecPipeCommand(&buf, exec.Command("echo", "hello"))
+				err := ExecPipeCommand(&buf, exec.Command("git", "--version"))
 
 				Ω(err).Should(BeNil())
 				Ω(buf.String()).ShouldNot(BeEmpty())

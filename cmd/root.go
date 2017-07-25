@@ -40,7 +40,10 @@ func Execute() {
 
 func init() {
 	RootCmd.PersistentFlags()
+
 	RootCmd.Flags().BoolVar(&options.GlobalFlagVersion, "version", false, "current version")
 
 	RootCmd.PersistentFlags().BoolVarP(&options.GlobalFlagVerbose, "verbose", "v", false, "verbose output")
+
+
 }

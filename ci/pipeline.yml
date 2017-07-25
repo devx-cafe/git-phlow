@@ -3,7 +3,6 @@
 jobs:
 - name: checkin
   plan:
-  - get: git-phlow
   - get: tollgate
     trigger: true
   - get: gp-version
@@ -36,7 +35,6 @@ jobs:
   plan: 
     - get: git-phlow
       trigger: true
-      passed: [checkin]
     - get: gp-version
       passed: [checkin]
     - task: windows-test
@@ -47,8 +45,8 @@ jobs:
   plan:
     - get: git-phlow
       trigger: true
-      passed: [checkin]
     - get: gp-version
+      passed: [checkin]
     - task: unix-test
       file: git-phlow/ci/test/test.yml
 
