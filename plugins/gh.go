@@ -52,10 +52,6 @@ func init() {
 	}
 }
 
-func (g *GitHubImpl) LOL() () {
-
-}
-
 //GetIssues ...
 func (g *GitHubImpl) GetIssues() (issues []Issues, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)

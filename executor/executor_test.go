@@ -14,9 +14,8 @@ var _ = Describe("Executor", func() {
 
 		Context("called with valid command ls", func() {
 			It("should not return an error", func() {
-				output, err := ExecuteCommand("ls", "-lah")
+				_, err := ExecuteCommand("echo", "hello")
 
-				Ω(output).ShouldNot(BeEmpty())
 				Ω(err).Should(BeNil())
 			})
 		})
@@ -35,10 +34,9 @@ var _ = Describe("Executor", func() {
 	Describe("The ExecPipeCommand function", func() {
 		Context("should run", func() {
 			It("with 3 commands", func() {
-
 				var buf bytes.Buffer
 				err := ExecPipeCommand(&buf,
-					exec.Command("ls", "-lah"),
+					exec.Command("echo", "cyan read yellow"),
 					exec.Command("grep", "c"),
 					exec.Command("sort", "-r"))
 
@@ -50,9 +48,8 @@ var _ = Describe("Executor", func() {
 		Context("should run", func() {
 			It("with 2 commands", func() {
 				var buf bytes.Buffer
-
 				err := ExecPipeCommand(&buf,
-					exec.Command("ls", "-lah"),
+					exec.Command("echo", "cyan"),
 					exec.Command("grep", "c"))
 
 				Ω(err).Should(BeNil())
@@ -63,8 +60,8 @@ var _ = Describe("Executor", func() {
 		Context("should run", func() {
 			It("with 1 command", func() {
 				var buf bytes.Buffer
+				err := ExecPipeCommand(&buf, exec.Command("echo", "hello"))
 
-				err := ExecPipeCommand(&buf, exec.Command("ls", "-lah"))
 				Ω(err).Should(BeNil())
 				Ω(buf.String()).ShouldNot(BeEmpty())
 			})
@@ -89,6 +86,7 @@ var _ = Describe("Executor", func() {
 				err := ExecPipeCommand(&buf,
 					exec.Command("ls", "-lah"),
 					exec.Command("jklasd", "stuff"))
+
 				Ω(err).ShouldNot(BeNil())
 			})
 		})

@@ -4,15 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"runtime"
-
-	"github.com/praqma/git-phlow/githandler"
-
 	"strings"
 	"syscall"
 
-	"github.com/praqma/git-phlow/plugins"
 	"golang.org/x/crypto/ssh/terminal"
+	"io"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/plugins"
 )
 
 //Auth ...
@@ -26,7 +24,7 @@ func Auth() {
 		isAuthenticated, err := plugins.GitHub.CheckAuth()
 		if !isAuthenticated {
 			fmt.Println("Token test expected HTTP code 200 but received " + err.Error())
-			if ReadInput("Delete local token and reauthenticate? (y/n): ") == "y" {
+			if ReadInput("Delete local token and reauthenticate? (y/n): ", os.Stdin) == "y" {
 				fmt.Println("Deleting local token and reauthenticating...")
 				githandler.ConfigUnset("token", "phlow")
 				githandler.ConfigUnset("user", "phlow")
@@ -43,17 +41,18 @@ func Auth() {
 	fmt.Fprintf(os.Stdout, "Enter credentials for %s \n", "GitHub")
 
 	//Read user input username
-	username := ReadInput("username: ")
+	username := ReadInput("username: ", os.Stdin)
 	//Read user input password
 	password := ReadPassword("password: ")
 
+	fmt.Println(username)
+	fmt.Println(password)
 	token, err := plugins.GitHub.Auth(username, password)
 	if err != nil {
 		fmt.Println()
 		fmt.Println(err)
 		return
 	}
-	plugins.GitHub.LOL()
 
 	githandler.ConfigSet("token", token, "phlow")
 	githandler.ConfigSet("user", username, "phlow")
@@ -64,12 +63,12 @@ func Auth() {
 
 //ReadInput ...
 //Reads input from user
-func ReadInput(messageToUser string) string {
+func ReadInput(messageToUser string, input io.Reader) string {
 	fmt.Print(messageToUser)
-	ds, db := GetOSLineBreak()
-	scanner := bufio.NewReader(os.Stdin)
-	text, _ := scanner.ReadString(db)
-	return strings.Replace(text, ds, "", -1)
+
+	scanner := bufio.NewScanner(input)
+	scanner.Scan()
+	return scanner.Text()
 }
 
 //ReadPassword ...
@@ -78,12 +77,4 @@ func ReadPassword(messageToUser string) string {
 	fmt.Print(messageToUser)
 	bytePassword, _ := terminal.ReadPassword(int(syscall.Stdin))
 	return strings.TrimSpace(string(bytePassword))
-}
-
-func GetOSLineBreak() (string, byte) {
-	if runtime.GOOS == "windows" {
-		return "\r",'\r'
-	} else {
-		return "\n",'\n'
-	}
 }

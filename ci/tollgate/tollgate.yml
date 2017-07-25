@@ -7,7 +7,6 @@ image_resource:
 
 inputs:
 - name: tollgate
-- name: git-phlow
 
 run:
   path: tollgate/ci/tollgate/tollgate.sh
