@@ -23,6 +23,9 @@ var (
 	//GlobalFlagForce ...
 	GlobalFlagForce = false
 
+	//GlobalFlagNoColor ...
+	GlobalFlagNoColor bool
+
 	//GlobalFlagShowTestOutput ...
 	GlobalFlagShowTestOutput bool
 

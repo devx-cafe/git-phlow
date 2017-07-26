@@ -2,6 +2,7 @@ package ui
 
 import (
 	"github.com/fatih/color"
+	"github.com/praqma/git-phlow/options"
 )
 
 var Format *colorFormat
@@ -30,49 +31,56 @@ type labelSubFormat struct {
 	G4Move     func(in string) string
 }
 
-func init() {
-	lsf = &labelSubFormat{
-		G1Await: func(in string) string {
-			return color.New(color.FgHiGreen).Add(color.Bold).Add(color.BgGreen).SprintFunc()(in)
-		},
-		G2Priority: func(in string) string {
-			return color.New(color.FgWhite).Add(color.Bold).Add(color.BgHiRed).SprintFunc()(in)
-		},
-		G3Time: func(in string) string {
-			return color.New(color.FgHiBlack).Add(color.Bold).Add(color.BgHiBlue).SprintFunc()(in)
-		},
-		G4Move: func(in string) string {
-			return color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite).SprintFunc()(in)
-		},
+func Colorizer(in string, c *color.Color) string{
+	if options.GlobalFlagNoColor{
+		return in
 	}
+		return c.SprintFunc()(in)
+}
 
-	Format = &colorFormat{
-		Bold: func(in string) string {
-			return color.New(color.Bold).SprintFunc()(in)
-		},
-		Success: func(in string) string {
-			return color.New(color.FgHiGreen).SprintFunc()(in)
-		},
-		Error: func(in string) string {
-			return color.New(color.FgHiRed).SprintFunc()(in)
-		},
-		Branch: func(in string) string {
-			return color.New(color.FgHiGreen).Add(color.Bold).SprintFunc()(in)
-		},
-		Alias: func(in string) string {
-			return color.New(color.FgHiCyan).Add(color.Bold).SprintFunc()(in)
-		},
-		Assignee: func(in string) string {
-			return color.New(color.FgYellow).Add(color.Bold).SprintFunc()("@" + in)
-		},
-		Issue: func(in string) string {
-			return color.New(color.Bold).SprintFunc()("#" + in)
-		},
-		MileStone: func(in string) string {
-			return color.New(color.FgGreen).SprintFunc()(in)
-		},
-		Label: lsf,
-	}
+func init() {
+		lsf = &labelSubFormat{
+			G1Await: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiGreen).Add(color.Bold).Add(color.BgGreen))
+			},
+			G2Priority: func(in string) string {
+				return Colorizer(in , color.New(color.FgWhite).Add(color.Bold).Add(color.BgHiRed))
+			},
+			G3Time: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiBlack).Add(color.Bold).Add(color.BgHiBlue))
+			},
+			G4Move: func(in string) string {
+				return Colorizer(in , color.New(color.FgBlack).Add(color.Bold).Add(color.BgHiWhite))
+			},
+		}
+
+		Format = &colorFormat{
+			Bold: func(in string) string {
+				return Colorizer(in , color.New(color.Bold))
+			},
+			Success: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiGreen))
+			},
+			Error: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiRed))
+			},
+			Branch: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiGreen).Add(color.Bold))
+			},
+			Alias: func(in string) string {
+				return Colorizer(in , color.New(color.FgHiCyan).Add(color.Bold))
+			},
+			Assignee: func(in string) string {
+				return Colorizer("@" + in , color.New(color.FgYellow).Add(color.Bold))
+			},
+			Issue: func(in string) string {
+				return Colorizer("#" + in , color.New(color.Bold))
+			},
+			MileStone: func(in string) string {
+				return Colorizer(in , color.New(color.FgGreen))
+			},
+			Label: lsf,
+		}
 }
 
 //FByG ...
