@@ -1,12 +1,11 @@
 package testfixture
 
 import (
-	"errors"
-	"fmt"
 	"os"
 	"testing"
 
 	"github.com/praqma/git-phlow/executor"
+	"log"
 )
 
 var (
@@ -27,13 +26,38 @@ var (
 func init() {
 	GoPath = os.Getenv("GOPATH")
 	if len(GoPath) == 0 {
-		fmt.Fprintln(os.Stdout, errors.New("GOPATH not set"))
-		os.Exit(1)
+		log.Panicln("GOPATH NOT SET")
 	}
 	ProjectPath = GoPath + "/src/github.com/praqma/git-phlow"
 	Script = ProjectPath + "/testfixture/gen_test_repo.sh"
 	Repo = ProjectPath + "/build/phlow-test-pkg"
 	Target = ProjectPath + "/build"
+}
+
+//CreateTestRepository ...
+//Runs gen_test_repo shell script
+func CreateTestRepositoryNoLog(verbose bool) {
+	output, err := executor.ExecuteCommand(Script)
+	if err != nil {
+		log.Panicln(output, err)
+	}
+
+	if err = os.Chdir(Repo); err != nil {
+		log.Panicln(err)
+	}
+}
+
+//RemoveTestRepository ...
+//Deletes the test repository and folders
+func RemoveTestRepositoryNoLog() {
+	if err := os.Chdir(ProjectPath); err != nil {
+		log.Panicln(err)
+	}
+
+	err := os.RemoveAll(Target)
+	if err != nil {
+		log.Panicln(err)
+	}
 }
 
 //CreateTestRepository ...
@@ -47,7 +71,9 @@ func CreateTestRepository(test *testing.T, verbose bool) {
 	if verbose {
 		test.Log(output)
 	}
-	os.Chdir(Repo)
+	if err = os.Chdir(Repo); err != nil {
+		log.Panicln(err)
+	}
 }
 
 //RemoveTestRepository ...
@@ -56,7 +82,6 @@ func RemoveTestRepository(test *testing.T) {
 	os.Chdir(ProjectPath)
 	err := os.RemoveAll(Target)
 	if err != nil {
-		test.Log(err.Error())
-		os.Exit(1)
+		log.Panicln(err)
 	}
 }

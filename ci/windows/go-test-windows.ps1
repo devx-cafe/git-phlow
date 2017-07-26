@@ -8,13 +8,12 @@ cp -R git-phlow/ $env:GOPATH/src/github.com/praqma
 
 cd $env:GOPATH/src/github.com/praqma/git-phlow
 
-ls
-
 #GET DEPENDENCIES
 go get -d -t -v ./...
 
 #RUN TESTS
-go test -p 1 -v ./...
+cd executor
+go test -p 1 -v
 
 # USES THE LATEST EXITCODE, WHICH IS FROM GO TEST, AND EXITS WITH THAT. THIS FIXIS 
 # ISSUE #152

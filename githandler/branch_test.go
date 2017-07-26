@@ -1,136 +1,111 @@
 package githandler
 
 import (
-	"testing"
-
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	"github.com/praqma/git-phlow/testfixture"
-	. "github.com/smartystreets/goconvey/convey"
 )
 
-func TestBranch(t *testing.T) {
-	Convey("Running tests on 'Branch' function", t, func() {
+var _ = Describe("Branch", func() {
 
-		testfixture.CreateTestRepository(t, false)
+	BeforeEach(func() {
 
-		Convey("branch should return List of branches", func() {
+		//Runs before each "It" block
+		testfixture.CreateTestRepositoryNoLog(false)
+	})
+
+	Describe("Branch Function execution", func() {
+
+		It("should return a list of branches", func() {
 			info, err := Branch()
-			So(len(info.List), ShouldEqual, 11)
-			So(err, ShouldBeNil)
+			Ω(len(info.List)).Should(Equal(11))
+			Ω(err).Should(BeNil())
 		})
 
-		Convey("branch should return Current branch", func() {
+		It("branch should return Current branch", func() {
 			info, err := Branch()
-			So(info.Current, ShouldEqual, "master")
-			So(err, ShouldBeNil)
+			Ω(info.Current).Should(Equal("master"))
+			Ω(err).Should(BeNil())
 		})
-
-		testfixture.RemoveTestRepository(t)
 
 	})
-}
 
-func TestBranchDelete(t *testing.T) {
+	Describe("Delete Branch Function", func() {
 
-	testfixture.CreateTestRepository(t, false)
-
-	Convey("Running tests on 'BranchDelete' function", t, func() {
-
-		Convey("BranchDelte should delete local branch and return message", func() {
+		It("should delete local branch and return message", func() {
 			output, err := BranchDelete("delivered/1-issue-branch", "", false, false)
 			info, _ := Branch()
 
-			t.Log(info.List)
-			So(err, ShouldBeNil)
-			So(output, ShouldNotBeEmpty)
-			So(info.List, ShouldHaveLength, 10)
+			Ω(err).Should(BeNil())
+			Ω(output).ShouldNot(BeEmpty())
+			Ω(info.List).Should(HaveLen(10))
 		})
 
-		Convey("BranchDelete should delete remote branch and return message", func() {
+		It("should delete remote branch and return message", func() {
 			_, err1 := BranchDelete("delivered/24-issue-branch", "origin", true, false)
 			_, err2 := BranchDelete("delivered/42-issue-branch", "origin", true, false)
 			info, _ := Branch()
 
-			t.Log(info.List)
-			So(err1, ShouldBeNil)
-			So(err2, ShouldBeNil)
-			So(info.List, ShouldHaveLength, 8)
+			Ω(err1).Should(BeNil())
+			Ω(err2).Should(BeNil())
+
+			Ω(info.List).Should(HaveLen(9))
 		})
+
 	})
 
-	testfixture.RemoveTestRepository(t)
-}
-
-func TestBranchDelivered(t *testing.T) {
-
-	Convey("Running tests in 'BranchDelivered' function", t, func() {
-
-		testfixture.CreateTestRepository(t, false)
-
-		Convey("BranchDelivred should return lists of delivered branches", func() {
+	Describe("Executing BranchDelivered", func() {
+		It("should return lists of delivered branches", func() {
 			locals, remotes := BranchDelivered("origin")
-			So(locals, ShouldHaveLength, 1)
-			So(remotes, ShouldHaveLength, 2)
-			So(remotes, ShouldContain, "delivered/24-issue-branch")
-
+			Ω(locals).Should(HaveLen(1))
+			Ω(remotes).Should(HaveLen(2))
+			Ω(remotes).Should(ContainElement("delivered/24-issue-branch"))
 		})
 
-		testfixture.RemoveTestRepository(t)
 	})
-}
 
-func TestBranchReady(t *testing.T) {
+	Describe("Running BranchDelivered", func() {
 
-	Convey("Running tests in 'BranchDelivered' function", t, func() {
+		It("should return list of ready branches", func() {
+			remotes := BranchReady("origin", "ready/")
 
-		testfixture.CreateTestRepository(t, false)
-
-		Convey("BranchReady should return list of ready branches", func() {
-			remotes := BranchReady("origin","ready/")
-			t.Log(remotes)
-			So(remotes, ShouldHaveLength, 2)
-			So(remotes, ShouldContain, "origin/ready/99-issue-branch")
+			Ω(remotes).Should(HaveLen(2))
+			Ω(remotes).Should(ContainElement("origin/ready/99-issue-branch"))
 		})
 
-		testfixture.RemoveTestRepository(t)
 	})
 
-}
+	Describe("Running tests on 'BranchTime' function", func() {
 
-func TestBranchTime(t *testing.T) {
-	Convey("Running tests on 'BranchTime' function", t, func() {
-
-		testfixture.CreateTestRepository(t, false)
-
-		Convey("Should get unix timestamp", func() {
+		It("Should get unix timestamp", func() {
 			output, err := BranchTime("origin/ready/99-issue-branch")
+			Ω(err).Should(BeNil())
+			Ω(output).Should(BeNumerically(">", 100000))
 
-			So(err, ShouldBeNil)
-			So(output, ShouldBeGreaterThan, 100000)
 		})
 
-		Convey("Should fail geting unix timestamp", func() {
+		It("Should fail geting unix timestamp", func() {
 			output, err := BranchTime("bluarh.. not a branch")
-
-			So(err, ShouldNotBeNil)
-			So(output, ShouldEqual, -1)
+			Ω(err).ShouldNot(BeNil())
+			Ω(output).Should(Equal(-1))
 		})
 
-		testfixture.RemoveTestRepository(t)
-
 	})
-}
 
-func Test(t *testing.T) {
-	Convey("Running test on 'BranchRemote' function", t, func() {
+	Describe("Executing BranchRemote", func() {
 
-		testfixture.CreateTestRepository(t, false)
-
-		Convey("should return origin/master", func() {
+		It("should return origin/master", func() {
 			output, err := branchRemote()
-			t.Log(err)
-			So(output, ShouldEqual, "origin/master")
+
+			Ω(err).Should(BeNil())
+			Ω(output).Should(Equal("origin/master"))
+
 		})
 
-		testfixture.RemoveTestRepository(t)
 	})
-}
+
+	AfterEach(func() {
+		testfixture.RemoveTestRepositoryNoLog()
+	})
+
+})
