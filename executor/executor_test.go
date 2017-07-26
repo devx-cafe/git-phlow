@@ -32,25 +32,13 @@ var _ = Describe("Executor", func() {
 	})
 
 	Describe("The ExecPipeCommand function", func() {
-		Context("should run", func() {
-			It("with 3 commands", func() {
-				var buf bytes.Buffer
-				err := ExecPipeCommand(&buf,
-					exec.Command("git", "--version"),
-					exec.Command("grep", "c"),
-					exec.Command("sort", "-r"))
-
-				Ω(err).Should(BeNil())
-				Ω(buf.String()).Should(BeEmpty())
-			})
-		})
 
 		Context("should run", func() {
 			It("with 2 commands", func() {
 				var buf bytes.Buffer
 				err := ExecPipeCommand(&buf,
 					exec.Command("git", "--version"),
-					exec.Command("grep", "c"))
+					exec.Command("sort", ""))
 
 				Ω(err).Should(BeNil())
 				Ω(buf.String()).Should(BeEmpty())

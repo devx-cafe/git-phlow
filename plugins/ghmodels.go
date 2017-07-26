@@ -1,5 +1,11 @@
 package plugins
 
+import (
+	"bytes"
+	"strconv"
+	"github.com/praqma/git-phlow/ui"
+)
+
 //Auth ...
 type Auth struct {
 	Token string `json:"token"`
@@ -10,8 +16,8 @@ type Repo struct {
 	DefaultBranch string `json:"default_branch"`
 }
 
-//Issues ...
-type Issues struct {
+//Issue ...
+type Issue struct {
 	Assignees []AssigneeIssue `json:"assignees"`
 	Title     string          `json:"title"`
 	Number    int             `json:"number"`
@@ -40,4 +46,32 @@ type AssigneeIssue struct {
 //Assignee ...
 type Assignee struct {
 	Assignees []string `json:"assignees"`
+}
+
+//Stringer ...
+//interface for github formats
+type Stringer interface {
+	ToString() string
+}
+
+//ToString ...
+//Formats issue
+func (issue *Issue) ToString() string {
+	var buffer bytes.Buffer
+
+	buffer.WriteString(ui.Format.Bold(strconv.Itoa(issue.Number) + ": "))
+	buffer.WriteString(issue.Title)
+
+	for _, label := range issue.Labels {
+		buffer.WriteString(" " + ui.Format.FByG(GroupID(label.Name))(label.Name))
+	}
+
+	for _, user := range issue.Assignees {
+		buffer.WriteString(" " + ui.Format.Assignee(user.Login))
+	}
+	buffer.WriteString(" " + ui.Format.MileStone(issue.Milestone.Title))
+
+	buffer.WriteString("\n")
+
+	return buffer.String()
 }

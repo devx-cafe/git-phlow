@@ -74,7 +74,7 @@ create_ready_branches () {
     git checkout -b ready/15-issue-branch
     echo "on branch ready/15-issue-branch" > README.md
     add_all_and_commit "ready/16 branch commit"
-    sleep 1
+
     return_to_master
     git checkout -b ready/99-issue-branch
     echo "on branch ready/99-issue-branch" > README.md

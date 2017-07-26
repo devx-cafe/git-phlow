@@ -22,7 +22,7 @@ var issueCmd = &cobra.Command{
 		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		phlow.IssueList()
+		phlow.Issues()
 	},
 }
 

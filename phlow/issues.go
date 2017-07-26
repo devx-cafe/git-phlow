@@ -3,18 +3,16 @@ package phlow
 import (
 	"fmt"
 	"os"
-	"strconv"
-
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/plugins"
+	"os/exec"
+	"strings"
+	"github.com/praqma/git-phlow/executor"
+	"bytes"
 	"github.com/praqma/git-phlow/ui"
+	"runtime"
 )
 
-//IssueList ...
-//List open issues from GitHub
-func IssueList() {
-
+func Issues() {
 	ui.PhlowSpinner.Start("")
 	issues, err := plugins.GitHub.GetIssues()
 	if err != nil {
@@ -23,48 +21,77 @@ func IssueList() {
 	}
 	ui.PhlowSpinner.Stop()
 
-	//Nested function for finding user issues
-	var userIssue = func(issue []plugins.AssigneeIssue) bool {
-		user := githandler.ConfigGet("user", "phlow")
-		for _, u := range issue {
-			if u.Login == user {
-				return true
-			}
-		}
-		return false
-	}
-	//Nested print function - only used for pretty output
-	var printIssue = func(issue plugins.Issues) {
-		issStr := strconv.Itoa(issue.Number)
-
-		fmt.Print(ui.Format.Bold(issStr + ": "))
-		fmt.Print(issue.Title)
-
-		for _, label := range issue.Labels {
-
-			fmt.Print(" " + ui.Format.FByG(plugins.GroupID(label.Name))(label.Name))
-		}
-
-		for _, user := range issue.Assignees {
-			fmt.Print(" " + ui.Format.Assignee(user.Login))
-		}
-		fmt.Print(" " + ui.Format.MileStone(issue.Milestone.Title))
-
-		fmt.Println()
-	}
-
-	fmt.Println(ui.Format.MileStone("# Issues"))
-
+	//Collection Issues to a string
+	var buffer bytes.Buffer
 	for _, issue := range issues {
-		assignees := issue.Assignees
-		//If mine is true we print on issues assigned to a user
-		if options.GlobalFlagMine {
-			if userIssue(assignees) {
-				printIssue(issue)
-			}
-		} else {
-			printIssue(issue)
-		}
+		buffer.WriteString(issue.ToString())
 	}
+
+	pager := GetPager()
+
+	if pager == "" {
+		fmt.Println(buffer.String())
+	} else {
+		IssuesInPager("less", buffer.String())
+	}
+}
+
+//GetPager ...
+//return the pager if set
+func GetPager() string {
+	pager := os.Getenv("PAGER")
+	if pager != "" {
+		return pager
+	}
+
+	if runtime.GOOS == "windows" {
+		return "more"
+	}
+	return ""
+}
+
+func IssuesInPager(pager, text string) error {
+	cmd := exec.Command(pager)
+	cmd.Stdin = strings.NewReader(text)
+	cmd.Stdout = os.Stdout
+	err := executor.ExecuteCommander(cmd)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+//IssueList ...
+//List open issues from GitHub
+func IssueList() {
+
+	//ui.PhlowSpinner.Start("")
+	//
+	//ui.PhlowSpinner.Stop()
+	//
+	////Nested function for finding user issues
+	//var userIssue = func(issue []plugins.AssigneeIssue) bool {
+	//	user := githandler.ConfigGet("user", "phlow")
+	//	for _, u := range issue {
+	//		if u.Login == user {
+	//			return true
+	//		}
+	//	}
+	//	return false
+	//}
+	//
+	//fmt.Println(ui.Format.MileStone("# Issue"))
+	//
+	//for _, issue := range issues {
+	//	assignees := issue.Assignees
+	//	//If mine is true we print on issues assigned to a user
+	//	if options.GlobalFlagMine {
+	//		if userIssue(assignees) {
+	//			printIssue(issue)
+	//		}
+	//	} else {
+	//		printIssue(issue)
+	//	}
+	//}
 
 }

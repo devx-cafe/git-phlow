@@ -53,12 +53,13 @@ func init() {
 }
 
 //GetIssues ...
-func (g *GitHubImpl) GetIssues() (issues []Issues, err error) {
+func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)
 
 	req, _ := http.NewRequest("GET", URL, nil)
 	q := req.URL.Query()
 	q.Add("access_token", g.token)
+	q.Add("per_page","100")
 	req.URL.RawQuery = q.Encode()
 
 	body, err := NewPWRequest().Do(req)
@@ -66,7 +67,7 @@ func (g *GitHubImpl) GetIssues() (issues []Issues, err error) {
 		return nil, err
 	}
 
-	re := []Issues{}
+	re := []Issue{}
 	if err = json.Unmarshal(body, &re); err != nil {
 		return nil, err
 	}
