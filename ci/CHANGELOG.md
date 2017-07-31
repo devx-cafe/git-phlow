@@ -1,18 +1,18 @@
-This new version contains a **Major** semantic change in the **wrapup** command. It has been returned to the default behaviour, so wrapup no longer requires `--hard` to add you changes, it does that automatically. I apologize for the inconvenience and confusion these changes to `wrapup` have introduced.
-The output and error handling is under improvement to make the tool more userfriendly to use. 
+##Changelog
+The new release of git-phlow adds support for windows in _beta_. Overall improvements have been made to increase stability and remove
+various bugs and odd behaviours.
 
-
+#### Features
+- Windows is now support in a pre-release version
+- Add Less and More browsing #150 @groenborg
+- Add no-color option for windows #148 @kryptag
 
 #### Improvements
-- upnext now has a prefix option #79 @groenborg
-- deliver now always change back to your default branch #75 @groenborg 
-- made workon less verbose #115 @groenborg
-- return wrapup to old behaviour #89 @groenborg
-- wrapup now has a `--force` flag for a custom commit message #90 @groenborg
+- Use Scanner in stead of buffered Reader #149 @groenborg
+- Add windows binary to GitHub release #151 @groenborg
+- Added windows worker to concourse ci #144
 
 #### Bug fixes
-- private repo access for web api should be fixed #81 #83 #84@groenborg 
-- fixed typo in workon #95 @randomsort
-- removed squash message #85 @groenborg
-
-
+- Colors are buggy when terminal width is changed #131 @groenborg
+- username and password are no longer printed #158 @groenborg
+- version was stuck at 1.0.0 #167 @groenborg

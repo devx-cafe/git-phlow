@@ -45,8 +45,6 @@ func Auth() {
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	fmt.Println(username)
-	fmt.Println(password)
 	token, err := plugins.GitHub.Auth(username, password)
 	if err != nil {
 		fmt.Println()
@@ -58,7 +56,7 @@ func Auth() {
 	githandler.ConfigSet("user", username, "phlow")
 
 	fmt.Println("")
-	fmt.Println("Successfully authorized: 'git phlow' is now enabled")
+	fmt.Println(fmt.Sprintf("%s Successfully authorized: 'git phlow' is now enabled", username))
 }
 
 //ReadInput ...

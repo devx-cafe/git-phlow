@@ -6,7 +6,7 @@ jobs:
   - get: tollgate
     trigger: true
   - get: gp-version
-    params: {bump: patch}
+    params: {bump: minor}
   - put: gp-version
     params: {file: gp-version/version}
   - task: integration
