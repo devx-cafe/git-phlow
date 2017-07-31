@@ -1,4 +1,4 @@
-##Changelog
+## Changelog
 The new release of git-phlow adds support for windows in _beta_. Overall improvements have been made to increase stability and remove
 various bugs and odd behaviours.
 
@@ -16,3 +16,4 @@ various bugs and odd behaviours.
 - Colors are buggy when terminal width is changed #131 @groenborg
 - username and password are no longer printed #158 @groenborg
 - version was stuck at 1.0.0 #167 @groenborg
+- Windows release is now zip and not tar.gz #169 @groenborg

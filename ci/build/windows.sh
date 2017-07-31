@@ -27,4 +27,4 @@ export GOARCH=amd64
 #BUILD AND COMPRESS
 export GOOS=windows
 go build -ldflags "-X   github.com/praqma/git-phlow/options.Version=`echo $VERSION` -X  github.com/praqma/git-phlow/options.Sha1=`git rev-parse HEAD` -X  github.com/praqma/git-phlow/options.Date=`date +'%d-%m-%Y'`"
-zip $BUILDPATH/build-artifacts/git-phlow-$VERSION-windows-$GOARCH.tar.gz git-phlow.exe
+zip $BUILDPATH/build-artifacts/git-phlow-$VERSION-windows-$GOARCH.zip git-phlow.exe
