@@ -6,7 +6,7 @@ apt-get install zip unzip
 
 #GET VERSION AND PATH
 #STORE VERSION AND PATH FOR BUILD
-VERSION="1.0.0" #$(cat gp-version/version)
+VERSION=$(cat gp-version/version)
 BUILDPATH=$(pwd)
 
 #CREATE GO DIRECTORY STRUCTURE
