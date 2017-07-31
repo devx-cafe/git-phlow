@@ -57,6 +57,10 @@ Download the latest release [here](https://github.com/Praqma/git-phlow/releases)
 
 In the near future the installation will be available via [chocolatey](https://chocolatey.org/). 
 
+##### Compatibility
+- Powershell v5.1+
+- command prompt - only with the `--no-color` flag
+
 ### Using git Phlow
 - Go to GitHub or Waffle and look at the issues
 - Find an issue to work on, and note it's id eg. `42`
