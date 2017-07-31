@@ -43,14 +43,19 @@ brew tap praqma/praqma-tap
 #Install git-phlow
 brew install git-phlow
 ``` 
-### Alternative
+### Linux
 You can also install git-phlow running the following commands. That will download and install the project.
 Remember to use the latest version.  
 
 ```shell
 #For linux
-wget https://github.com/Praqma/git-phlow/releases/download/v1.1.5/git-phlow-1.1.5-linux-amd64.tar.gz && tar -xzf git-phlow-1.1.5-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.2-linux-amd64.tar.gz && tar -xzf git-phlow-2.3.2-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
 ```
+
+### Windows
+Download the latest release [here](https://github.com/Praqma/git-phlow/releases) and extract it with zip. Place it in the windows path and now it is availbe as `git phlow`.
+
+In the near future the installation will be available via [chocolatey](https://chocolatey.org/). 
 
 ### Using git Phlow
 - Go to GitHub or Waffle and look at the issues
