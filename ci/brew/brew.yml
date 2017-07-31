@@ -14,4 +14,4 @@ outputs:
 - name: updated-praqma-tap 
 
 run:
-  path: git-phlow/ci/scripts/brew-release.sh
+  path: git-phlow/ci/scripts/brew.sh
