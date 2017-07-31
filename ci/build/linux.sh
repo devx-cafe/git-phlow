@@ -3,7 +3,7 @@ set -e -u -x
 
 #GET VERSION AND PATH
 #STORE VERSION AND PATH FOR BUILD
-VERSION="1.0.0" #$(cat gp-version/version)
+VERSION=$(cat gp-version/version)
 BUILDPATH=$(pwd)
 
 #CREATE GO DIRECTORY STRUCTURE
@@ -15,7 +15,6 @@ cp -R git-phlow/ $GOPATH/src/github.com/praqma
 #NAVIGATE TO FOLDER AND GET DEPS
 cd $GOPATH/src/github.com/praqma/git-phlow
 go get -d -t -v ./...
-go get -v github.com/inconshreveable/mousetrap
 
 #BUILD WE ONLY BUILD FOR amd64
 export GOARCH=amd64
