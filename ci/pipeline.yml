@@ -83,7 +83,7 @@ jobs:
     - task: create-release 
       file: git-phlow/ci/build/windows.yml
     - put: phlow-artifact-windows-s3
-      params: {file: build-artifacts/git-phlow-*-windows-amd64.tar.gz}                    
+      params: {file: build-artifacts/git-phlow-*-windows-amd64.zip}
 
 #PAC GOES HERE
     
@@ -112,7 +112,7 @@ jobs:
       globs: 
         - phlow-artifact-linux-s3/git-phlow-*-linux-amd64.tar.gz
         - phlow-artifact-darwin-s3/git-phlow-*-darwin-amd64.tar.gz
-        - phlow-artifact-windows-s3/git-phlow-*-windows-amd64.tar.gz
+        - phlow-artifact-windows-s3/git-phlow-*-windows-amd64.zip
 
 
 - name: afterburner

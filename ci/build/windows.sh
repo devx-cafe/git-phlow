@@ -1,9 +1,12 @@
 #!/bin/sh
 set -e -u -x
 
+apt-get update
+apt-get install zip unzip
+
 #GET VERSION AND PATH
 #STORE VERSION AND PATH FOR BUILD
-VERSION=$(cat gp-version/version)
+VERSION="1.0.0" #$(cat gp-version/version)
 BUILDPATH=$(pwd)
 
 #CREATE GO DIRECTORY STRUCTURE
@@ -24,4 +27,4 @@ export GOARCH=amd64
 #BUILD AND COMPRESS
 export GOOS=windows
 go build -ldflags "-X   github.com/praqma/git-phlow/options.Version=`echo $VERSION` -X  github.com/praqma/git-phlow/options.Sha1=`git rev-parse HEAD` -X  github.com/praqma/git-phlow/options.Date=`date +'%d-%m-%Y'`"
-tar -cvzf $BUILDPATH/build-artifacts/git-phlow-$VERSION-windows-$GOARCH.tar.gz git-phlow.exe
+zip $BUILDPATH/build-artifacts/git-phlow-$VERSION-windows-$GOARCH.tar.gz git-phlow.exe
