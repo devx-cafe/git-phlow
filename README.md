@@ -44,16 +44,14 @@ brew tap praqma/praqma-tap
 brew install git-phlow
 ```
 ### Linux
-You can also install git-phlow running the following commands. That will download and install the project.
-Remember to use the latest version.
+Install git-phlow running the following commands. Remember to use the latest version.
 
 ```shell
-#For linux
 wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.2-linux-amd64.tar.gz && tar -xzf git-phlow-2.3.2-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
 ```
 
 ### Windows
-git-phlow can be install with [scoop](http://scoop.sh/), a package manager for command line tools. It can also be install by downloading the latest [release]((https://github.com/Praqma/git-phlow/releases))
+Install with [scoop](http://scoop.sh/), a package manager for command line tools. Or download the latest [release]((https://github.com/Praqma/git-phlow/releases))
 
 **Install Scoop**
 
@@ -92,22 +90,20 @@ git phlow workon 42
 
 - This will create a branch: `42-some-issue-title`
 - Make the changes and complete the task
-- When it's done, type:
+- When done, add everything and commit with a single command:
 
 ```git
 git phlow wrapup
-
-#adds everything and commits the changes
-#alternately you can add your changes manually and use
-git phlow wrapup
 ```
+
 - Now that the changes are ready, type:
 
 ```git
 git phlow deliver
-# renames local branch to: delivered/42-some-issue-title
-# pushes remote branch named: ready/42-some-issue-title
 ```
+
+- It renames the local branch to: `delivered/42-some-issue-title`
+- It pushes remote branch named: `ready/42-some-issue-title`
 
 If the automation tools have been configured to listen for __ready/__ branches, they will pick up the branch and integrate them with the stable branch.
 If you do not have an automation system, you can deliver the work to your default branch by doing a local deliver instead.
@@ -117,7 +113,7 @@ git phlow deliver --local
 ```
 
 - Changes branch to `master`
-- Merges changes from `42-some-issue-branch`
+- Merges changes from `42-some-issue-title`
 - Pushes changes to GitHub
 
 ### Automation systems
