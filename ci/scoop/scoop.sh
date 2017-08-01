@@ -12,5 +12,9 @@ cat scoop-bucket/git-phlow.json
 
 #Commit everything in the scoop bucket
 cd scoop-bucket
+
+git config --global user.email "concourse@praqma.net"
+git config --global user.name "concourse"
+
 git add --all
 git commit -m "$VERSION released"
