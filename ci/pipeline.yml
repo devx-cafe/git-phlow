@@ -136,6 +136,16 @@ jobs:
     params:
       repository: updated-praqma-tap
 
+- name: supersonic
+  plan:
+  - get: scoop-bucket
+  - get: git-phlow
+  - get: gp-version
+  - get: phlow-artifact-windows-s3
+  - task: scoop-release
+    file: git-phlow/ci/scoop/scoop.yml
+  - put: scoop-bucket
+    params: {repository: scoop-bucket}
 
 
 resource_types:
@@ -172,7 +182,19 @@ resources:
         uri: git@github.com:Praqma/homebrew-praqma-tap.git
         branch: master
         private_key: {{github-private-key}} 
-        
+
+#GIHUB SCOOP-TAP
+    - name: scoop-bucket
+      type: git
+      source:
+         uri: git@github.com:Praqma/scoop-praqma-tools.git
+         branch: master
+         private_key: {{github-private-key}}
+         git_config:
+         - name: user.email
+           value: concourse@praqma.net
+         - name: user.name
+           value: concourse
 
 #PRETESTED INTEGRATION
     - name: tollgate

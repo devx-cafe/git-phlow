@@ -1,0 +1,15 @@
+---
+platform: linux
+
+image_resource:
+   type: docker-image
+   source: {repository: python, tag: "2.7"}
+
+inputs:
+- name: scoop-bucket
+- name: git-phlow
+- name: gp-version
+- name: phlow-artifact-windows-s3
+
+run:
+  path: git-phlow/ci/scoop/scoop.sh
