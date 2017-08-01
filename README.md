@@ -53,9 +53,23 @@ wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.
 ```
 
 ### Windows
-Download the latest release [here](https://github.com/Praqma/git-phlow/releases) and extract it with zip. Place it in the windows path and now it is availbe as `git phlow`.
+git-phlow can be install with [scoop](http://scoop.sh/), a package manager for command line tools. It can also be install by downloading the latest [release]((https://github.com/Praqma/git-phlow/releases))
 
-In the near future the installation will be available via [chocolatey](https://chocolatey.org/).
+**Install Scoop**
+
+Open powershell and get the latest release of scoop
+```
+iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+```
+Add Praqmas scoop-bucket
+```
+scoop bucket add praqma-tools https://github.com/praqma/scoop-praqma-tools.git
+```
+
+**Install git-phlow**
+```
+scoop intstall git-phlow
+```
 
 ##### Compatibility
 - Powershell v5.1+
@@ -81,7 +95,7 @@ git phlow workon 42
 - When it's done, type:
 
 ```git
-git phlow wrapup --hard
+git phlow wrapup
 
 #adds everything and commits the changes
 #alternately you can add your changes manually and use

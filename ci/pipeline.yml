@@ -121,6 +121,7 @@ jobs:
     - get: praqma-tap
     - get: git-phlow #contains the formula update script
     - get: gp-version
+      passed: [takeoff]
     - get: phlow-artifact-darwin-s3
       passed: [takeoff]
       trigger: true
@@ -141,8 +142,10 @@ jobs:
   - get: scoop-bucket
   - get: git-phlow
   - get: gp-version
+    passed: [takeoff]
+    trigger: true
   - get: phlow-artifact-windows-s3
-    passed: [windows-pilot-check]
+    passed: [takeoff]
     trigger: true
   - task: scoop-release
     file: git-phlow/ci/scoop/scoop.yml
