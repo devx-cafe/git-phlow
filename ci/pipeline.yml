@@ -142,12 +142,12 @@ jobs:
   - get: git-phlow
   - get: gp-version
   - get: phlow-artifact-windows-s3
-    passed: [takeoff]
+    passed: [windows-pilot-check]
     trigger: true
   - task: scoop-release
     file: git-phlow/ci/scoop/scoop.yml
   - put: scoop-bucket
-    params: {repository: scoop-bucket}
+    params: {repository: scoop-bucket-modified}
 
 
 resource_types:

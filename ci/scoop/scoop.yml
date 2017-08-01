@@ -11,5 +11,10 @@ inputs:
 - name: gp-version
 - name: phlow-artifact-windows-s3
 
+outputs:
+- name: scoop-bucket-modified
+
 run:
-  path: git-phlow/ci/scoop/scoop.sh
+  path: python
+  args: 
+  -  git-phlow/ci/scoop/scoop.py
