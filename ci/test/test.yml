@@ -4,9 +4,13 @@ platform: linux
 image_resource:
   type: docker-image
   source: {repository: golang, tag: "1.8"}
+  
+params:
+  coveralls: token   
 
 inputs:
 - name: git-phlow
+  path: src/github.com/praqma/git-phlow
 
 run:
-  path: git-phlow/ci/test/test.sh
+  path: src/github.com/praqma/git-phlow/ci/test/test.sh

@@ -1,19 +1,20 @@
 #!/bin/sh
 set -e -u -x
 
-#CREATE GO DIRECTORY STRUCTURE
-#THE STRUCTURE IS NECESSARY FOR GO TOOLS OTHERWISE 
-# 'build' AND 'get' WILL FAIL
-
-mkdir -p $GOPATH/src/github.com/praqma
-cp -R git-phlow/ $GOPATH/src/github.com/praqma
+#Set new GOPATH to current dir
+export GOPATH=$PWD
+export PATH=$PATH:$GOPATH/bin
 
 # RESOLVE DEPENDENCIES - TEST AND PRODUCTION
 cd $GOPATH/src/github.com/praqma/git-phlow
-go get -d -t -v ./...
+go get -t -d -v ./...
 
-#RUN WHOLE TEST SUITE IN VERBOSE MODE
-#THE P FLAG ENSURES TESTS WILL RUN SEQUENTIALLY
-#THEY WILL FAIL IN PARALLEL BECAUSE THE TESTFIXTURE CREATES CONFLICTING DIRECTORIES
-#HOWEVER THIS IS NOT RELATED TO THE RESULTS OF THE TESTS
-go test -v -p 1 ./...
+#install ginkgo
+go install github.com/onsi/ginkgo/ginkgo
+
+
+# run tests
+go test -p 1 -v ./...
+
+
+

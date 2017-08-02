@@ -1,35 +1,34 @@
 package phlow
 
 import (
+	"github.com/praqma/git-phlow/platform"
 	"fmt"
-	"os"
-
-	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/ui"
 )
 
-//MkAlias ...
-func MkAlias() {
-	group := "alias"
-	aliases := make(map[string]string)
-	aliases["wrapup"] = "phlow wrapup"
-	aliases["workon"] = "phlow workon"
-	aliases["deliver"] = "phlow deliver"
-	aliases["cleanup"] = "phlow cleanup"
-	aliases["agent"] = "phlow agent"
-	aliases["web"] = "phlow web"
-	aliases["issues"] = "phlow issues"
-	aliases["auth"] = "phlow auth"
+//MakeAliasCaller ...
+func MakeAliasCaller() {
+	MakeAlias(platform.DefaultConfiguration())
+}
 
-	for key, value := range aliases {
-		str := githandler.ConfigGet(key, group)
+//MakeAlias ...
+func MakeAlias(conf platform.Configurator) {
+	aliases := make(map[string]string)
+	aliases["alias.wrapup"] = "phlow wrapup"
+	aliases["alias.workon"] = "phlow workon"
+	aliases["alias.deliver"] = "phlow deliver"
+	aliases["alias.cleanup"] = "phlow cleanup"
+	aliases["alias.web"] = "phlow web"
+	aliases["alias.issues"] = "phlow issues"
+
+	for group, value := range aliases {
+
+		str := conf.Get(group)
 		if str == "" {
-			fmt.Printf("Creating alias %s \n", ui.Format.Alias(key))
-			githandler.ConfigSet(key, value, group)
+			fmt.Printf("Creating alias %s \n", ui.Format.Alias(group))
+			conf.Set(group, value)
 		} else {
-			fmt.Printf("Alias %s already exists \n", ui.Format.Alias(key))
+			fmt.Printf("Alias %s already exists \n", ui.Format.Alias(group))
 		}
 	}
-
-	fmt.Fprintln(os.Stdout, "Aliases updated")
 }

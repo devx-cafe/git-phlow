@@ -20,7 +20,6 @@ func verboseOutput(argv ...string) {
 	fmt.Println()
 }
 
-
 //Commander ...
 //interface for os executions
 type Commander interface {
@@ -28,13 +27,41 @@ type Commander interface {
 }
 
 //ExecuteCommander ...
-//Execute a function with control over stdout and stdin
+//Run a function with control over stdout and stdin
 func ExecuteCommander(c Commander) error {
 	err := c.Run()
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+
+//Runner ...
+//Runner type for git executions
+type Runner func(command string, argv ...string) (string, error)
+
+//Run ...
+//implemented runner
+func Run(command string, argv ...string) (string, error) {
+	var stdOutBuffer, stdErrBuffer bytes.Buffer
+	exe := exec.Command(command, argv...)
+
+	if options.GlobalFlagVerbose {
+		verboseOutput(exe.Args...)
+	}
+
+	exe.Stderr = &stdErrBuffer
+	exe.Stdout = &stdOutBuffer
+
+	err := exe.Run()
+	if err != nil {
+		if out := stdOutBuffer.String(); stdErrBuffer.String() == "" {
+			return "", errors.New(out)
+		}
+		return "", errors.New(stdErrBuffer.String())
+	}
+	return stdOutBuffer.String(), nil
 }
 
 //ExecuteCommand ...

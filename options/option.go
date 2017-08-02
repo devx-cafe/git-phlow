@@ -14,9 +14,6 @@ var (
 	//GlobalFlagMine ...
 	GlobalFlagMine = false
 
-
-
-
 	//GlobalFlagVersion ...
 	GlobalFlagVersion = false
 
@@ -47,3 +44,15 @@ var (
 	//Date date of build
 	Date string
 )
+
+func init() {
+
+}
+
+func windows() {
+
+}
+
+func unix() {
+
+}

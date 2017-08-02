@@ -9,15 +9,23 @@ import (
 
 	"golang.org/x/crypto/ssh/terminal"
 	"io"
-	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/platform"
+	"github.com/praqma/git-phlow/executor"
 )
 
+//AuthCaller
+//Wraps auth and injects dependencies
+func AuthCaller() {
+	cf := platform.KeyConfiguration{Run: executor.Run}
+	Auth(cf)
+}
+
 //Auth ...
-//Authenticates the user with gh
-func Auth() {
-	token := githandler.ConfigGet("token", "phlow")
-	user := githandler.ConfigGet("user", "phlow")
+//Authenticates the user
+func Auth(cf platform.Configurator) {
+	token := cf.Get(platform.PhlowToken)
+	user := cf.Get(platform.PhlowUser)
 
 	if token != "" && user != "" {
 		fmt.Println("Checking token validity...")
@@ -26,9 +34,9 @@ func Auth() {
 			fmt.Println("Token test expected HTTP code 200 but received " + err.Error())
 			if ReadInput("Delete local token and reauthenticate? (y/n): ", os.Stdin) == "y" {
 				fmt.Println("Deleting local token and reauthenticating...")
-				githandler.ConfigUnset("token", "phlow")
-				githandler.ConfigUnset("user", "phlow")
-				Auth()
+				cf.Unset(platform.PhlowToken)
+				cf.Unset(platform.PhlowUser)
+				AuthCaller()
 			} else {
 				fmt.Println("Aborting...")
 			}
@@ -51,9 +59,8 @@ func Auth() {
 		fmt.Println(err)
 		return
 	}
-
-	githandler.ConfigSet("token", token, "phlow")
-	githandler.ConfigSet("user", username, "phlow")
+	cf.Set(platform.PhlowUser, username)
+	cf.Set(platform.PhlowToken, token)
 
 	fmt.Println("")
 	fmt.Println(fmt.Sprintf("%s Successfully authorized: 'git phlow' is now enabled", username))

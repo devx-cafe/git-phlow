@@ -1,13 +1,13 @@
 package githandler
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
 	"github.com/praqma/git-phlow/executor"
 	"bytes"
 	"os/exec"
+	"fmt"
 )
 
 //CheckOut ...
@@ -21,9 +21,8 @@ func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
 	remote := ConfigBranchRemote(defaultBranch)
 	_, err := executor.ExecuteCommand("git", "checkout", "-b", branch, remote+"/"+defaultBranch)
 	return err
+
 }
-
-
 
 //FormatPatch ...
 //dry runs patch to see if we can auto merge
@@ -136,4 +135,11 @@ func remoteURLExtractor(url string) *RemoteInfo {
 
 	//Clone from local repo
 	return &RemoteInfo{}
+}
+
+//ConfigBranchRemote ...
+func ConfigBranchRemote(branch string) string {
+	configArg := fmt.Sprintf("branch.%s.remote", branch)
+	output, _ := executor.ExecuteCommand("git", "config", configArg)
+	return strings.Replace(output, "\n", "", -1)
 }

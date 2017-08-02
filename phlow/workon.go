@@ -78,7 +78,7 @@ func WorkOn(issue int) {
 //Set Label and assignee on a GitHub issue
 func UpdateIssue(issue int) {
 	//Retrieve token
-	user := githandler.ConfigGet("user", "phlow")
+	user := ""//githandler.ConfigGet("user", "phlow")
 
 	if _, err := plugins.GitHub.SetLabel(plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
 		fmt.Println(err)

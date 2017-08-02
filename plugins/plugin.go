@@ -7,6 +7,10 @@ import (
 	"strings"
 )
 
+
+type DefaultBranch func() (defaultBranch string, err error)
+
+
 //PhlowLabels ...
 //Map of labels in the phlow
 var PhlowLabels map[string]*PhlowLabel

@@ -18,7 +18,7 @@ Auth will prompt you for a GitHub username and password to generate a token.
 Don't worry, the token does not include admininstrator rights, only access to manage issues for public repositories.
 `, ui.Format.Bold("auth")),
 	Run: func(cmd *cobra.Command, args []string) {
-		phlow.Auth()
+		phlow.AuthCaller()
 	},
 }
 

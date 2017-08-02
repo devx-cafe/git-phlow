@@ -12,6 +12,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/platform"
 )
 
 var GitHub *GitHubImpl
@@ -39,10 +40,12 @@ func init() {
 		userRepo:    "/user/repos",
 	}
 
+	tok:= platform.DefaultConfiguration().Get(platform.PhlowToken)
+
 	info, _ := githandler.Remote()
 	org := info.Organisation
 	repo := info.Repository
-	token := githandler.ConfigGet("token", "phlow")
+	token := tok
 
 	GitHub = &GitHubImpl{
 		urls,
@@ -59,7 +62,7 @@ func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	req, _ := http.NewRequest("GET", URL, nil)
 	q := req.URL.Query()
 	q.Add("access_token", g.token)
-	q.Add("per_page","100")
+	q.Add("per_page", "100")
 	req.URL.RawQuery = q.Encode()
 
 	body, err := NewPWRequest().Do(req)
@@ -97,7 +100,7 @@ func (g *GitHubImpl) SetLabel(label string, issue int) (labels []Label, err erro
 
 //Default ...
 //Get default branch of a GitHub issue
-func (g *GitHubImpl) Default() (defUrl string, err error) {
+func (g *GitHubImpl) Default() (defaultBranch string, err error) {
 
 	URL := fmt.Sprintf(g.URLNoEsc(g.pluginWebURL.repo), g.org, g.repo)
 
