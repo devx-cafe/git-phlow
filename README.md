@@ -66,7 +66,7 @@ scoop bucket add praqma-tools https://github.com/praqma/scoop-praqma-tools.git
 
 **Install git-phlow**
 ```
-scoop intstall git-phlow
+scoop install git-phlow
 ```
 
 ##### Compatibility
