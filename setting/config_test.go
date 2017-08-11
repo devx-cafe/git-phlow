@@ -1,48 +1,47 @@
-package platform_test
+package setting_test
 
 import (
 	. "github.com/onsi/ginkgo"
-	"github.com/praqma/git-phlow/platform"
 	. "github.com/onsi/gomega"
-	"github.com/go-errors/errors"
+	"errors"
+	"github.com/praqma/git-phlow/setting"
 )
 
 var _ = Describe("Config", func() {
-
 	Describe("Testing configurator", func() {
 		Context("", func() {
 			It("Set should not panic", func() {
-				conf := platform.KeyConfiguration{Run: func(command string, argv ...string) (string, error) {
+				conf := setting.GitConfig{Run: func(command string, argv ...string) (string, error) {
 					return "token\n", nil
 				}}
 
-				var fun = func() { conf.Set(platform.PhlowToken, "value") }
+				var fun = func() { conf.Set(setting.PhlowToken, "value") }
 				Ω(fun).ToNot(Panic())
 			})
 
 			It("Unset should not panic", func() {
-				conf := platform.KeyConfiguration{Run: func(command string, argv ...string) (string, error) {
+				conf := setting.GitConfig{Run: func(command string, argv ...string) (string, error) {
 					return "token\n", nil
 				}}
 
-				var fun = func() { conf.Set(platform.PhlowToken, "value") }
+				var fun = func() { conf.Set(setting.PhlowToken, "value") }
 				Ω(fun).ToNot(Panic())
 			})
 
 			It("Get should return EXPECTED", func() {
 				EXPECTED := "token"
-				conf := platform.KeyConfiguration{Run: func(command string, argv ...string) (string, error) {
+				conf := setting.GitConfig{Run: func(command string, argv ...string) (string, error) {
 					return "token\n", nil
 				}}
 
-				ACTUAL := conf.Get(platform.PhlowUser)
+				ACTUAL := conf.Get(setting.PhlowUser)
 				Ω(ACTUAL).Should(Equal(EXPECTED))
 			})
 
 		})
 
 		Context("when it panics", func() {
-			conf := platform.KeyConfiguration{Run: func(command string, argv ...string) (string, error) {
+			conf := setting.GitConfig{Run: func(command string, argv ...string) (string, error) {
 				return "", errors.New("")
 			}}
 
@@ -64,5 +63,4 @@ var _ = Describe("Config", func() {
 		})
 
 	})
-
 })

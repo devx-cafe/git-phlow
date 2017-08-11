@@ -12,7 +12,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"github.com/praqma/git-phlow/platform"
+	"github.com/praqma/git-phlow/setting"
 )
 
 var GitHub *GitHubImpl
@@ -40,12 +40,12 @@ func init() {
 		userRepo:    "/user/repos",
 	}
 
-	tok:= platform.DefaultConfiguration().Get(platform.PhlowToken)
+	stg := setting.NewToolStg()
 
 	info, _ := githandler.Remote()
 	org := info.Organisation
 	repo := info.Repository
-	token := tok
+	token := stg.Token
 
 	GitHub = &GitHubImpl{
 		urls,

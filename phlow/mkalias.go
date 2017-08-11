@@ -1,18 +1,18 @@
 package phlow
 
 import (
-	"github.com/praqma/git-phlow/platform"
 	"fmt"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //MakeAliasCaller ...
 func MakeAliasCaller() {
-	MakeAlias(platform.DefaultConfiguration())
+	MakeAlias(setting.GitConfig{})
 }
 
 //MakeAlias ...
-func MakeAlias(conf platform.Configurator) {
+func MakeAlias(conf setting.Configurator) {
 	aliases := make(map[string]string)
 	aliases["alias.wrapup"] = "phlow wrapup"
 	aliases["alias.workon"] = "phlow workon"

@@ -9,6 +9,7 @@ import (
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //WorkOn ...
@@ -78,7 +79,8 @@ func WorkOn(issue int) {
 //Set Label and assignee on a GitHub issue
 func UpdateIssue(issue int) {
 	//Retrieve token
-	user := ""//githandler.ConfigGet("user", "phlow")
+	stg := setting.NewToolStg()
+	user := stg.User
 
 	if _, err := plugins.GitHub.SetLabel(plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
 		fmt.Println(err)

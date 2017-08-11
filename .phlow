@@ -1,0 +1,16 @@
+[default]
+    integration_branch = master
+    remote = origin
+    service = github
+    delivery_branch_prefix = ready
+[jira]
+    integration_branch = gh_pages
+    remote = fork
+    service = jira
+    delivery_branch_prefix = integrateme
+
+[gitlab]
+    integration_branch = gh_pages
+    remote = fork
+    service = jira
+    delivery_branch_prefix = integrateme

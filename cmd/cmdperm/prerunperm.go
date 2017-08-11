@@ -6,15 +6,15 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/platform"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //RequiredAuthentication ...
 //Validates if the user has logged in before running the command
 func RequiredAuthentication() {
-	conf := platform.DefaultConfiguration()
-	token := conf.Get(platform.PhlowToken)
-	user := conf.Get(platform.PhlowUser)
+	stg := setting.NewToolStg()
+	token := stg.Token
+	user := stg.User
 
 	if token == "" || user == "" {
 		fmt.Printf("Please run %s to connect to github \n", ui.Format.Bold("auth"))

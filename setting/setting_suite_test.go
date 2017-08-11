@@ -1,4 +1,4 @@
-package platform_test
+package setting_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestConfig(t *testing.T) {
+func TestSetting(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Config Suite")
+	RunSpecs(t, "Setting Suite")
 }

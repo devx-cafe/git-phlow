@@ -1,4 +1,4 @@
-package platform
+package setting
 
 import (
 	"strings"
@@ -13,9 +13,9 @@ const (
 	PhlowToken = "phlow.token"
 )
 
-
-func DefaultConfiguration() Configurator {
-	return KeyConfiguration{Run: executor.Run}
+//DefaultGitConfig ...
+func DefaultGitConfig() Configurator {
+	return GitConfig{Run: executor.Run}
 }
 
 //Configurator ...
@@ -26,13 +26,13 @@ type Configurator interface {
 	Unset(group string)
 }
 
-//KeyConfiguration ...
-type KeyConfiguration struct {
+//GitConfig ...
+type GitConfig struct {
 	Run executor.Runner
 }
 
 //Get ...
-func (pc KeyConfiguration) Get(group string) string {
+func (pc GitConfig) Get(group string) string {
 	output, err := pc.Run("git", "config", "--global", "--get", group)
 	if err != nil {
 		panic(err)
@@ -41,7 +41,7 @@ func (pc KeyConfiguration) Get(group string) string {
 }
 
 //Set ...
-func (pc KeyConfiguration) Set(group string, value string) {
+func (pc GitConfig) Set(group string, value string) {
 	_, err := pc.Run("git", "config", "--global", group, value)
 	if err != nil {
 		panic(err)
@@ -49,7 +49,7 @@ func (pc KeyConfiguration) Set(group string, value string) {
 }
 
 //Unset ...
-func (pc KeyConfiguration) Unset(group string) {
+func (pc GitConfig) Unset(group string) {
 	_, err := pc.Run("git", "config", "--global", "--unset", group)
 	if err != nil {
 		panic(err)
