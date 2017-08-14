@@ -18,8 +18,6 @@ var RootCmd = &cobra.Command{
 create, work on and deliver tasks.
 `, ui.Format.Bold("git-phlow")),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(options.GlobalFlagNoColor)
-
 		if options.GlobalFlagVersion != false {
 			fmt.Println("phlow specification")
 			fmt.Println("sha \t\t: " + options.Sha1)
