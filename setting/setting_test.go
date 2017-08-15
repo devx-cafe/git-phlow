@@ -52,31 +52,90 @@ var _ = Describe("Setting", func() {
 	Describe("LoadProjectSetting", func() {
 
 		It("should return find local default", func() {
-
 			conf := setting.LoadProjectSettings(setting.GetLocal(), "", "default")
 			Ω(conf.File).Should(Equal(".phlow"))
-			Ω(conf.Service).Should(Equal("github"))
-
+			Ω(conf.IssueURL).Should(Equal("https://api.github.com"))
 		})
 
 		It("should find local jira", func() {
 			conf := setting.LoadProjectSettings(setting.GetLocal(), "", "jira")
 			Ω(conf.File).Should(Equal(".phlow"))
-			Ω(conf.Service).Should(Equal("jira"))
+			Ω(conf.IssueURL).Should(Equal("jira"))
 		})
 
 		It("no params should set default", func() {
 			conf := setting.LoadProjectSettings(setting.GetLocal(), "", "")
 			Ω(conf.File).Should(Equal(".phlow"))
-			Ω(conf.Service).Should(Equal("github"))
+			Ω(conf.IssueURL).Should(Equal("https://api.github.com"))
 		})
-
 
 		It("no config files should use internal default", func() {
 			conf := setting.LoadProjectSettings("", "", "")
 			Ω(conf.File).Should(Equal("none"))
 			Ω(conf.Scope).Should(Equal("internal"))
 		})
+	})
+
+	Describe("Test Validation for non-optional params", func() {
+		var set = setting.ProjectSetting{}
+
+		BeforeEach(func() {
+			set = setting.ProjectSetting{
+				Service:              "not empty",
+				IntegrationBranch:    "not empty",
+				DeliveryBranchPrefix: "not empty",
+				Remote:               "not empty",
+				IssueURL:             "not empty",
+				PipelineUrl:          "not empty"}
+
+		})
+
+		Context("With missing IssueUrl", func() {
+			It("Should return error", func() {
+				set.IssueURL = ""
+				err := setting.ValidateLoadedSetting(&set)
+				Ω(err).ShouldNot(BeNil())
+
+			})
+
+		})
+
+		Context("With missing remote", func() {
+			It("Should return error", func() {
+				set.Remote = ""
+				err := setting.ValidateLoadedSetting(&set)
+				Ω(err).ShouldNot(BeNil())
+
+			})
+
+		})
+
+		Context("With missing branch prefix", func() {
+			It("Should return error", func() {
+				set.DeliveryBranchPrefix = ""
+				err := setting.ValidateLoadedSetting(&set)
+				Ω(err).ShouldNot(BeNil())
+
+			})
+
+		})
+
+		Context("With missing integration branch", func() {
+			It("Should return error", func() {
+				set.IntegrationBranch = ""
+				err := setting.ValidateLoadedSetting(&set)
+				Ω(err).ShouldNot(BeNil())
+			})
+		})
+
+		Context("With missing service", func() {
+			It("Should return error", func() {
+				set.Service = ""
+				err := setting.ValidateLoadedSetting(&set)
+				Ω(err).ShouldNot(BeNil())
+			})
+		})
+
 	})
 
 })

@@ -6,6 +6,8 @@ import (
 	"github.com/praqma/git-phlow/executor"
 	"github.com/go-ini/ini"
 	"fmt"
+	"reflect"
+	"github.com/go-errors/errors"
 )
 
 //Load internals
@@ -17,12 +19,14 @@ const (
 
 //Default configuration
 const (
+	internal_default_service                = "github"
 	internal_default_integration_branch     = "master"
 	internal_default_remote                 = "origin"
-	internal_default_service                = "github"
+	internal_default_issue_url              = "https://api.github.com"
 	internal_default_delivery_branch_prefix = "ready"
 	internal_default_scope                  = "internal"
 	internal_default_file                   = "none"
+	internal_pipeline_url                   = "none"
 )
 
 //Uses git config commandline interface
@@ -35,12 +39,15 @@ type ToolsSetting struct {
 
 //ProjectSetting ...
 type ProjectSetting struct {
+	Service              string `ini:"service"`
 	IntegrationBranch    string `ini:"integration_branch"`
 	Remote               string `ini:"remote"`
-	Service              string `ini:"service"`
+	IssueURL             string `ini:"issue_url"`
+	PipelineUrl          string `ini:"pipeline"`
 	DeliveryBranchPrefix string `ini:"delivery_branch_prefix"`
 	Scope                string
 	File                 string
+	INIBlock             string
 }
 
 //NewProjectStg ...
@@ -102,10 +109,12 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 		}
 		//return internal default because no other configuration exist and no other is specified by params
 		return &ProjectSetting{
+			Service:              internal_default_service,
 			IntegrationBranch:    internal_default_integration_branch,
 			Remote:               internal_default_remote,
-			Service:              internal_default_service,
+			IssueURL:             internal_default_issue_url,
 			DeliveryBranchPrefix: internal_default_delivery_branch_prefix,
+			PipelineUrl:          internal_pipeline_url,
 			Scope:                internal_default_scope,
 			File:                 internal_default_file,
 		}
@@ -118,8 +127,48 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 	//Add configuration origin
 	conf.File = configFile
 	conf.Scope = configScope
+	conf.INIBlock = INIBlock
 
+	if err := ValidateLoadedSetting(conf); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	return conf
+}
+
+//ValidateLoadedSetting ...
+func ValidateLoadedSetting(setting *ProjectSetting) (error) {
+	r := reflect.ValueOf(setting).Elem()
+	t := r.Type()
+
+	//Non Optional Field checks..
+	for i := 0; i < t.NumField(); i++ {
+		if t.Field(i).Name == "Service" && (r.Field(i).String() == "") {
+			return errors.New(fmt.Sprintf("Error in configuration file: %s \n"+
+				"Non-optional field missing: %s \n In configuration block: %s \n ", setting.Scope+"/"+setting.File, "service", setting.INIBlock))
+		}
+
+		if t.Field(i).Name == "IssueURL" && r.Field(i).String() == "" {
+			return errors.New(fmt.Sprintf("Error in configuration file: %s \n"+
+				"Non-optional field missing: %s \n In configuration block: %s \n ", setting.Scope+"/"+setting.File, "issue_url", setting.INIBlock))
+		}
+
+		if t.Field(i).Name == "IntegrationBranch" && r.Field(i).String() == "" {
+			return errors.New(fmt.Sprintf("Error in configuration file: %s \n"+
+				"Non-optional field missing: %s \n In configuration block: %s \n ", setting.Scope+"/"+setting.File, "integration_branch", setting.INIBlock))
+		}
+
+		if t.Field(i).Name == "Remote" && r.Field(i).String() == "" {
+			return errors.New(fmt.Sprintf("Error in configuration file: %s \n"+
+				"Non-optional field missing: %s \n In configuration block: %s \n ", setting.Scope+"/"+setting.File, "remote", setting.INIBlock))
+		}
+
+		if t.Field(i).Name == "DeliveryBranchPrefix" && r.Field(i).String() == "" {
+			return errors.New(fmt.Sprintf("Error in configuration file: %s \n"+
+				"Non-optional field missing: %s \n In configuration block: %s \n ", setting.Scope+"/"+setting.File, "delivery_branch_prefix", setting.INIBlock))
+		}
+	}
+	return nil
 }
 
 //LoadToolSettings ...
