@@ -1,16 +1,9 @@
 package main
 
 import (
-	"github.com/praqma/git-phlow/setting"
-	"fmt"
+	"github.com/praqma/git-phlow/cmd"
 )
 
 func main() {
-	//cmd.Execute()
-
-	proj := setting.NewProjectStg("default")
-
-	err := setting.ValidateLoadedSetting(proj)
-	fmt.Println(err)
-
+	cmd.Execute()
 }

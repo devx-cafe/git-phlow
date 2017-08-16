@@ -16,7 +16,7 @@ import (
 func WorkOn(issue int) {
 	ui.PhlowSpinner.Start("Setting up workspace")
 	defer ui.PhlowSpinner.Stop()
-	if err := githandler.Fetch(); err != nil {
+	if _, err := githandler.Pull(); err != nil {
 		fmt.Println(err)
 		return
 	}

@@ -4,6 +4,8 @@
 *.a
 *.so
 
+git-phlow
+
 # Folders
 _obj
 _test
