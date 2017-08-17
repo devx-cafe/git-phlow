@@ -4,13 +4,11 @@ import (
 	. "github.com/praqma/git-phlow/executor"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"bytes"
-	"os/exec"
 )
 
 var _ = Describe("Executor", func() {
 
-	Describe("The ExecuteCommand function", func() {
+	Describe("The RunCommand function", func() {
 
 		Context("called with valid command ls", func() {
 			It("should not return an error", func() {
@@ -31,53 +29,25 @@ var _ = Describe("Executor", func() {
 
 	})
 
-	Describe("The ExecPipeCommand function", func() {
+	Describe("The RunGit function", func() {
 
-		Context("should run", func() {
-			It("with 2 commands", func() {
-				var buf bytes.Buffer
-				err := ExecPipeCommand(&buf,
-					exec.Command("git", "--version"),
-					exec.Command("sort", ""))
+		Context("called with valid command ls", func() {
+			It("should not return an error", func() {
+				_, err := RunGit("git", "--version")
 
 				Ω(err).Should(BeNil())
-				Ω(buf.String()).Should(BeEmpty())
 			})
 		})
 
-		Context("should run", func() {
-			It("with 1 command", func() {
-				var buf bytes.Buffer
-				err := ExecPipeCommand(&buf, exec.Command("git", "--version"))
-
-				Ω(err).Should(BeNil())
-				Ω(buf.String()).ShouldNot(BeEmpty())
-			})
-		})
-
-		Context("should fail", func() {
-			It("in first function", func() {
-				var buf bytes.Buffer
-
-				err := ExecPipeCommand(&buf,
-					exec.Command("argh", "blash"),
-					exec.Command("grep", "stuff"))
-
+		Context("called with invalid command", func() {
+			It("should fail", func() {
+				output, err := RunGit("lsk", "-lah")
+				Ω(output).Should(BeEmpty())
 				Ω(err).ShouldNot(BeNil())
 			})
+
 		})
 
-		Context("should fail", func() {
-			It("in second function", func() {
-				var buf bytes.Buffer
-
-				err := ExecPipeCommand(&buf,
-					exec.Command("ls", "-lah"),
-					exec.Command("jklasd", "stuff"))
-
-				Ω(err).ShouldNot(BeNil())
-			})
-		})
 	})
 
 })

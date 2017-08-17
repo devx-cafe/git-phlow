@@ -13,19 +13,6 @@ type RemoteInfo struct {
 	Repository   string
 }
 
-//Remote ...
-//Must have either origin or upstream
-//THIS NEEDS TO BE REVISITED
-func Remote() (*RemoteInfo, error) {
-	var res string
-	var err error
-	if res, err = executor.RunCommand("git", "ls-remote", "--get-url", "origin"); err != nil {
-		return nil, err
-	}
-	res = strings.Trim(res, "\n")
-	return remoteURLExtractor(res), nil
-}
-
 //OrgAndRepo ...
 //Expects input from LSRemote
 func OrgAndRepo(url string) *RemoteInfo {
@@ -48,6 +35,21 @@ func OrgAndRepo(url string) *RemoteInfo {
 	return &RemoteInfo{}
 }
 
+
+// -------------------------------- DEPRECATED SECTION ---------------------------------------------------
+//Remote
+//Deprecated
+func Remote() (*RemoteInfo, error) {
+	var res string
+	var err error
+	if res, err = executor.RunCommand("git", "ls-remote", "--get-url", "origin"); err != nil {
+		return nil, err
+	}
+	res = strings.Trim(res, "\n")
+	return remoteURLExtractor(res), nil
+}
+
+//Deprecated
 func remoteURLExtractor(url string) *RemoteInfo {
 	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
 
@@ -68,7 +70,8 @@ func remoteURLExtractor(url string) *RemoteInfo {
 	return &RemoteInfo{}
 }
 
-//ConfigBranchRemote ...
+//ConfigBranchRemote ... use setting.Project setting to get remote in stead
+//Deprecated
 func ConfigBranchRemote(branch string) string {
 	configArg := fmt.Sprintf("branch.%s.remote", branch)
 	output, _ := executor.RunCommand("git", "config", configArg)

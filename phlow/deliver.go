@@ -10,6 +10,7 @@ import (
 
 	"github.com/praqma/git-phlow/ui"
 	"github.com/praqma/git-phlow/setting"
+	"os"
 )
 
 //Deliver ...
@@ -41,9 +42,13 @@ func Deliver(defaultBranch string) {
 		return
 	}
 
-	if err := githandler.BranchRename(branchInfo.Current); err != nil {
-		//Conflicting branch name
-		fmt.Printf("branch delivered/%s already exists in you local workspace \n", branchInfo.Current)
+	_, err = git.Branch("-m", branchInfo.Current, "delivered/"+branchInfo.Current)
+	if err != nil {
+		ui.PhlowSpinner.Stop()
+		fmt.Fprintln(os.Stdout, "The branch have been pushed successfully to your remote, but there is a local name conflict")
+		fmt.Fprintf(os.Stderr, "CONFLICT: your already have a branch named %s in your workspace \n", "delivered/"+branchInfo.Current)
+		fmt.Fprintf(os.Stderr, "to mark it delivered run: git branch -m %s %s \n", branchInfo.Current, "delivered/"+branchInfo.Current)
+		os.Exit(1)
 		return
 	}
 

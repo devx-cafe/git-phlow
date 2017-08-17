@@ -57,9 +57,6 @@ func Ready(info *BranchInfo, remote string, prefix string) (remoteBranches []str
 	return
 }
 
-
-
-
 //DEPRECETED SECTION - USE GIT
 //BranchRename ...
 func BranchRename(name string) error {
