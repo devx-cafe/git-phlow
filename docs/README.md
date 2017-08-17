@@ -1,3 +1,26 @@
+### phlow auth
+```
+git phlow auth -t <target>
+```
+Git phlow auth, authorizes towards a chosen service which can be either `github` or `jira`. Auth is used by git phlow to access and manage issues in your chosen provider.
+
+Auth is dependent on a configuration file unless you are using GitHub.com for your issues and Repositories, in that case you can complete omit using the `--target` flag
+
+#### Self hosted services or Jira
+To authenticate with your own hosted service or Jira you _must_ provide a valid configuration (see **Configuration** section). Your configuration must contain a base url to where your service is hosted and the name of the service. When authenticating set your `--target` to the name of the configuration e.g.
+
+```ini
+[myjiraconfig]
+    integration_branch = master
+    remote = origin
+    service = jira
+    issue_url = https://my.jira.instance.com
+    delivery_branch_prefix = ready
+```
+```bash
+git phlow auth --target myjiraconfig
+```
+
 ### Configuration
 git phlow is configured via `.phlow`, or `.gitignore`  files., in your local workspace or in the home folder of your computer. The configuration is standard INI files, just like gitconfig.
 

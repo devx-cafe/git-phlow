@@ -35,6 +35,9 @@ var (
 	//GlobalFlagForce ...
 	GlobalFlagForceMessage string
 
+	//GlobalFlagTarget ...
+	GlobalFlagTarget string
+
 	//Sha1 git commit hash
 	Sha1 string
 
@@ -43,16 +46,10 @@ var (
 
 	//Date date of build
 	Date string
+
+	//AuthFlagJira ...
+	AuthFlagJira = false
+
+	//AuthFlagGitHub ...
+	AuthFlagGitHub = false
 )
-
-func init() {
-
-}
-
-func windows() {
-
-}
-
-func unix() {
-
-}

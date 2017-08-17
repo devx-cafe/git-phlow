@@ -5,10 +5,11 @@
     issue_url = https://api.github.com
     pipeline_url = http://concourse.bosh.praqma.cloud/teams/main/pipelines/git-phlow
     delivery_branch_prefix = ready
+
 [jira]
-    service = sd
-    integration_branch = gh_pages
-    remote = fork
-    repo_url = jira
+    integration_branch = master
+    remote = origin
+    service = http://jira.teamsinspace.com:8080
     issue_url = jira
-    delivery_branch_prefix = integrateme
+    pipeline_url = http://concourse.bosh.praqma.cloud/teams/main/pipelines/git-phlow
+    delivery_branch_prefix = ready

@@ -55,6 +55,64 @@ func init() {
 	}
 }
 
+//AuthorizeGitHub ...
+//Retrieve token from github for authorization
+func AuthorizeGitHub(githubBaseURL, user, pass string) (token string, err error) {
+
+	perm, err := createGHPermissions()
+	if err != nil {
+		return "", err
+	}
+
+	req, _ := http.NewRequest("POST", githubBaseURL+"/authorizations", bytes.NewBuffer([]byte(perm)))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.SetBasicAuth(user, pass)
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+
+	err = requestStatus(res)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	re := Auth{}
+	err = json.NewDecoder(res.Body).Decode(re)
+	if err != nil {
+		return "", err
+	}
+	return re.Token, nil
+}
+
+//AuthenticateGitHub
+//Checks personal access token validity by requesting private repositories and checking status code
+func AuthenticateGitHub(githubBaseURL string, user, token string) (bool, error) {
+
+	req, _ := http.NewRequest("GET", githubBaseURL+"/user/repos", nil)
+	q := req.URL.Query()
+	q.Add("access_token", token)
+	req.URL.RawQuery = q.Encode()
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+	if err != nil {
+		return false, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return false, errors.New(strconv.Itoa(res.StatusCode))
+	}
+	return true, nil
+}
+
+
+// ------------------------------------------ DEPRECATE SECTION
+
 //GetIssues ...
 func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)
@@ -97,6 +155,7 @@ func (g *GitHubImpl) SetLabel(label string, issue int) (labels []Label, err erro
 	}
 	return re, nil
 }
+
 
 //Default ...
 //Get default branch of a GitHub issue

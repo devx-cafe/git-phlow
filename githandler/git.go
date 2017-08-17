@@ -74,6 +74,16 @@ func (os *Git) Merge(argv ...string) (string, error) {
 	return os.Run("git", "merge", argv...)
 }
 
+//Config ...
+//Executes local git config with params
+func (os *Git) Config(argv ...string) (string, error) {
+	stdOut, stdErr := os.Run("git", "config", argv...)
+	if stdErr != nil {
+		return "", stdErr
+	}
+	return strings.Replace(stdOut, "\n", "", -1), nil
+}
+
 //DEPRECATESD SECTION ---------------------------------------------------------------
 //FormatPatch ...
 //dry runs patch to see if we can auto merge

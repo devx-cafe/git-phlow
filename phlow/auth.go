@@ -12,31 +12,41 @@ import (
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
 )
 
 //AuthCaller
 //Wraps auth and injects dependencies
 func AuthCaller() {
-	cf := setting.GitConfig{Run: executor.RunCommand}
-	Auth(cf)
+	INIBlock := options.GlobalFlagTarget
+	conf := setting.NewProjectStg(INIBlock)
+
+	if "jira" == strings.ToLower(conf.Service) {
+		Auth(INIBlock, plugins.AuthorizeJIRA, plugins.AuthenticateJIRA, "phlow.jirauser", "phlow.jiratoken", conf.Service)
+	}
+
+	Auth(INIBlock, plugins.AuthorizeGitHub, plugins.AuthenticateGitHub, "phlow.user", "phlow.token", conf.Service)
 }
 
 //Auth ...
-//Authenticates the user
-func Auth(cf setting.Configurator) {
-	token := cf.Get(setting.PhlowToken)
-	user := cf.Get(setting.PhlowUser)
+func Auth(INIBlock string, authorization plugins.Authorization, authentication plugins.Authentication, configUser string, configToken string, service string) {
+	conf := setting.NewProjectStg(INIBlock)
+	git := githandler.Git{Run: executor.RunGit}
+
+	token, err := git.Config("--get", configToken)
+	user, err := git.Config("--get", configUser)
 
 	if token != "" && user != "" {
-		fmt.Println("Checking token validity...")
-		isAuthenticated, err := plugins.GitHub.CheckAuth()
+		fmt.Printf("Checking token validity for %s... \n", service)
+		isAuthenticated, err := authentication(conf.IssueURL, user, token)
 		if !isAuthenticated {
 			fmt.Println("Token test expected HTTP code 200 but received " + err.Error())
 			if ReadInput("Delete local token and reauthenticate? (y/n): ", os.Stdin) == "y" {
 				fmt.Println("Deleting local token and reauthenticating...")
-				cf.Unset(setting.PhlowToken)
-				cf.Unset(setting.PhlowUser)
-				AuthCaller()
+				git.Config("--global", "--unset", configUser)
+				git.Config("--global", "--unset", configToken)
+				Auth(conf.INIBlock, authorization, authentication, configUser, configToken, service)
 			} else {
 				fmt.Println("Aborting...")
 			}
@@ -46,21 +56,21 @@ func Auth(cf setting.Configurator) {
 		return
 	}
 
-	fmt.Fprintf(os.Stdout, "Enter credentials for %s \n", "GitHub")
+	fmt.Fprintf(os.Stdout, "Enter credentials for %s \n", service)
 
 	//Read user input username
 	username := ReadInput("username: ", os.Stdin)
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	token, err := plugins.GitHub.Auth(username, password)
+	_, err = authorization(conf.IssueURL, username, password)
 	if err != nil {
 		fmt.Println()
 		fmt.Println(err)
 		return
 	}
-	cf.Set(setting.PhlowUser, username)
-	cf.Set(setting.PhlowToken, token)
+	_, err = git.Config("--global", configUser, password)
+	_, err = git.Config("--global", configToken, username)
 
 	fmt.Println("")
 	fmt.Println(fmt.Sprintf("%s Successfully authorized: 'git phlow' is now enabled", username))

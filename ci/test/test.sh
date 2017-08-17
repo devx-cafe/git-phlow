@@ -7,14 +7,14 @@ export PATH=$PATH:$GOPATH/bin
 
 # RESOLVE DEPENDENCIES - TEST AND PRODUCTION
 cd $GOPATH/src/github.com/praqma/git-phlow
-go get -t -d -v ./...
+go get -t -v ./...
 
 #install ginkgo
 go install github.com/onsi/ginkgo/ginkgo
 
 
 # run tests
-go test -p 1 -v ./...
+go test -v ./...
 
 
 
