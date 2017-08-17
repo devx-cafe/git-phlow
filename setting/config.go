@@ -15,7 +15,7 @@ const (
 
 //DefaultGitConfig ...
 func DefaultGitConfig() Configurator {
-	return GitConfig{Run: executor.Run}
+	return GitConfig{Run: executor.RunCommand}
 }
 
 //Configurator ...

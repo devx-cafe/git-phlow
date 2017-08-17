@@ -7,7 +7,6 @@ import (
 	"os/exec"
 
 	"github.com/praqma/git-phlow/options"
-	"io"
 )
 
 //verboseOutput ...
@@ -36,14 +35,13 @@ func ExecuteCommander(c Commander) error {
 	return nil
 }
 
-
 //Runner ...
 //Runner type for git executions
 type Runner func(command string, argv ...string) (string, error)
 
 //Run ...
 //implemented runner
-func Run(command string, argv ...string) (string, error) {
+func RunCommand(command string, argv ...string) (string, error) {
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
 	exe := exec.Command(command, argv...)
 
@@ -64,10 +62,15 @@ func Run(command string, argv ...string) (string, error) {
 	return stdOutBuffer.String(), nil
 }
 
+//GitCommandRunner ...
+type GitCommandRunner func(git string, sub string, argv ...string) (string, error)
+
 //ExecuteCommand ...
 //Executes a single command from strings
-func ExecuteCommand(command string, argv ...string) (string, error) {
-	exe := exec.Command(command, argv...)
+func RunGit(git string, sub string, argv ...string) (string, error) {
+
+	argv = append([]string{sub}, argv...)
+	exe := exec.Command(git, argv...)
 
 	if options.GlobalFlagVerbose {
 		verboseOutput(exe.Args...)
@@ -90,64 +93,4 @@ func ExecuteCommand(command string, argv ...string) (string, error) {
 	}
 
 	return stdOutBuffer.String(), nil
-}
-
-//ExecPipeCommand ...
-//Executes a series of commands
-func ExecPipeCommand(out *bytes.Buffer, execStack ...*exec.Cmd) (err error) {
-
-	var errBuf bytes.Buffer
-
-	pipes := make([]*io.PipeWriter, len(execStack)-1)
-	execStack[len(execStack)-1].Stdout = out
-
-	for i := 0; i < len(execStack)-1; i++ {
-		r, w := io.Pipe()
-		execStack[i].Stdout = w
-		execStack[i].Stderr = &errBuf
-		execStack[i+1].Stdin = r
-		pipes[i] = w
-
-	}
-
-	for i := 0; i < len(execStack); i++ {
-		if options.GlobalFlagVerbose {
-			verboseOutput(execStack[i].Args...)
-		}
-
-		if err = execStack[i].Start(); err != nil {
-			return
-		}
-	}
-
-	if err = closer(pipes, execStack); err != nil {
-		return
-	}
-
-	return nil
-}
-
-//closer ...
-//helper function to ExecutePipeCommand
-func closer(pipes []*io.PipeWriter, execStack []*exec.Cmd) (err error) {
-	//Return if the command-stack is empty
-	if len(execStack) <= 0 {
-		return nil
-	}
-
-	defer func() {
-		//Close the pipe if more exists
-		if len(pipes) > 0 {
-			if err = pipes[0].Close(); err != nil {
-				return
-			}
-			pipes = pipes[1:]
-		}
-		if err = closer(pipes, execStack[1:]); err != nil {
-			return
-		}
-	}()
-	//Wait for the command to return, defer is the
-	//last function to be executed
-	return execStack[0].Wait()
 }

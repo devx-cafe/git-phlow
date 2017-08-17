@@ -37,7 +37,7 @@ func init() {
 //CreateTestRepository ...
 //Runs gen_test_repo shell script
 func CreateTestRepositoryNoLog(verbose bool) {
-	output, err := executor.ExecuteCommand(Script)
+	output, err := executor.RunCommand(Script)
 	if err != nil {
 		log.Panicln(output, err)
 	}
@@ -63,7 +63,7 @@ func RemoveTestRepositoryNoLog() {
 //CreateTestRepository ...
 //Runs gen_test_repo shell script
 func CreateTestRepository(test *testing.T, verbose bool) {
-	output, err := executor.ExecuteCommand(Script)
+	output, err := executor.RunCommand(Script)
 	if err != nil {
 		test.Log(err)
 		os.Exit(1)

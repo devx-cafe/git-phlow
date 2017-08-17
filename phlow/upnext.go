@@ -8,18 +8,27 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/executor"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
 func UpNext(remote string, prefix string) (name string) {
-
+	git := githandler.Git{Run: executor.RunGit}
+	conf := setting.NewProjectStg("defaults")
 	if prefix == "" {
 		prefix = "ready/"
 	}
 
-	branches := githandler.BranchReady(remote, prefix)
+	out, err := git.Branch("-a")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	branches := githandler.Ready(githandler.AsList(out), conf.Remote, conf.DeliveryBranchPrefix)
 
 	if len(branches) != 0 {
 		if options.GlobalFlagHumanReadable {

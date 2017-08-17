@@ -1,87 +1,98 @@
 package githandler
 
 import (
-	"regexp"
 	"strings"
 
 	"github.com/praqma/git-phlow/executor"
 	"bytes"
-	"os/exec"
 	"fmt"
 )
 
+//Git ...
+//Git object for execution operations on the local git installation
+type Git struct {
+	Run executor.GitCommandRunner
+}
+
+//LSRemote ...
+//Executes local git ls-remote with params
+func (os *Git) LSRemote(argv ...string) (string, error) {
+	return os.Run("git", "ls-remote", argv...)
+}
+
+//Branch ...
+//Executes local git branch with params
+func (os *Git) Branch(argv ...string) (string, error) {
+	return os.Run("git", "branch", argv...)
+}
+
 //CheckOut ...
-func CheckOut(branch string) error {
-	_, err := executor.ExecuteCommand("git", "checkout", branch)
-	return err
+//Executes local git checkout with params
+func (os *Git) CheckOut(argv ...string) (string, error) {
+	return os.Run("git", "checkout", argv...)
 }
 
-//CheckoutNewBranchFromRemote ...
-func CheckoutNewBranchFromRemote(branch, defaultBranch string) error {
-	remote := ConfigBranchRemote(defaultBranch)
-	_, err := executor.ExecuteCommand("git", "checkout", "-b", branch, remote+"/"+defaultBranch)
-	return err
-
+//Add ...
+//Executes local git add with params
+func (os *Git) Add(argv ...string) (string, error) {
+	return os.Run("git", "add", argv...)
 }
 
-//FormatPatch ...
-//dry runs patch to see if we can auto merge
-func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
-	err = executor.ExecPipeCommand(buf,
-		exec.Command("git", "format-patch", remoteBranch, "--stdout"),
-		exec.Command("git", "apply", "check"),
-	)
-	return
+//Commit ...
+//Executes local git commit with params
+func (os *Git) Commit(argv ...string) (string, error) {
+	return os.Run("git", "commit", argv...)
+}
+
+//Fetch ...
+//Executes local git fetch with params
+func (os *Git) Fetch(argv ...string) (string, error) {
+	return os.Run("git", "fetch", argv...)
+}
+
+//Pull ...
+//Executes local git pull with params
+func (os *Git) Pull(argv ...string) (string, error) {
+	return os.Run("git", "pull", argv...)
+}
+
+//Push ...
+//Executes local git push with params
+func (os *Git) Push(argv ...string) (string, error) {
+	return os.Run("git", "push", argv...)
 }
 
 //Status ...
-//git status
-func Status() error {
-	_, err := executor.ExecuteCommand("git", "status")
-	return err
+//Executes local git status with params
+func (os *Git) Status(argv ...string) (string, error) {
+	return os.Run("git", "status", argv...)
+}
+
+//Merge ...
+//Executes local git merge with params
+func (os *Git) Merge(argv ...string) (string, error) {
+	return os.Run("git", "merge", argv...)
+}
+
+//DEPRECATESD SECTION ---------------------------------------------------------------
+//FormatPatch ...
+//dry runs patch to see if we can auto merge
+func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
+	//err = executor.ExecPipeCommand(buf,
+	//	exec.Command("git", "format-patch", remoteBranch, "--stdout"),
+	//	exec.Command("git", "apply", "check"),
+	//)
+	return
 }
 
 //StatusPorcelain ...
 //generates behind and ahead status
 func StatusPorcelain() (string, error) {
-	out, err := executor.ExecuteCommand("git", "status", "short", "--branch", "--porcelain")
+	out, err := executor.RunCommand("git", "status", "short", "--branch", "--porcelain")
 	if err != nil {
 		return "", err
 	}
 	return strings.TrimSpace(out), nil
-}
-
-//Add ...
-func Add() error {
-	_, err := executor.ExecuteCommand("git", "add", "--all")
-	return err
-}
-
-//Commit ...
-func Commit(message string) (string, error) {
-	return executor.ExecuteCommand("git", "commit", "-m", message)
-}
-
-//Fetch ...
-func Fetch() error {
-	_, err := executor.ExecuteCommand("git", "fetch", "--all")
-	return err
-}
-
-//FetchPrune ...
-func FetchPrune() error {
-	_, err := executor.ExecuteCommand("git", "fetch", "--prune")
-	return err
-}
-
-//Pull ...
-func Pull() (string, error) {
-	return executor.ExecuteCommand("git", "pull", "--rebase")
-}
-
-//Push ...
-func Push() (string, error) {
-	return executor.ExecuteCommand("git", "push")
 }
 
 //PushRename ...
@@ -89,57 +100,5 @@ func PushRename(branch, defaultBranch string) (string, error) {
 	remote := ConfigBranchRemote(defaultBranch)
 	str := fmt.Sprintf("%s:ready/%s", branch, branch)
 
-	return executor.ExecuteCommand("git", "push", remote, str)
-}
-
-//Merge ...
-func Merge(branch string) error {
-	_, err := executor.ExecuteCommand("git", "merge", branch)
-	return err
-}
-
-//RemoteInfo ...
-type RemoteInfo struct {
-	Organisation string
-	Repository   string
-}
-
-//Remote ...
-//Must have either origin or upstream
-//THIS NEEDS TO BE REVISITED
-func Remote() (*RemoteInfo, error) {
-	var res string
-	var err error
-	if res, err = executor.ExecuteCommand("git", "ls-remote", "--get-url", "origin"); err != nil {
-		return nil, err
-	}
-	res = strings.Trim(res, "\n")
-	return remoteURLExtractor(res), nil
-}
-
-func remoteURLExtractor(url string) *RemoteInfo {
-	re := regexp.MustCompile(`.+:(\S+)\/(\S+)\.git`)
-
-	//Extracts repo and org from ssh url format
-	if strings.HasPrefix(url, "git@") {
-		match := re.FindStringSubmatch(url)
-		return &RemoteInfo{match[1], match[2]}
-	}
-	//Extracts repo and org from http url format
-	if strings.HasPrefix(url, "http") {
-		splitURL := strings.Split(strings.TrimSuffix(url, ".git"), "/")
-		org := splitURL[len(splitURL)-2]
-		repo := splitURL[len(splitURL)-1]
-		return &RemoteInfo{org, repo}
-	}
-
-	//Clone from local repo
-	return &RemoteInfo{}
-}
-
-//ConfigBranchRemote ...
-func ConfigBranchRemote(branch string) string {
-	configArg := fmt.Sprintf("branch.%s.remote", branch)
-	output, _ := executor.ExecuteCommand("git", "config", configArg)
-	return strings.Replace(output, "\n", "", -1)
+	return executor.RunCommand("git", "push", remote, str)
 }

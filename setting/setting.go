@@ -61,7 +61,7 @@ func NewProjectStg(INIBlock string) *ProjectSetting {
 //NewToolStg ...
 //Initializes Tool settings from .gitconfig
 func NewToolStg() *ToolsSetting {
-	return LoadToolSettings(executor.ExecuteCommand)
+	return LoadToolSettings(executor.RunCommand)
 }
 
 //LoadProjectSettings ...
@@ -197,7 +197,7 @@ func GetGlobal() string {
 
 //GetLocal ...
 func GetLocal() string {
-	absoluteRepoPath, err := executor.ExecuteCommand("git", "rev-parse", "--show-toplevel")
+	absoluteRepoPath, err := executor.RunCommand("git", "rev-parse", "--show-toplevel")
 	if err != nil {
 		panic(err)
 	}

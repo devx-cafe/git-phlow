@@ -10,23 +10,29 @@ import (
 	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/executor"
 )
 
 //WorkOn ...
 func WorkOn(issue int) {
+	git := githandler.Git{Run: executor.RunGit}
+	conf := setting.NewProjectStg("default")
+
 	ui.PhlowSpinner.Start("Setting up workspace")
 	defer ui.PhlowSpinner.Stop()
-	if _, err := githandler.Pull(); err != nil {
+
+	if _, err := git.Pull("--rebase"); err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	branchInfo, err := githandler.Branch()
+	out, err := git.Branch("-a")
 	if err != nil {
 		fmt.Println("Could not get branches")
 		return
 	}
 
+	branchInfo := githandler.AsList(out)
 	if plugins.IssueFromBranchName(branchInfo.Current) == issue {
 		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format.Branch(branchInfo.Current))
 		return
@@ -34,7 +40,8 @@ func WorkOn(issue int) {
 
 	for _, branch := range branchInfo.List {
 		if plugins.IssueFromBranchName(branch) == issue {
-			if err = githandler.CheckOut(branch); err != nil {
+
+			if _, err = git.CheckOut(branch); err != nil {
 				fmt.Println(err)
 			}
 			ui.PhlowSpinner.Stop()
@@ -49,20 +56,18 @@ func WorkOn(issue int) {
 		fmt.Println(err)
 		return
 	}
-	//Get the default branch - eg. master
-	defaultBranch, err := plugins.GitHub.Default()
-	if err != nil {
-		fmt.Println(err)
-	}
 
 	//Loop through all issues verifying the work-on issue exists
 	for _, iss := range gitHubIssues {
 		if iss.Number == issue {
 			name := plugins.BranchNameFromIssue(issue, iss.Title)
-			if err = githandler.CheckoutNewBranchFromRemote(name, defaultBranch); err != nil {
+
+			_, err := git.CheckOut("-b", name, conf.Remote+"/"+conf.IntegrationBranch)
+			if err != nil {
 				fmt.Println(err)
 				return
 			}
+
 			ui.PhlowSpinner.Stop()
 			fmt.Fprintf(os.Stdout, "Created workspace:  %s \n", ui.Format.Branch(name))
 

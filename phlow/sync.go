@@ -11,7 +11,7 @@ import (
 //Sync ...
 func Sync() {
 
-	remote := githandler.RemoteBranch()
+	remote := "origin/master" // <- use setting.ProjectSetting
 	status, err := githandler.StatusPorcelain()
 	if err != nil {
 		fmt.Println(err)

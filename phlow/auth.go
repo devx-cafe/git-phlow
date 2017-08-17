@@ -17,7 +17,7 @@ import (
 //AuthCaller
 //Wraps auth and injects dependencies
 func AuthCaller() {
-	cf := setting.GitConfig{Run: executor.Run}
+	cf := setting.GitConfig{Run: executor.RunCommand}
 	Auth(cf)
 }
 

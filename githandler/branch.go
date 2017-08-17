@@ -13,65 +13,26 @@ type BranchInfo struct {
 	List    []string
 }
 
-func RemoteBranch() (remote string) {
-	remote, err := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
-	if err != nil {
-		return ""
-	}
-	return
-}
+//AsList ...
+func AsList(branchOutput string) *BranchInfo {
+	var info BranchInfo
 
-//Branch ...
-func Branch() (*BranchInfo, error) {
-	var err error
-	info := BranchInfo{}
-
-	current, cErr := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
-	if cErr != nil {
-		return nil, err
-	}
-
-	output, lErr := executor.ExecuteCommand("git", "branch", "-a")
-	if lErr != nil {
-		return nil, err
-	}
-
-	info.Current = strings.TrimSpace(current)
-	for _, branch := range strings.Split(output, "\n") {
+	for _, branch := range strings.Split(branchOutput, "\n") {
 		if branch != "" {
-			branch = strings.TrimPrefix(branch, "*")
+			if strings.HasPrefix(branch, "*") {
+				branch = strings.TrimPrefix(branch, "*")
+				branch = strings.TrimSpace(branch)
+				info.Current = branch
+			}
 			branch = strings.TrimSpace(branch)
 			info.List = append(info.List, branch)
 		}
 	}
-	return &info, err
+	return &info
 }
 
-//BranchRename ...
-func BranchRename(name string) error {
-	_, err := executor.ExecuteCommand("git", "branch", "-m", name, "delivered/"+name)
-	return err
-}
-
-//BranchDelete ...
-func BranchDelete(name, remote string, deleteRemote, force bool) (string, error) {
-	if deleteRemote {
-		return executor.ExecuteCommand("git", "push", remote, "--delete", name)
-	}
-
-	if force {
-		return executor.ExecuteCommand("git", "branch", "-D", name)
-	}
-	return executor.ExecuteCommand("git", "branch", "-d", name)
-}
-
-//BranchDelivered ...
-func BranchDelivered(remote string) (localBranches []string, remoteBranches []string) {
-	info, err := Branch()
-
-	if err != nil {
-		return
-	}
+//Delivered ...
+func Delivered(info *BranchInfo, remote string) (localBranches []string, remoteBranches []string) {
 
 	for _, branch := range info.List {
 		if strings.HasPrefix(branch, "delivered/") {
@@ -85,21 +46,8 @@ func BranchDelivered(remote string) (localBranches []string, remoteBranches []st
 	return
 }
 
-func branchRemote() (string, error) {
-	output, err := executor.ExecuteCommand("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}")
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(output), nil
-}
-
-//BranchReady ...
-func BranchReady(remote string, prefix string) (remoteBranches []string) {
-	info, err := Branch()
-	if err != nil {
-		return
-	}
-
+//Ready ...
+func Ready(info *BranchInfo, remote string, prefix string) (remoteBranches []string) {
 	for _, branch := range info.List {
 		if strings.HasPrefix(branch, "remotes/"+remote+"/"+prefix) {
 			branch = strings.TrimPrefix(branch, "remotes/")
@@ -109,9 +57,19 @@ func BranchReady(remote string, prefix string) (remoteBranches []string) {
 	return
 }
 
+
+
+
+//DEPRECETED SECTION - USE GIT
+//BranchRename ...
+func BranchRename(name string) error {
+	_, err := executor.RunCommand("git", "branch", "-m", name, "delivered/"+name)
+	return err
+}
+
 //BranchTime ...
 func BranchTime(name string) (int, error) {
-	output, err := executor.ExecuteCommand("git", "log", "-n 1", name, "--format=format:%ct")
+	output, err := executor.RunCommand("git", "log", "-n 1", name, "--format=format:%ct")
 	if err != nil {
 		return -1, err
 	}

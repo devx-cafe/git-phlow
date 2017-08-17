@@ -8,30 +8,42 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/executor"
 )
 
 //WrapUp ...
 func WrapUp() {
+	git := githandler.Git{Run: executor.RunGit}
 
 	//Add all files to index
-	if err := githandler.Add(); err != nil {
+	_, err := git.Add("--all")
+	if err != nil {
 		fmt.Println("Project files could not be added: " + err.Error())
 		return
 	}
 
-	//Retrieve branch info - current branch
-	info, _ := githandler.Branch()
-	var cmsg string
-
-	if options.GlobalFlagForceMessage != "" {
-		cmsg = "close #" + strings.Split(info.Current, "-")[0] + " " + options.GlobalFlagForceMessage
-	} else {
-		cmsg = "close #" + strings.Replace(info.Current, "-", " ", -1)
-	}
-
-	if _, err := githandler.Commit(cmsg); err != nil {
+	out, err := git.Branch("-a")
+	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Fprintln(os.Stdout, cmsg)
+
+	//Retrieve branch info - current branch
+	info := githandler.AsList(out)
+
+	var commitMessage string
+
+	if options.GlobalFlagForceMessage != "" {
+		commitMessage = "close #" + strings.Split(info.Current, "-")[0] + " " + options.GlobalFlagForceMessage
+	} else {
+		commitMessage = "close #" + strings.Replace(info.Current, "-", " ", -1)
+	}
+
+	_, err = git.Commit("-m", commitMessage)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Fprintln(os.Stdout, commitMessage)
 }

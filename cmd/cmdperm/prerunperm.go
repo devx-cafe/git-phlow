@@ -7,6 +7,7 @@ import (
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/executor"
 )
 
 //RequiredAuthentication ...
@@ -25,7 +26,8 @@ func RequiredAuthentication() {
 //RequiredCurDirRepository ...
 //Validates if the command is runnign in a git repository
 func RequiredCurDirRepository() {
-	if err := githandler.Status(); err != nil {
+	git := githandler.Git{Run: executor.RunGit}
+	if _, err := git.Status(); err != nil {
 		fmt.Fprintln(os.Stdout, err)
 		os.Exit(0)
 	}
