@@ -3,16 +3,18 @@ package phlow
 import (
 	"fmt"
 	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/executor"
 )
 
 //MakeAliasCaller ...
 func MakeAliasCaller() {
-	MakeAlias(setting.GitConfig{})
+	MakeAlias()
 }
 
 //MakeAlias ...
-func MakeAlias(conf setting.Configurator) {
+func MakeAlias() {
+	git := githandler.Git{Run: executor.RunGit}
 	aliases := make(map[string]string)
 	aliases["alias.wrapup"] = "phlow wrapup"
 	aliases["alias.workon"] = "phlow workon"
@@ -23,10 +25,10 @@ func MakeAlias(conf setting.Configurator) {
 
 	for group, value := range aliases {
 
-		str := conf.Get(group)
+		str, _ := git.Config("--global", "--get", group)
 		if str == "" {
 			fmt.Printf("Creating alias %s \n", ui.Format.Alias(group))
-			conf.Set(group, value)
+			git.Config("--global", group, value)
 		} else {
 			fmt.Printf("Alias %s already exists \n", ui.Format.Alias(group))
 		}

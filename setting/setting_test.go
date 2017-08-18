@@ -5,6 +5,7 @@ import (
 	"github.com/praqma/git-phlow/setting"
 	. "github.com/onsi/gomega"
 	"github.com/go-errors/errors"
+	"runtime"
 )
 
 var _ = Describe("Setting", func() {
@@ -18,7 +19,9 @@ var _ = Describe("Setting", func() {
 
 		It("global should not be empty", func() {
 			local := setting.GetGlobal()
-			Ω(local).ShouldNot(BeEmpty())
+			if runtime.GOOS != "windows" {
+				Ω(local).ShouldNot(BeEmpty())
+			}
 		})
 
 	})

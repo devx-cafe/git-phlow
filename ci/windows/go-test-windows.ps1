@@ -12,8 +12,7 @@ cd $env:GOPATH/src/github.com/praqma/git-phlow
 go get -d -t -v ./...
 
 #RUN TESTS
-cd executor
-go test -p 1 -v
+go test -v ./...
 
 # USES THE LATEST EXITCODE, WHICH IS FROM GO TEST, AND EXITS WITH THAT. THIS FIXIS 
 # ISSUE #152

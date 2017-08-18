@@ -84,7 +84,7 @@ func (os *Git) Config(argv ...string) (string, error) {
 	return strings.Replace(stdOut, "\n", "", -1), nil
 }
 
-//DEPRECATESD SECTION ---------------------------------------------------------------
+//Deprecated
 //FormatPatch ...
 //dry runs patch to see if we can auto merge
 func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
@@ -95,6 +95,7 @@ func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
 	return
 }
 
+//Deprecated
 //StatusPorcelain ...
 //generates behind and ahead status
 func StatusPorcelain() (string, error) {
@@ -105,6 +106,7 @@ func StatusPorcelain() (string, error) {
 	return strings.TrimSpace(out), nil
 }
 
+//Deprecated
 //PushRename ...
 func PushRename(branch, defaultBranch string) (string, error) {
 	remote := ConfigBranchRemote(defaultBranch)

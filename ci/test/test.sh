@@ -14,7 +14,7 @@ go install github.com/onsi/ginkgo/ginkgo
 
 
 # run tests
-go test -v ./...
+ginkgo -v -r -trace -cover
 
 
 

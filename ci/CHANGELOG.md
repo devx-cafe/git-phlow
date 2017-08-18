@@ -1,19 +1,18 @@
 ## Changelog
-The new release of git-phlow adds support for windows in _beta_. Overall improvements have been made to increase stability and remove
-various bugs and odd behaviours.
+git phlow have had a _huge_ makeover in this release. Configuration have been introduced, and git phlow now works by reading
+configuration from a .phlow file, instead of guessing your remote and integration branch. This also brings support for new services like Jira and bitbucket.
+The underlying git implementation have been stabilized and is now up and running on windows, so do not feel cheated anymore.
 
 #### Features
-- Windows is now support in a pre-release version
-- Add Less and More browsing #150 @groenborg
-- Add no-color option for windows #148 @kryptag
+- Auth for jira #185 @groenborg
+git phlow can now authorize against Jira using the right configuration. See [docs](docs/README.md)
+
+- phlow as configuration #192 @groenborg
+git phlow now works based on a .phlow config file
 
 #### Improvements
-- Use Scanner in stead of buffered Reader #149 @groenborg
-- Add windows binary to GitHub release #151 @groenborg
-- Added windows worker to concourse ci #144
+- git for windows is stabilized
 
 #### Bug fixes
-- Colors are buggy when terminal width is changed #131 @groenborg
-- username and password are no longer printed #158 @groenborg
-- version was stuck at 1.0.0 #167 @groenborg
-- Windows release is now zip and not tar.gz #169 @groenborg
+- pull when setting up workspace #193 @lakruzz
+

@@ -12,7 +12,7 @@ import (
 
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/executor"
 )
 
 var GitHub *GitHubImpl
@@ -27,6 +27,7 @@ type GitHubImpl struct {
 	token string
 }
 
+//Deprecated - This need to be redone to fit configuration - refer to: AuthorizeGitHub and AuthenticateGitHub they are changed to work the new way
 //init ...
 //creates a new GitHub request object with all the gh api urls
 func init() {
@@ -40,12 +41,12 @@ func init() {
 		userRepo:    "/user/repos",
 	}
 
-	stg := setting.NewToolStg()
-
+	git := githandler.Git{Run: executor.RunGit}
+	t, _ := git.Config("--get", "phlow.token")
 	info, _ := githandler.Remote()
 	org := info.Organisation
 	repo := info.Repository
-	token := stg.Token
+	token := t
 
 	GitHub = &GitHubImpl{
 		urls,
@@ -110,9 +111,6 @@ func AuthenticateGitHub(githubBaseURL string, user, token string) (bool, error) 
 	return true, nil
 }
 
-
-// ------------------------------------------ DEPRECATE SECTION
-
 //GetIssues ...
 func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)
@@ -155,7 +153,6 @@ func (g *GitHubImpl) SetLabel(label string, issue int) (labels []Label, err erro
 	}
 	return re, nil
 }
-
 
 //Default ...
 //Get default branch of a GitHub issue
@@ -228,6 +225,7 @@ func createGHPermissions() (string, error) {
 	return string(b2b), nil
 }
 
+//Deprecated
 //Auth ...
 //Auth request to gh
 func (g *GitHubImpl) Auth(user, pass string) (token string, err error) {
@@ -253,6 +251,7 @@ func (g *GitHubImpl) Auth(user, pass string) (token string, err error) {
 	return re.Token, nil
 }
 
+//Deprecated
 //CheckAuth ...
 //Checks personal access token validity by requesting private repositories and checking status code
 func (g *GitHubImpl) CheckAuth() (bool, error) {
