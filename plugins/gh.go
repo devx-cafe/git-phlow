@@ -111,6 +111,31 @@ func AuthenticateGitHub(githubBaseURL string, user, token string) (bool, error) 
 	return true, nil
 }
 
+//DefaultBranchGitHub ...
+//return the default branch of the repository
+func DefaultBranchGitHub(URL, org, repo, token string) (defaultBranch string, err error) {
+
+	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s", org, repo), nil)
+	q := req.URL.Query()
+	q.Add("access_token", token)
+	req.URL.RawQuery = q.Encode()
+
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	re := Repo{}
+	err = json.NewDecoder(res.Body).Decode(&re)
+	if err != nil {
+		return "", err
+	}
+	return re.DefaultBranch, nil
+}
+
 //GetIssues ...
 func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)
@@ -154,6 +179,7 @@ func (g *GitHubImpl) SetLabel(label string, issue int) (labels []Label, err erro
 	return re, nil
 }
 
+//Deprecated
 //Default ...
 //Get default branch of a GitHub issue
 func (g *GitHubImpl) Default() (defaultBranch string, err error) {

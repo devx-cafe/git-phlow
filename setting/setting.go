@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"reflect"
 	"github.com/go-errors/errors"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/githandler"
 )
 
 //Load internals
@@ -107,10 +109,23 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 			}
 			os.Exit(1)
 		}
+
+		//Try to get default branch otherwise just create the default
+		defaultBranch, err := GetDefaultBranchFromInternalDefault()
+		if err != nil {
+			defaultBranch = internal_default_integration_branch
+		}
+
+		err = BootstrapPhlowConfig(local, defaultBranch)
+		if err != nil {
+			fmt.Println("Could not create a local .phlow config file")
+			os.Exit(1)
+		}
+
 		//return internal default because no other configuration exist and no other is specified by params
 		return &ProjectSetting{
 			Service:              internal_default_service,
-			IntegrationBranch:    internal_default_integration_branch,
+			IntegrationBranch:    defaultBranch,
 			Remote:               internal_default_remote,
 			IssueURL:             internal_default_issue_url,
 			DeliveryBranchPrefix: internal_default_delivery_branch_prefix,
@@ -134,6 +149,26 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 		os.Exit(1)
 	}
 	return conf
+}
+
+//BootstrapPhlowConfig ...
+//Creates a new .phlow ini file on given location
+func BootstrapPhlowConfig(local, integrationBranch string) error {
+	fmt.Println("No .phlow config found")
+	cfg := ini.Empty()
+	sec, _ := cfg.NewSection("default")
+	sec.Key("remote").SetValue(internal_default_remote)
+	sec.Key("service").SetValue(internal_default_service)
+	sec.Key("integration_branch").SetValue(integrationBranch)
+	sec.Key("issue_url").SetValue(internal_default_issue_url)
+	sec.Key("delivery_branch_prefix").SetValue(internal_default_delivery_branch_prefix)
+
+	err := cfg.SaveTo(local + "/" + ".phlow")
+	if err != nil {
+		return err
+	}
+	fmt.Println("Bootstrapping new .phlow file")
+	return nil
 }
 
 //ValidateLoadedSetting ...
@@ -202,4 +237,23 @@ func GetLocal() string {
 		panic(err)
 	}
 	return strings.TrimSpace(absoluteRepoPath)
+}
+
+//GetDefaultBranchFromInternalDefault ...
+//Trying to retrieve the default branch from github
+func GetDefaultBranchFromInternalDefault() (string, error) {
+	git := githandler.Git{Run: executor.RunGit}
+
+	remote, err := git.LSRemote("--get-url", internal_default_remote)
+	if err != nil {
+		return "", err
+	}
+	orgAndRepo := githandler.OrgAndRepo(remote)
+	token, err := git.Config("--get", "phlow.token")
+
+	branch, err := plugins.DefaultBranchGitHub(internal_default_issue_url, orgAndRepo.Organisation, orgAndRepo.Repository, token)
+	if err != nil {
+		return "", err
+	}
+	return branch, nil
 }
