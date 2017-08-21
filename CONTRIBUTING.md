@@ -114,6 +114,37 @@ if you have exported GOBIN you can run the binary directly from the terminal
 `git phlow --help`
 
 
+### Release
+git phlow runs on concourse.ci and is fully automated, in terms of testing and releasing.  Creating a new release will do so on `GitHub`,  `homebrew`  and `scoop`.
+
+#### Semver versioning
+By default git-phlow bumps patches when builds are run. To bump a minor or major release you must change a configuration in the `pipeline.yml` file  in the `checkin`  job.
+```yaml
+ - get: gp-version
+   params: {bump: patch}
+```
+bump supports:
+- `major`
+- `minor`
+- `patch`
+
+Next upload the pipeline with the fly cli and the next build will then bump the specified version.
+NOTE: In order to upload the pipeline, you must have valid credentials for GitHub and the other dependencies of the pipeline.
+```
+fly -t <target> sp -c ci/pipeline.yml -p git-phlow -l <path/to/credentiasl.yml>
+```
+
+#### Trigger the release
+The release job is [takeoff](http://concourse.bosh.praqma.cloud/teams/main/pipelines/git-phlow/jobs/takeoff/builds/1) which creates the GitHub release. When that is done supersonic and afterburner will release to `scoop` and `homebrew`. Be aware that you release software to customers, so only trigger the job when you **want** to release.
+
+#### Releasing is easy - just run
+```
+fly -t <target> trigger-job --job git-phlow/takeoff
+```
+
+
+
+
 ### Tools
 IntelliJ has a [plugin](http://go-ide.com) for go development - I personally use this (groenborg)
 
