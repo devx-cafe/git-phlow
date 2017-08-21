@@ -21,7 +21,7 @@ func WorkOn(issue int) {
 	ui.PhlowSpinner.Start("Setting up workspace")
 	defer ui.PhlowSpinner.Stop()
 
-	if _, err := git.Pull("--rebase"); err != nil {
+	if _, err := git.Fetch("--all"); err != nil {
 		fmt.Println(err)
 		return
 	}
