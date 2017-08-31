@@ -13,15 +13,15 @@ git-phlow (pronounced _"git flow"_), is a CLI extension for git, which provides 
 
 Read about the pragmatic workflow, **the phlow** [here](http://www.praqma.com/stories/a-pragmatic-workflow/).
 
-git-phlows core features will include:
+git-phlows core features include:
 
 - *works with GitHub and waffle*: git-phlow assigns labels to move around user stories on waffle boards, and managing your github issues.
 
-- *branches based on issues*:  work-on will create a branch from a GitHub issues and move it to "wip"
+- *branches based on issues*:  `workon` creates a branch from a GitHub issues and moves it to "wip"
 
 - *issue tracking*: having all your user stories as waffle cards or GitHub issues, git-phlow will mark them appropriately to their status.
 
-- *build for pretest integration*: deliver will push your branch to GitHub, ready for your pipeline to pull, integrate, test and merge back in.
+- *build for pretest integration*: `deliver` pushes your branch to GitHub, ready for your pipeline to pull, integrate, test and merge back in.
 
 ## Using the phlow (workflow)
 To get started using the-phlow, read [praqmas](http://www.praqma.com/stories/a-pragmatic-workflow/) article about how the phlow works, and how to configure Waffle for your projects.
@@ -32,19 +32,23 @@ A few things nees to be configured before hand:
 - Download and install _git-phlow_ using _brew_ or _wget_
 - Start creating tasks in GitHub issues
 
-## installing git-phlow (tool)
-### Using Homebrew
-If you are a Mac user and have homebrew installed, you can tap our official repository.
+## Installing git-phlow (tool)
+### Mac
+If you have homebrew installed, you can tap our official repository.
 
 ```shell
-#Tap our repository
+# Tap our repository
 brew tap praqma/praqma-tap
 
-#Install git-phlow
+# Install git-phlow
 brew install git-phlow
+
+# Upgrade to a new version
+brew upgrade git-phlow
 ```
+
 ### Linux
-Install git-phlow running the following commands. Remember to use the latest version.
+Install git-phlow by running the following commands. Remember to use the latest version.
 
 ```shell
 wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.2-linux-amd64.tar.gz && tar -xzf git-phlow-2.3.2-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
@@ -71,9 +75,9 @@ scoop install git-phlow
 
 ##### Compatibility
 - Powershell v5.1+
-- command prompt - only with the `--no-color` flag
+- Command prompt - only with the `--no-color` flag
 
-### Using git Phlow
+### Usage
 - First time, authenticate to GitHub:
 
 ```git
@@ -128,13 +132,12 @@ There are known issues with _cmd_ rendering formatted text incorrect, and _git b
 ## Project status
 This is the official repository for the git-phlow extension. The project is currently under development and many additions are still to come. but version 0.1.5 is available and stable for both linux and Mac.
 
-
 ## Getting started
 **Know the phlow, know go**
 To understand the-phlow read praqmas great story about what is is and how it works. [read me, please!](http://www.praqma.com/stories/a-pragmatic-workflow/)
 
 ### Contribution
-To contribute to the project, I refer to reading our [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
+Contributions are welcome! Please read the [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
 
 ### CodeScene Analysis
 [![](https://codescene.io/projects/1345/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/1345/jobs/latest-successful/results)
