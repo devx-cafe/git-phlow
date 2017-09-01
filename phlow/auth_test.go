@@ -9,7 +9,7 @@ import (
 
 var _ = Describe("Auth", func() {
 
-	Describe("reading input rom user", func() {
+	Describe("reading input from user", func() {
 		Context("in osx and windows", func() {
 
 			It("should read line breaks on mac", func() {

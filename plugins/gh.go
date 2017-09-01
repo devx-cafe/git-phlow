@@ -66,24 +66,18 @@ func AuthorizeGitHub(githubBaseURL, user, pass string) (token string, err error)
 	}
 
 	req, _ := http.NewRequest("POST", githubBaseURL+"/authorizations", bytes.NewBuffer([]byte(perm)))
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("content-type", "application/json")
 	req.SetBasicAuth(user, pass)
-	client := http.DefaultClient
 
-	res, err := client.Do(req)
+	body, err := NewPWRequest().Do(req)
 	if err != nil {
 		return "", err
 	}
-
-	err = requestStatus(res)
-	if err != nil {
-		return "", err
-	}
-	defer res.Body.Close()
 
 	re := Auth{}
-	err = json.NewDecoder(res.Body).Decode(re)
-	if err != nil {
+	if err = json.Unmarshal(body, &re); err != nil {
 		return "", err
 	}
 	return re.Token, nil

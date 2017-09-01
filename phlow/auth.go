@@ -21,12 +21,13 @@ import (
 func AuthCaller() {
 	INIBlock := options.GlobalFlagTarget
 	conf := setting.NewProjectStg(INIBlock)
-
 	if "jira" == strings.ToLower(conf.Service) {
 		Auth(INIBlock, plugins.AuthorizeJIRA, plugins.AuthenticateJIRA, "phlow.jirauser", "phlow.jiratoken", conf.Service)
+	} else if "github" == strings.ToLower(conf.Service) {
+		Auth(INIBlock, plugins.AuthorizeGitHub, plugins.AuthenticateGitHub, "phlow.user", "phlow.token", conf.Service)
+	} else {
+		fmt.Println(conf.Service + "Is an unknown Service in you project .phlow file")
 	}
-
-	Auth(INIBlock, plugins.AuthorizeGitHub, plugins.AuthenticateGitHub, "phlow.user", "phlow.token", conf.Service)
 }
 
 //Auth ...
@@ -57,20 +58,19 @@ func Auth(INIBlock string, authorization plugins.Authorization, authentication p
 	}
 
 	fmt.Fprintf(os.Stdout, "Enter credentials for %s \n", service)
-
 	//Read user input username
 	username := ReadInput("username: ", os.Stdin)
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	_, err = authorization(conf.IssueURL, username, password)
+	token, err = authorization(conf.IssueURL, username, password)
 	if err != nil {
 		fmt.Println()
 		fmt.Println(err)
 		return
 	}
-	_, err = git.Config("--global", configUser, password)
-	_, err = git.Config("--global", configToken, username)
+	_, err = git.Config("--global", configUser, username)
+	_, err = git.Config("--global", configToken, token)
 
 	fmt.Println("")
 	fmt.Println(fmt.Sprintf("%s Successfully authorized: 'git phlow' is now enabled", username))
