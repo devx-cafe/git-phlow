@@ -72,6 +72,7 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 
 	supportedScopes := []string{local, global}
 	supportedConfigFiles := []string{phlow_file_name, git_config_fileName}
+	pathSeparator := os.PathSeparator
 
 	//If params are not set, we use the default config
 	if INIBlock == "" {
@@ -84,7 +85,7 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 		for _, scope := range supportedScopes {
 			for _, file := range supportedConfigFiles {
 
-				config, err := ini.LooseLoad(scope + "/" + file)
+				config, err := ini.LooseLoad(scope + string(pathSeparator) + file)
 				if err != nil {
 					panic(err)
 				}
@@ -105,7 +106,7 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 			fmt.Printf("Error: '%s' configuration does not exist in you configuration files. Following paths were searched: \n", INIBlock)
 			for _, scope := range supportedScopes {
 				for _, file := range supportedConfigFiles {
-					fmt.Println("paths: " + scope + "/" + file)
+					fmt.Println("paths: " + scope + string(pathSeparator) + file)
 				}
 			}
 			os.Exit(1)
