@@ -77,7 +77,23 @@ scoop install git-phlow
 - Powershell v5.1+
 - Command prompt - only with the `--no-color` flag
 
-### Usage
+## Updating git-phlow (tool)
+### Mac
+On Mac using homebrew, run the upgrade command.
+```shell
+brew upgrade git-phlow
+```
+### Linux
+In linux you run the installation again, but this time override the old `git-phlow` binary.
+
+### Windows
+On windows using scoop, run the update command
+```
+scoop update git-phlow
+```
+
+
+## Usage
 - First time, authenticate to GitHub:
 
 ```git

@@ -22,10 +22,10 @@ git phlow auth --target myjiraconfig
 ```
 
 ### Configuration
-git phlow is configured via `.phlow`, or `.gitignore`  files., in your local workspace or in the home folder of your computer. The configuration is standard INI files, just like gitconfig.
+git phlow is configured via `.phlow`  files, in your local workspace or in the home folder of your computer. The configuration is standard INI files, just like `.gitconfig`.
 
 #### Config Block
-Each configuration is has it's own block which can be used either by setting the block name to `[default]` or by specifying which configuration you want to use by setting it in the git phlow command.
+Each configuration is has its own block which can be used by setting the block name to `[default]` or by specifying which configuration you want to use by setting it in the git phlow command.
 
 A block consists of following fields.
 
@@ -37,7 +37,7 @@ A block consists of following fields.
 
 #### Supported services
 -  `github`
--  ~~`jira`~~ -  coming soon
+-  `jira` - `auth` command only
 
 
 #### Example Configuration
@@ -52,7 +52,7 @@ A block consists of following fields.
 ```
 
 #### Internal Default
-If no  `.phlow` or `.gitconfig` files are located, git phlow will use an interal default configuration.  The internal configuration is the last resort, and it is strongly recommended to use `.phlow` to keep your projects configuration, even though it mimiks the default.
+If no  `.phlow`  files are located, git phlow will use an interal default configuration.  The internal configuration is the last resort, and it is strongly recommended to use `.phlow` to keep your projects configuration, even though it mimics the default.
 
 ```ini
 [default]
