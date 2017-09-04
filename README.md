@@ -80,9 +80,10 @@ scoop install git-phlow
 ## Updating git-phlow (tool)
 ### Mac
 On Mac using homebrew, run the upgrade command.
+
 ```shell
 brew upgrade git-phlow
-```
+```
 ### Linux
 In linux you run the installation again, but this time override the old `git-phlow` binary.
 
