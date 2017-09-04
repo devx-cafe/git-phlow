@@ -160,6 +160,7 @@ func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting 
 //Creates a new .phlow ini file on given location
 func BootstrapPhlowConfig(local, integrationBranch string) error {
 	fmt.Println("No .phlow config found")
+	pathSeparator := os.PathSeparator
 	cfg := ini.Empty()
 	sec, _ := cfg.NewSection("default")
 	sec.Key("remote").SetValue(internal_default_remote)
@@ -168,7 +169,7 @@ func BootstrapPhlowConfig(local, integrationBranch string) error {
 	sec.Key("issue_url").SetValue(internal_default_issue_url)
 	sec.Key("delivery_branch_prefix").SetValue(internal_default_delivery_branch_prefix)
 
-	err := cfg.SaveTo(local + "/" + phlow_file_name)
+	err := cfg.SaveTo(local + string(pathSeparator) + phlow_file_name)
 	if err != nil {
 		return err
 	}
