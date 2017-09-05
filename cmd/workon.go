@@ -9,6 +9,7 @@ import (
 	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
+	"github.com/praqma/git-phlow/options"
 )
 
 // workonCmd represents the workon command
@@ -42,4 +43,8 @@ A new branch will be created, based on your remote default branch and named afte
 
 func init() {
 	RootCmd.AddCommand(workonCmd)
+
+	//Target for configuration
+	workonCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .phlow files")
+
 }

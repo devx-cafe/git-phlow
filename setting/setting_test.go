@@ -54,7 +54,7 @@ var _ = Describe("Setting", func() {
 
 	Describe("LoadProjectSetting", func() {
 
-		It("should return find local default", func() {
+		/*It("should return find local default", func() {
 			conf := setting.LoadProjectSettings(setting.GetLocal(), "", "default")
 			Ω(conf.File).Should(Equal(".phlow"))
 			Ω(conf.IssueURL).Should(Equal("https://api.github.com"))
@@ -76,7 +76,7 @@ var _ = Describe("Setting", func() {
 			conf := setting.LoadProjectSettings("", "", "")
 			Ω(conf.File).Should(Equal("none"))
 			Ω(conf.Scope).Should(Equal("internal"))
-		})
+		})*/
 	})
 
 	Describe("Test Validation for non-optional params", func() {

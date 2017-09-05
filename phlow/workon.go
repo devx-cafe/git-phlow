@@ -13,6 +13,13 @@ import (
 	"github.com/praqma/git-phlow/executor"
 )
 
+//WorkonCaller ...
+func WorkonCaller() {
+
+}
+
+
+
 //WorkOn ...
 func WorkOn(issue int) {
 	git := githandler.Git{Run: executor.RunGit}
