@@ -3,13 +3,11 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strconv"
-
 	"github.com/praqma/git-phlow/cmd/cmdperm"
-	"github.com/praqma/git-phlow/phlow"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/phlow"
 )
 
 // workonCmd represents the workon command
@@ -26,18 +24,13 @@ A new branch will be created, based on your remote default branch and named afte
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if len(args) > 0 {
-			issue, err := strconv.Atoi(args[0])
-			if err != nil {
-				fmt.Fprintf(os.Stdout, "Whoops \nYour argument, %s, is not a number! I only accept numbers \n", args[0])
-				os.Exit(0)
-			}
-
-			phlow.WorkOn(issue)
+		if len(args) == 0 {
+			fmt.Fprintln(os.Stdout, cmd.UsageString())
 			os.Exit(0)
 		}
 
-		fmt.Fprintln(os.Stdout, cmd.UsageString())
+		phlow.WorkOnCaller(args[0])
+
 	},
 }
 

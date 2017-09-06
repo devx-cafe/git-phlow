@@ -13,6 +13,7 @@ import (
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/executor"
+	"io/ioutil"
 )
 
 var GitHub *GitHubImpl
@@ -128,6 +129,37 @@ func DefaultBranchGitHub(URL, org, repo, token string) (defaultBranch string, er
 		return "", err
 	}
 	return re.DefaultBranch, nil
+}
+
+//GetIssueGitHub ...
+//return an issue with from the number of the issue
+func GetIssueGitHub(URL, org, repo, key, token string) (*Issue, error) {
+
+	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s/issues/", org, repo)+key, nil)
+	req.Header.Set("Content-Type", "application/json")
+	q := req.URL.Query()
+	q.Add("access_token", token)
+	req.URL.RawQuery = q.Encode()
+
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body);
+	if err != nil {
+		return nil, err
+	}
+
+	re := Issue{}
+	if err = json.Unmarshal(body, &re); err != nil {
+		return nil, err
+	}
+
+	return &re, err
 }
 
 //GetIssues ...

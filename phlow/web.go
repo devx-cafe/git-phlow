@@ -45,7 +45,7 @@ func Web(userIssue int) {
 		os.Exit(0)
 	}
 
-	if branchIssue != -1 {
+	if branchIssue != "-1" {
 		issueInfoURL = fmt.Sprintf(issueInfoURL, orgAndRepo.Organisation, orgAndRepo.Repository, branchIssue)
 		executor.RunCommand("open", issueInfoURL)
 		os.Exit(0)

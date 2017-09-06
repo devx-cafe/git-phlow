@@ -3,7 +3,6 @@ package plugins
 import (
 	"bytes"
 	"regexp"
-	"strconv"
 	"strings"
 )
 
@@ -18,6 +17,8 @@ type Authentication func(URL, user, pass string) (authenticated bool, err error)
 //DefaultBranch ...
 //interface for getting the default branch of the external service
 type DefaultBranch func(URL, org, repo, token string) (defaultBranch string, err error)
+
+
 
 //PhlowLabels ...
 //Map of labels in the phlow
@@ -60,7 +61,7 @@ func GroupID(name string) int {
 
 //BranchNameFromIssue ...
 //Converts issues to branch names nby removing illegal characters and inserting hyphens
-func BranchNameFromIssue(issue int, name string) string {
+func BranchNameFromIssue(issue string, name string) string {
 	var result string
 
 	removeNonAlphaNumeric := regexp.MustCompile("([^\\w-])+")
@@ -71,17 +72,13 @@ func BranchNameFromIssue(issue int, name string) string {
 
 	result = strings.Trim(result, "-")
 	result = strings.ToLower(result)
-	return strconv.Itoa(issue) + "-" + result
+	return issue + "-" + result
 }
 
 //IssueFromBranchName ...
 //Extracts the issue number from the branch name
-func IssueFromBranchName(branch string) int {
-	iss, err := strconv.Atoi(strings.Split(branch, "-")[0])
-	if err != nil {
-		return -1
-	}
-	return iss
+func IssueFromBranchName(branch string) string {
+	return strings.Split(branch, "-")[0]
 }
 
 //efficientConcatString
