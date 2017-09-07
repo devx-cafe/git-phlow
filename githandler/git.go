@@ -4,8 +4,6 @@ import (
 	"strings"
 
 	"github.com/praqma/git-phlow/executor"
-	"bytes"
-	"fmt"
 )
 
 //Git ...
@@ -82,35 +80,4 @@ func (os *Git) Config(argv ...string) (string, error) {
 		return "", stdErr
 	}
 	return strings.Replace(stdOut, "\n", "", -1), nil
-}
-
-//Deprecated
-//FormatPatch ...
-//dry runs patch to see if we can auto merge
-func FormatPatch(buf *bytes.Buffer, remoteBranch string) (err error) {
-	//err = executor.ExecPipeCommand(buf,
-	//	exec.Command("git", "format-patch", remoteBranch, "--stdout"),
-	//	exec.Command("git", "apply", "check"),
-	//)
-	return
-}
-
-//Deprecated
-//StatusPorcelain ...
-//generates behind and ahead status
-func StatusPorcelain() (string, error) {
-	out, err := executor.RunCommand("git", "status", "short", "--branch", "--porcelain")
-	if err != nil {
-		return "", err
-	}
-	return strings.TrimSpace(out), nil
-}
-
-//Deprecated
-//PushRename ...
-func PushRename(branch, defaultBranch string) (string, error) {
-	remote := ConfigBranchRemote(defaultBranch)
-	str := fmt.Sprintf("%s:ready/%s", branch, branch)
-
-	return executor.RunCommand("git", "push", remote, str)
 }

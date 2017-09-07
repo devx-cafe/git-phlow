@@ -13,11 +13,25 @@ import (
 	"os"
 )
 
-//Deliver ...
-func Deliver(defaultBranch string) {
+//DeliverCaller ...
+//Top level deliver call, called from cmd
+func DeliverCaller() {
+	INIBlock := options.GlobalFlagTarget
+	conf := setting.NewProjectStg(INIBlock)
 
+	//If Run if local deliver
+	if options.GlobalFlagLocal {
+		LocalDeliver(conf)
+		return
+	}
+	//Deliver with ready branch
+	Deliver(conf)
+}
+
+//Deliver ...
+//Push a ready branch to the remote repository
+func Deliver(conf *setting.ProjectSetting) {
 	git := githandler.Git{Run: executor.RunGit}
-	conf := setting.NewProjectStg("default")
 
 	ui.PhlowSpinner.Start("delivering")
 	defer ui.PhlowSpinner.Stop()
@@ -35,8 +49,8 @@ func Deliver(defaultBranch string) {
 		fmt.Printf("Could not deliver: %s", branchInfo.Current)
 		return
 	}
-
-	_, err = githandler.PushRename(branchInfo.Current, conf.IntegrationBranch)
+	//git push origin name:ready/name
+	_, err = git.Push(conf.Remote, fmt.Sprintf("%s:ready/%s", branchInfo.Current, branchInfo.Current))
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -45,9 +59,9 @@ func Deliver(defaultBranch string) {
 	_, err = git.Branch("-m", branchInfo.Current, "delivered/"+branchInfo.Current)
 	if err != nil {
 		ui.PhlowSpinner.Stop()
-		fmt.Fprintln(os.Stdout, "The branch have been pushed successfully to your remote, but there is a local name conflict")
-		fmt.Fprintf(os.Stderr, "CONFLICT: your already have a branch named %s in your workspace \n", "delivered/"+branchInfo.Current)
-		fmt.Fprintf(os.Stderr, "to mark it delivered run: git branch -m %s %s \n", branchInfo.Current, "delivered/"+branchInfo.Current)
+		fmt.Println("The branch have been pushed successfully to your remote, but there is a local name conflict")
+		fmt.Printf("CONFLICT: your already have a branch named %s in your workspace \n", "delivered/"+branchInfo.Current)
+		fmt.Printf("to mark it delivered run: git branch -m %s %s \n", branchInfo.Current, "delivered/"+branchInfo.Current)
 		os.Exit(1)
 		return
 	}
@@ -64,9 +78,9 @@ func Deliver(defaultBranch string) {
 }
 
 //LocalDeliver ...
-func LocalDeliver(defaultBranch string) {
+//Delivers locally and pushes the changes to the remote
+func LocalDeliver(conf *setting.ProjectSetting) {
 	git := githandler.Git{Run: executor.RunGit}
-	conf := setting.NewProjectStg("default")
 
 	out, err := git.Branch("-a")
 	branchInfo := githandler.AsList(out)
@@ -115,34 +129,5 @@ func LocalDeliver(defaultBranch string) {
 		return
 	}
 	ui.PhlowSpinner.Stop()
-	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(defaultBranch))
-}
-
-//TestDeliver ...
-//Run tests and returns
-func TestDeliver(args []string) error {
-
-	cmd, argv := convertCommand(args)
-	output, err := executor.RunCommand(cmd, argv...)
-
-	if err != nil {
-		return err
-	}
-
-	if options.GlobalFlagShowTestOutput {
-		fmt.Println(output)
-	}
-
-	return nil
-}
-
-//ConvertCommand ...
-//Formats the command to ExecutorCommand
-func convertCommand(args []string) (string, []string) {
-
-	//Command with extra arguments
-	if len(args) > 1 {
-		return args[0], args[1:]
-	}
-	return args[0], []string{}
+	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(conf.IntegrationBranch))
 }
