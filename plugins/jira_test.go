@@ -69,7 +69,7 @@ var _ = Describe("Jira", func() {
 				defer ts.Close()
 
 				transitions, err := GetTransitions(ts.URL, "TIS-41", "user", "pass")
-				Ω(transitions.Transitions[0].To.Name).Should(Equal("In Progress"))
+				Ω(transitions.Transitions[0].To.StatusCategory.Name).Should(Equal("In Progress"))
 				Ω(err).Should(BeNil())
 			})
 

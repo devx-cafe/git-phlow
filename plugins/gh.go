@@ -13,8 +13,10 @@ import (
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/executor"
-	"io/ioutil"
 )
+
+//------------------------------------DEPRECATED SECTION------------------------------//
+//This file are being exhanged with github.go
 
 var GitHub *GitHubImpl
 var urls *pluginWebURL
@@ -57,111 +59,7 @@ func init() {
 	}
 }
 
-//AuthorizeGitHub ...
-//Retrieve token from github for authorization
-func AuthorizeGitHub(githubBaseURL, user, pass string) (token string, err error) {
-
-	perm, err := createGHPermissions()
-	if err != nil {
-		return "", err
-	}
-
-	req, _ := http.NewRequest("POST", githubBaseURL+"/authorizations", bytes.NewBuffer([]byte(perm)))
-	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Add("accept", "application/json")
-	req.Header.Add("content-type", "application/json")
-	req.SetBasicAuth(user, pass)
-
-	body, err := NewPWRequest().Do(req)
-	if err != nil {
-		return "", err
-	}
-
-	re := Auth{}
-	if err = json.Unmarshal(body, &re); err != nil {
-		return "", err
-	}
-	return re.Token, nil
-}
-
-//AuthenticateGitHub
-//Checks personal access token validity by requesting private repositories and checking status code
-func AuthenticateGitHub(githubBaseURL string, user, token string) (bool, error) {
-
-	req, _ := http.NewRequest("GET", githubBaseURL+"/user/repos", nil)
-	q := req.URL.Query()
-	q.Add("access_token", token)
-	req.URL.RawQuery = q.Encode()
-	client := http.DefaultClient
-
-	res, err := client.Do(req)
-	if err != nil {
-		return false, err
-	}
-	defer res.Body.Close()
-
-	if res.StatusCode != http.StatusOK {
-		return false, errors.New(strconv.Itoa(res.StatusCode))
-	}
-	return true, nil
-}
-
-//DefaultBranchGitHub ...
-//return the default branch of the repository
-func DefaultBranchGitHub(URL, org, repo, token string) (defaultBranch string, err error) {
-
-	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s", org, repo), nil)
-	q := req.URL.Query()
-	q.Add("access_token", token)
-	req.URL.RawQuery = q.Encode()
-
-	client := http.DefaultClient
-
-	res, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer res.Body.Close()
-
-	re := Repo{}
-	err = json.NewDecoder(res.Body).Decode(&re)
-	if err != nil {
-		return "", err
-	}
-	return re.DefaultBranch, nil
-}
-
-//GetIssueGitHub ...
-//return an issue with from the number of the issue
-func GetIssueGitHub(URL, org, repo, key, token string) (*Issue, error) {
-
-	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s/issues/", org, repo)+key, nil)
-	req.Header.Set("Content-Type", "application/json")
-	q := req.URL.Query()
-	q.Add("access_token", token)
-	req.URL.RawQuery = q.Encode()
-
-	client := http.DefaultClient
-
-	res, err := client.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer res.Body.Close()
-
-	body, err := ioutil.ReadAll(res.Body);
-	if err != nil {
-		return nil, err
-	}
-
-	re := Issue{}
-	if err = json.Unmarshal(body, &re); err != nil {
-		return nil, err
-	}
-
-	return &re, err
-}
-
+//Deprecated
 //GetIssues ...
 func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	URL := fmt.Sprintf(g.URLNoEsc(urls.issueURL), g.org, g.repo)
@@ -184,6 +82,7 @@ func (g *GitHubImpl) GetIssues() (issues []Issue, err error) {
 	return re, nil
 }
 
+//Deprecated
 //SetLabel ...
 func (g *GitHubImpl) SetLabel(label string, issue int) (labels []Label, err error) {
 
@@ -229,6 +128,7 @@ func (g *GitHubImpl) Default() (defaultBranch string, err error) {
 	return re.DefaultBranch, nil
 }
 
+//Deprecated
 //SetAssignee ...
 //Set assignee on a GitHub Issue
 func (g *GitHubImpl) SetAssignee(assignee string, issue int) (err error) {
@@ -254,6 +154,7 @@ type GhPermissions struct {
 	Note   string   `json:"note"`
 }
 
+//This should be rewritten
 //createGHPermissions ...
 func createGHPermissions() (string, error) {
 	hostname, err := os.Hostname()

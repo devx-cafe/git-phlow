@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	. "github.com/smartystreets/goconvey/convey"
+	"strconv"
 )
 
 type testCase struct {
@@ -38,7 +39,7 @@ func TestBranchNameFromIssue(t *testing.T) {
 		for _, currentTest := range testsToRun {
 
 			Convey(currentTest.casedesc, func() {
-				actualName := BranchNameFromIssue(currentTest.issue, currentTest.branchName)
+				actualName := BranchNameFromIssue(strconv.Itoa(currentTest.issue), currentTest.branchName)
 				t.Log(currentTest.branchName)
 				So(actualName, ShouldEqual, currentTest.expected)
 			})
@@ -70,7 +71,7 @@ func TestGetIssueFromBranch(t *testing.T) {
 		Convey("GetIssueSFromBranch should return 1", func() {
 
 			i := IssueFromBranchName("39-enable---Add-sign-in-function")
-			So(i, ShouldEqual, 39)
+			So(i, ShouldEqual, "39")
 		})
 	})
 }

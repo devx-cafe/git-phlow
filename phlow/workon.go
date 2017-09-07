@@ -13,6 +13,7 @@ import (
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/options"
 	"strings"
+	"errors"
 )
 
 //WorkOnUpdate ...
@@ -21,13 +22,13 @@ import (
 type WorkOnUpdate func(key string, projectSetting *setting.ProjectSetting) (string, error)
 
 //WorkOnCaller ...
+//Toplevel workon function called from cmd
 func WorkOnCaller(keyOrID string) {
 
 	INIBlock := options.GlobalFlagTarget
 	conf := setting.NewProjectStg(INIBlock)
 
 	if "jira" == strings.ToLower(conf.Service) {
-
 		WorkOn(keyOrID, conf, UpdateJIRAIssue)
 		return
 	}
@@ -35,7 +36,7 @@ func WorkOnCaller(keyOrID string) {
 	if "github" == strings.ToLower(conf.Service) {
 		_, err := strconv.Atoi(keyOrID)
 		if err != nil {
-			fmt.Fprintf(os.Stdout, "Whoops \nYour argument, %s, is not a number! I only accept numbers \n", keyOrID)
+			fmt.Println("Whoops \nYour argument, " + keyOrID + ", is not a valid GitHub issue number \n")
 			os.Exit(0)
 		}
 		WorkOn(keyOrID, conf, UpdateGithubIssue)
@@ -45,12 +46,13 @@ func WorkOnCaller(keyOrID string) {
 	fmt.Println(conf.Service + "Is an unknown Service in you project .phlow file")
 }
 
+//WorkOn ...
+//creates a new workspace from issue by given WorkOnUpdate and configuration
 func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 
 	git := githandler.Git{Run: executor.RunGit}
 
-	ui.PhlowSpinner.Start("Setting up workspace")
-	defer ui.PhlowSpinner.Stop()
+	fmt.Println("Preparing workspace...")
 
 	if _, err := git.Fetch("--all"); err != nil {
 		fmt.Println(err)
@@ -65,7 +67,6 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 
 	branchInfo := githandler.AsList(out)
 
-	fmt.Println(plugins.IssueFromBranchName(branchInfo.Current))
 	//Are we already on the branch we want to work on
 	if plugins.IssueFromBranchName(branchInfo.Current) == keyOrID {
 		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format.Branch(branchInfo.Current))
@@ -77,18 +78,15 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 
 			if _, err = git.CheckOut(branch); err != nil {
 				fmt.Println(err)
+				return
 			}
-			ui.PhlowSpinner.Stop()
+
 			fmt.Fprintf(os.Stdout, "Resuming to workspace:  %s \n", ui.Format.Branch(branch))
 			return
 		}
 	}
 
-	//Get issue and do the transition
-
 	name, err := update(keyOrID, conf)
-
-	//Proceed to create the new workspace
 
 	_, err = git.CheckOut("-b", name, conf.Remote+"/"+conf.IntegrationBranch)
 	if err != nil {
@@ -96,9 +94,7 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 		return
 	}
 
-	ui.PhlowSpinner.Stop()
 	fmt.Fprintf(os.Stdout, "Created workspace:  %s \n", ui.Format.Branch(name))
-
 }
 
 //UpdateJIRAIssue ...
@@ -109,48 +105,39 @@ func UpdateJIRAIssue(key string, conf *setting.ProjectSetting) (string, error) {
 	user, _ := git.Config("--get", "phlow.jirauser")
 	token, _ := git.Config("--get", "phlow.jiratoken")
 
-	//Get jira issue or fail
 	issue, err := plugins.GetJiraIssue(conf.IssueURL, key, user, token)
 	if err != nil {
 		return "", err
 	}
 
 	var transitionErr error
-	var assignErr error
+	assignErr := plugins.AssignUser(conf.IssueURL, key, user, token)
 
 	//Get transition
 	transition, err := plugins.GetTransitions(conf.IssueURL, key, user, token)
 	if err == nil {
 		for _, tran := range transition.Transitions {
-			if tran.To.Name == "In Progress" {
+			if tran.To.StatusCategory.Name == "In Progress" {
 				transitionErr = plugins.DoTransition(conf.IssueURL, key, user, token, tran.ID)
+
 				break
 			}
 		}
+		transitionErr = errors.New("No 'In Progress' transition ")
 	}
 
-	assignErr = plugins.AssignUser(conf.IssueURL, key, user, token)
-
-	ui.PhlowSpinner.Stop()
-	if transitionErr != nil || assignErr != nil {
-		fmt.Fprintf(os.Stdout, "\n-------- Issue %s updated --------  \n", ui.Format.Issue(issue.Key))
-	} else {
-		fmt.Printf("\nIssue %s could not be moved to 'In Progress'\n", ui.Format.Issue(issue.Key))
-		fmt.Printf("Assingee '%s' could not be assigned to issue %s\n", ui.Format.Assignee(user), ui.Format.Issue(issue.Key))
-		fmt.Println(ui.Format.Bold("Go to Jira and manually set the assignee and state"))
-
-	}
+	fmt.Printf("\n-------- Issue %s--------  \n", ui.Format.Issue(issue.Key))
 
 	if transitionErr != nil {
-		fmt.Fprintf(os.Stdout, "Moved to => %s \n", ui.Format.Label.G4Move(plugins.PhlowLabels["In Progress"].Title))
+		fmt.Printf("Issue %s could not be moved to 'In Progress'\n", ui.Format.Issue(issue.Key))
+	} else {
+		fmt.Printf("Moved to => %s \n", ui.Format.Label.G4Move("In Progress"))
 	}
 
 	if assignErr != nil {
-		fmt.Fprintf(os.Stdout, "Assignee => %s \n", ui.Format.Assignee(user))
-	}
-
-	if transitionErr != nil || assignErr != nil {
-		fmt.Println("----------------------------------")
+		fmt.Printf("Assingee '%s' could not be assigned to issue %s\n", ui.Format.Assignee(user), ui.Format.Issue(issue.Key))
+	} else {
+		fmt.Printf("Assignee => %s \n", ui.Format.Assignee(user))
 	}
 
 	return plugins.BranchNameFromIssue(issue.Key, issue.Fields.Summary), nil
@@ -170,21 +157,19 @@ func UpdateGithubIssue(issue string, conf *setting.ProjectSetting) (string, erro
 		panic(err)
 	}
 
+	oap := githandler.OrgAndRepo(remote)
 
-	orgAndRepo := githandler.OrgAndRepo(remote)
-	fmt.Println(orgAndRepo.Repository)
-
-	issueOb, err := plugins.GetIssueGitHub(conf.IssueURL, orgAndRepo.Organisation, orgAndRepo.Repository, issue, token)
+	issueOb, err := plugins.GetIssueGitHub(conf.IssueURL, oap.Organisation, oap.Repository, issue, token)
 	if err != nil {
-		fmt.Println("No matching issues")
+		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	if _, err := plugins.GitHub.SetLabel(plugins.PhlowLabels["Status - in progress"].Title, issueOb.Number); err != nil {
+	if err := plugins.SetAssigneeGitHub(conf.IssueURL, oap.Organisation, oap.Repository, token, issue, user); err != nil {
 		fmt.Println(err)
 	}
 
-	if err := plugins.GitHub.SetAssignee(user, issueOb.Number); err != nil {
+	if _, err := plugins.SetLabelGitHub(conf.IssueURL, oap.Organisation, oap.Repository, token, plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
 		fmt.Println(err)
 	}
 

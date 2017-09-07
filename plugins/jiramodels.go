@@ -7,8 +7,8 @@ type JiraIssue struct {
 		Summary string `json:"summary"`
 		Status struct {
 			Name string `json:"name"`
-		}`json:"status"`
-	}`json:"fields"`
+		} `json:"status"`
+	} `json:"fields"`
 }
 
 //transitions ...
@@ -20,7 +20,9 @@ type Transitions struct {
 type Transition struct {
 	ID string `json:"id"`
 	To struct {
-		Name string `json:"name"`
+		StatusCategory struct {
+			Name string `json:"name"`
+		} `json:"statusCategory"`
 	} `json:"to"`
 }
 
