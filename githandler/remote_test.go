@@ -11,10 +11,10 @@ var _ = Describe("Remote", func() {
 
 		Context("using github", func() {
 			It("should return organisation and repository with https url", func() {
-				var https = "https://github.com/Org/sOme--repo.git"
+				var https = "https://github.com/Praqma/phlow-test-strategy.git"
 				info := OrgAndRepo(https)
-				Ω(info.Organisation).Should(Equal("Org"))
-				Ω(info.Repository).Should(Equal("sOme--repo"))
+				Ω(info.Organisation).Should(Equal("Praqma"))
+				Ω(info.Repository).Should(Equal("phlow-test-strategy"))
 			})
 
 			It("should return organisation and repository with ssh", func() {

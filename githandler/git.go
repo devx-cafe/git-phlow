@@ -15,7 +15,11 @@ type Git struct {
 //LSRemote ...
 //Executes local git ls-remote with params
 func (os *Git) LSRemote(argv ...string) (string, error) {
-	return os.Run("git", "ls-remote", argv...)
+	output, err := os.Run("git", "ls-remote", argv...)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(output), nil
 }
 
 //Branch ...
