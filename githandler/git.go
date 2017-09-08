@@ -79,5 +79,5 @@ func (os *Git) Config(argv ...string) (string, error) {
 	if stdErr != nil {
 		return "", stdErr
 	}
-	return strings.Replace(stdOut, "\n", "", -1), nil
+	return strings.TrimSpace(stdOut), nil
 }
