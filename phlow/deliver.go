@@ -44,10 +44,17 @@ func Deliver(conf *setting.ProjectSetting) {
 	}
 
 	//Is branch master or is branch delivered
-	if strings.HasPrefix(branchInfo.Current, "delivered/") || (branchInfo.Current == conf.IntegrationBranch) {
-		fmt.Printf("Could not deliver: %s", branchInfo.Current)
+	if strings.HasPrefix(branchInfo.Current, "delivered/") {
+		fmt.Printf("It is not possible to deliver a branch already delivered: %s \n", branchInfo.Current)
 		return
 	}
+
+	//Delivering master
+	if branchInfo.Current == conf.IntegrationBranch {
+		fmt.Printf("It is not possible to deliver the integration branch: %s \n", branchInfo.Current)
+		return
+	}
+
 	//git push origin name:ready/name
 	_, err = git.Push(conf.Remote, fmt.Sprintf("%s:%s/%s", branchInfo.Current, conf.DeliveryBranchPrefix, branchInfo.Current))
 	if err != nil {

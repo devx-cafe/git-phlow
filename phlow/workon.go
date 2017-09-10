@@ -68,13 +68,13 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 	branchInfo := githandler.AsList(out)
 
 	//Are we already on the branch we want to work on
-	if plugins.IssueFromBranchName(branchInfo.Current) == keyOrID {
+	if strings.HasPrefix(branchInfo.Current, keyOrID) {
 		fmt.Fprintf(os.Stdout, "You are already on branch %s \n", ui.Format.Branch(branchInfo.Current))
 		return
 	}
 	//Does another workspace already exist with the key or ID
 	for _, branch := range branchInfo.List {
-		if plugins.IssueFromBranchName(branch) == keyOrID {
+		if strings.HasPrefix(branch, keyOrID) {
 
 			if _, err = git.CheckOut(branch); err != nil {
 				fmt.Println(err)
@@ -88,7 +88,6 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 
 	name, err := update(keyOrID, conf)
 	if err != nil {
-
 		fmt.Println(err)
 		os.Exit(1)
 	}
