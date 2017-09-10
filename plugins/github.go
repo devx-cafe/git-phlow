@@ -107,6 +107,10 @@ func GetIssueGitHub(URL, org, repo, key, token string) (*Issue, error) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode == 401 {
+		return nil, errors.New("Not Authorized \nVerify that you are authorized by running 'git phlow auth' with the same configuration")
+	}
+
 	if res.StatusCode == 404 && (org == "" || repo == "") {
 		return nil, errors.New("Could not reach GitHub API - Malformed URL \nVerify 'Remote' field is correct in configuration" +
 			"\ntry 'git ls-remote --get <Remote from config>' should return: git@github.com:org/repo.git")

@@ -23,7 +23,6 @@ If no argument is given, it tries to find the issue of the currently checked out
 `, ui.Format.Bold("web")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
-		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) > 0 {

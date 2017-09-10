@@ -18,8 +18,6 @@ type Authentication func(URL, user, pass string) (authenticated bool, err error)
 //interface for getting the default branch of the external service
 type DefaultBranch func(URL, org, repo, token string) (defaultBranch string, err error)
 
-
-
 //PhlowLabels ...
 //Map of labels in the phlow
 var PhlowLabels map[string]*PhlowLabel

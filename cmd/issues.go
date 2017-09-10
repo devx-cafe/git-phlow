@@ -19,7 +19,6 @@ var issueCmd = &cobra.Command{
 `, ui.Format.Bold("issues")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
-		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		phlow.Issues()

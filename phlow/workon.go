@@ -87,7 +87,12 @@ func WorkOn(keyOrID string, conf *setting.ProjectSetting, update WorkOnUpdate) {
 	}
 
 	name, err := update(keyOrID, conf)
+	if err != nil {
 
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	//ERROR CHECK HERE
 	_, err = git.CheckOut("-b", name, conf.Remote+"/"+conf.IntegrationBranch)
 	if err != nil {
 		fmt.Println(err)

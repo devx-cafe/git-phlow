@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"fmt"
 	"bytes"
+	"strings"
 )
 
 //AuthenticateJIRA ...
@@ -48,6 +49,8 @@ func AuthorizeJIRA(URL, user, pass string) (token string, err error) {
 //GetJiraIssue ...
 func GetJiraIssue(URL, key, user, pass string) (*JiraIssue, error) {
 
+	pass = strings.TrimSpace(pass)
+
 	issueURL := "/rest/api/latest/issue/"
 	req, _ := http.NewRequest("GET", URL+issueURL+key, nil)
 	req.Header.Set("Content-Type", "application/json")
@@ -60,7 +63,17 @@ func GetJiraIssue(URL, key, user, pass string) (*JiraIssue, error) {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body);
+	if res.StatusCode == 401 {
+		return nil, errors.New("Not Authorized \nVerify that you are authorized by running 'git phlow auth' with the same configuration")
+	}
+
+	if res.StatusCode == 404 {
+		return nil, errors.New("Could not find issue with ID " + key +
+			" \nCheck you have permissions or that the issue exists \nVerify the configuration 'issue_url' is correct")
+
+	}
+
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}

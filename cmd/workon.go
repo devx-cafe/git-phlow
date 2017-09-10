@@ -20,7 +20,6 @@ A new branch will be created, based on your remote default branch and named afte
 `, ui.Format.Bold("workon")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()
-		cmdperm.RequiredAuthentication()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
