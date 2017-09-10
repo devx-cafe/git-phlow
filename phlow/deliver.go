@@ -50,7 +50,7 @@ func Deliver(conf *setting.ProjectSetting) {
 		return
 	}
 	//git push origin name:ready/name
-	_, err = git.Push(conf.Remote, fmt.Sprintf("%s:ready/%s", branchInfo.Current, branchInfo.Current))
+	_, err = git.Push(conf.Remote, fmt.Sprintf("%s:%s/%s", branchInfo.Current, conf.DeliveryBranchPrefix, branchInfo.Current))
 	if err != nil {
 		fmt.Println(err)
 		return
