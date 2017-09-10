@@ -33,8 +33,7 @@ func DeliverCaller() {
 func Deliver(conf *setting.ProjectSetting) {
 	git := githandler.Git{Run: executor.RunGit}
 
-	ui.PhlowSpinner.Start("delivering")
-	defer ui.PhlowSpinner.Stop()
+	fmt.Println("delivering...")
 
 	out, err := git.Branch("-a")
 	branchInfo := githandler.AsList(out)
@@ -58,7 +57,6 @@ func Deliver(conf *setting.ProjectSetting) {
 
 	_, err = git.Branch("-m", branchInfo.Current, "delivered/"+branchInfo.Current)
 	if err != nil {
-		ui.PhlowSpinner.Stop()
 		fmt.Println("The branch have been pushed successfully to your remote, but there is a local name conflict")
 		fmt.Printf("CONFLICT: your already have a branch named %s in your workspace \n", "delivered/"+branchInfo.Current)
 		fmt.Printf("to mark it delivered run: git branch -m %s %s \n", branchInfo.Current, "delivered/"+branchInfo.Current)
@@ -73,7 +71,6 @@ func Deliver(conf *setting.ProjectSetting) {
 		return
 	}
 
-	ui.PhlowSpinner.Stop()
 	fmt.Printf("Delivered branch %s \n", ui.Format.Branch(branchInfo.Current))
 }
 
@@ -99,8 +96,6 @@ func LocalDeliver(conf *setting.ProjectSetting) {
 	}
 
 	//Pull rebase latest changes
-	ui.PhlowSpinner.Start("delivering")
-	defer ui.PhlowSpinner.Stop()
 
 	_, err = git.Pull("--rebase")
 	if err != nil {
@@ -128,6 +123,6 @@ func LocalDeliver(conf *setting.ProjectSetting) {
 		fmt.Println(err)
 		return
 	}
-	ui.PhlowSpinner.Stop()
+
 	fmt.Printf("Delivered changes from %s to %s \n", ui.Format.Branch(branchInfo.Current), ui.Format.Branch(conf.IntegrationBranch))
 }
