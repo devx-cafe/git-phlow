@@ -32,6 +32,8 @@ A few things nees to be configured before hand:
 - Download and install _git-phlow_ using _brew_ or _wget_
 - Start creating tasks in GitHub issues
 
+Read the official documentation [here](/docs/README.md)
+
 ## Installing git-phlow (tool)
 ### Mac
 If you have homebrew installed, you can tap our official repository.
