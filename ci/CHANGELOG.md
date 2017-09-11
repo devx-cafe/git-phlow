@@ -1,10 +1,26 @@
 ## Changelog
-An apology to the users who was affected by the recent major release, that was not cool. We have fixed a few things that should make life easier.
-We also cleaned up the code a bit and made it look nicer.
 
-#### Improvements
-- bootstrap .phlow if it does not exist #203 @groenborg
-git phlow will now create a .phlow file if none exists. It will also see if it can find the default branch like it did before.
 
-- workon should not do a pull rebase #200 @groenborg
-workon will not do a pull rebase, when setting up a workspace.
+#### Features
+
+- deliver is updated to support target configuration, and Jira #230 @groenborg
+you can now deliver work, with settings from the target configuration.. Hurray
+
+- wrapup is now support on windows as well #188 @groenborg
+wrapup will now format messages based on GitHub and Jira branches
+
+- workon is now updated to support target configuration, and Jira #224 @groenborg
+you can now work on issues located on GitHub and Jira, with settings from the target configuration
+
+
+#### Bug Fixes
+- fix configuration for windows #236 @groenborg
+Turns out the config before did not work on windows, however, it does now.
+
+- auth errors are handled when commands using service API are called #240 @groenborg
+a successful bug-hunt resulted in one less error, where the tool basically would explode with errors if commands were executed without authorization
+
+
+#### improvements
+- We removed the beautiful spinner when running `workon` and `deliver` #241 @groenborg
+it might return in future versions, when it no longer messes with the formatting. Never mess with the formatting!
