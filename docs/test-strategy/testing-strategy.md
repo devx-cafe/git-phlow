@@ -48,9 +48,68 @@ Similarly for OS X. With Windows this is not entirely the same, and different wi
 
 None of the above tests should ever be necessary at the higher levels of testing. Furthermore, testing things that are not happy path may be worthwhile here, depending on where bugs showed up in the past, and future. 
 
+An exellent example of this can be found in [gh_test.go](https://github.com/Praqma/git-phlow/blob/master/plugins/gh_test.go) : 
+```
+func TestAuthorize(t *testing.T) {
+	Convey("Running tests on 'Authorize' request", t, func() {
+		Convey("Authorize should return token", func() {
+			ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method != "POST" {
+					t.Errorf("Expected Request 'POST', got '%s'", r.Method)
+				}
+				if r.URL.EscapedPath() != "/authorizations" {
+					t.Errorf("Expected request to 'repos', got '%s'", r.URL.EscapedPath())
+				}
+				w.WriteHeader(http.StatusCreated)
+				w.Write([]byte(authResponse))
+
+			}))
+
+			defer ts.Close()
+			GitHub.Auth.URL = ts.URL + "/authorizations"
+			token, err := GitHub.Auth.Auth("simon", "password")
+			t.Log(err)
+			So(token, ShouldEqual, "abcdefgh12345678")
+			So(err, ShouldBeNil)
+		})
+	})
+}
+```
+
+As well as [branch_test.go](https://github.com/Praqma/git-phlow/blob/master/githandler/branch_test.go)
+
+```
+func TestBranch(t *testing.T) {
+	Convey("Running tests on 'Branch' function", t, func() {
+
+		testfixture.CreateTestRepository(t, false)
+
+		Convey("branch should return List of branches", func() {
+			info, err := Branch()
+			So(len(info.List), ShouldEqual, 11)
+			So(err, ShouldBeNil)
+		})
+
+		Convey("branch should return Current branch", func() {
+			info, err := Branch()
+			So(info.Current, ShouldEqual, "master")
+			So(err, ShouldBeNil)
+		})
+
+		testfixture.RemoveTestRepository(t)
+
+	})
+}
+```
+These are marked as integration tests since neither of them execute on a singular method, but need to authenticate against github (network call) and create a repository to execute on (system call) respectively. 
+
+
 ## Methods (Unit test level)
 Every method should have a unit test, as it's a straight forward project to run TDD on. However as with most prototypes this is probably not the case, and thus it is necessary to determine which parts of the system are still exploratory. 
 Writing a lot of unit tests for existing methods, which are still being restructured is a waste of productivity. 
+
+Good examples of unit tests would be this method in []()
+
 
 ## Handling "legacy" code
 Legacy code for Git Phlow is from here defined as : 
