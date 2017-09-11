@@ -24,3 +24,5 @@ a successful bug-hunt resulted in one less error, where the tool basically would
 #### improvements
 - We removed the beautiful spinner when running `workon` and `deliver` #241 @groenborg
 it might return in future versions, when it no longer messes with the formatting. Never mess with the formatting!
+
+- Error messages have also been improved, from "something happened" to "your hyper drive core melted a super size hole in you spaceship.. Remember to cool it!"
