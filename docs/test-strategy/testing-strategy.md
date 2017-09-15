@@ -108,7 +108,35 @@ These are marked as integration tests since neither of them execute on a singula
 Every method should have a unit test, as it's a straight forward project to run TDD on. However as with most prototypes this is probably not the case, and thus it is necessary to determine which parts of the system are still exploratory. 
 Writing a lot of unit tests for existing methods, which are still being restructured is a waste of productivity. 
 
-Good examples of unit tests would be this method in []()
+Good examples of unit tests would be this method in [plugin_test.go](https://github.com/Praqma/git-phlow/blob/master/plugins/plugin_test.go)
+
+```
+Describe("Branch name from issue", func() {
+		testsToRun := [7]testCase{
+			{issue: 12, branchName: "work on iss", expected: "12-work-on-iss", casedesc: "Test replaces whitespaces with dash '-'"},
+			{issue: 45, branchName: "Case SENsitivity", expected: "45-case-sensitivity", casedesc: "Test converts charecters to lowercase"},
+			{issue: 15, branchName: ".branch name", expected: "15-branch-name", casedesc: "Test removes . prefix"},
+			{issue: 220, branchName: "^^..:~:name", expected: "220-name", casedesc: "removes ASCII control characters"},
+			{issue: 2735, branchName: "name/", expected: "2735-name", casedesc: "test removes end / "},
+			{issue: 234567, branchName: ".NAME.is\"dotted", expected: "234567-name-is-dotted", casedesc: "test removes backslash"},
+			{issue: 672, branchName: "add big data blog /", expected: "672-add-big-data-blog", casedesc: "remove forward slash"},
+		}
+
+		Context("Names should follow format rules", func() {
+
+			for _, currentTest := range testsToRun {
+
+				It(currentTest.casedesc, func() {
+					actualName := BranchNameFromIssue(strconv.Itoa(currentTest.issue), currentTest.branchName)
+
+					Ω(actualName).Should(Equal(currentTest.expected))
+				})
+			}
+		})
+	})
+```
+
+This is a unit test, as no calls are made other than the single method in question (which compares the name to format rules)
 
 
 ## Handling "legacy" code
