@@ -13,11 +13,18 @@ import (
 	"github.com/praqma/git-phlow/plugins"
 )
 
-//Load internals
+//Config git group.name
 const (
-	phlow_file_name     = ".phlow"
-	git_config_fileName = ".gitconfig"
-	default_block       = "default"
+	default_block                 = "phlow"
+	phlow_file_name               = ".phlow"
+	git_config_fileName           = ".gitconfig"
+	config_default_block          = "phlow"
+	config_service                = "service"
+	config_remote                 = "remote"
+	config_service_url            = "service-url"
+	config_pipeline               = "pipeline"
+	config_integration_branch     = "integration-branch"
+	config_delivery_branch_prefix = "delivery-branch-prefix"
 )
 
 //Default configuration
@@ -56,9 +63,57 @@ type ProjectSetting struct {
 //NewProjectStg ...
 //initializes project settings from .phlow INI files
 func NewProjectStg(INIBlock string) *ProjectSetting {
-	r := GetLocal()
-	g := GetGlobal()
-	return LoadProjectSettings(r, g, INIBlock)
+	return LoadSettings(INIBlock, githandler.Git{Run: executor.RunGit})
+}
+
+func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
+
+	//no params have been given, search for default
+	if INIBlock == "" {
+		INIBlock = config_default_block
+	}
+
+	//Load all configurations using git config
+	//Errors result in an empty config string, which is git's way to return empty config
+	service, _ := git.Config("--get", fmt.Sprintf("%s.%s", INIBlock, "token"))
+	serviceURL, _ := git.Config("--get", INIBlock+"."+config_service_url)
+	remote, _ := git.Config("--get", INIBlock+"."+config_remote)
+	deliveryBranch, _ := git.Config("--get", INIBlock+"."+config_delivery_branch_prefix)
+	integrationBranch, _ := git.Config("--get", INIBlock+"."+config_integration_branch)
+
+	loadedSetting := ProjectSetting{
+		Service:              service,
+		IssueURL:             serviceURL,
+		Remote:               remote,
+		IntegrationBranch:    integrationBranch,
+		DeliveryBranchPrefix: deliveryBranch,
+		INIBlock:             INIBlock,
+	}
+
+	err := ValidateLoadedSetting(&loadedSetting)
+	if err != nil {
+		//It is the default config, so we will just go to the internal default
+		if INIBlock == config_default_block {
+			defaultBranch, err := GetDefaultBranchFromInternalDefault()
+			if err != nil || strings.TrimSpace(defaultBranch) == "" {
+				defaultBranch = internal_default_integration_branch
+			}
+			return &ProjectSetting{
+				Service:              internal_default_service,
+				IntegrationBranch:    defaultBranch,
+				Remote:               internal_default_remote,
+				IssueURL:             internal_default_issue_url,
+				DeliveryBranchPrefix: internal_default_delivery_branch_prefix,
+				PipelineUrl:          internal_pipeline_url,
+				Scope:                internal_default_scope,
+				File:                 internal_default_file,
+			}
+		}
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	return &loadedSetting
 }
 
 //NewToolStg ...
@@ -185,28 +240,28 @@ func ValidateLoadedSetting(setting *ProjectSetting) error {
 	//Non Optional Field checks..
 	for i := 0; i < t.NumField(); i++ {
 		if t.Field(i).Name == "Service" && (r.Field(i).String() == "") {
-			return errors.New(fmt.Sprintf("Error in configuration file: %s\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", setting.Scope+"/"+setting.File, "service", setting.INIBlock))
+			return errors.New(fmt.Sprintf("Error in configuration\n"+
+				"Non-optional field missing: %s \nIn configuration block: %s \n ", "service", setting.INIBlock))
 		}
 
 		if t.Field(i).Name == "IssueURL" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration file: %s\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", setting.Scope+"/"+setting.File, "issue_url", setting.INIBlock))
+			return errors.New(fmt.Sprintf("Error in configuration\n"+
+				"Non-optional field missing: %s \nIn configuration block: %s \n ", "issue_url", setting.INIBlock))
 		}
 
 		if t.Field(i).Name == "IntegrationBranch" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration file: %s\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", setting.Scope+"/"+setting.File, "integration_branch", setting.INIBlock))
+			return errors.New(fmt.Sprintf("Error in configuration\n"+
+				"Non-optional field missing: %s \nIn configuration block: %s \n ", "integration_branch", setting.INIBlock))
 		}
 
 		if t.Field(i).Name == "Remote" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration file: %s\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", setting.Scope+"/"+setting.File, "remote", setting.INIBlock))
+			return errors.New(fmt.Sprintf("Error in configuration\n"+
+				"Non-optional field missing: %s \nIn configuration block: %s \n ", "remote", setting.INIBlock))
 		}
 
 		if t.Field(i).Name == "DeliveryBranchPrefix" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration file: %s\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", setting.Scope+"/"+setting.File, "delivery_branch_prefix", setting.INIBlock))
+			return errors.New(fmt.Sprintf("Error in configuration\n"+
+				"Non-optional field missing: %s \nIn configuration block: %s \n ", "delivery_branch_prefix", setting.INIBlock))
 		}
 	}
 	return nil
