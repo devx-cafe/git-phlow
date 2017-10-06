@@ -72,7 +72,7 @@ func RunGit(git string, sub string, argv ...string) (string, error) {
 	argv = append([]string{sub}, argv...)
 	exe := exec.Command(git, argv...)
 
-	if true {
+	if options.GlobalFlagVerbose {
 		verboseOutput(exe.Args...)
 	}
 

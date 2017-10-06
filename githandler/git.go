@@ -22,6 +22,16 @@ func (os *Git) LSRemote(argv ...string) (string, error) {
 	return strings.TrimSpace(output), nil
 }
 
+//RevParse ...
+//Executes local git rev-parse with params
+func (os *Git) RevParse(argv ...string) (string, error) {
+	output, err := os.Run("git", "rev-parse", argv...)
+	if err != nil {
+		return "", err
+	}
+	return strings.TrimSpace(output), nil
+}
+
 //Branch ...
 //Executes local git branch with params
 func (os *Git) Branch(argv ...string) (string, error) {

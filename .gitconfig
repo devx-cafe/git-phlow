@@ -1,0 +1,7 @@
+[phlow]
+remote                 = origin
+service                = github
+integration-branch     = master
+issue-url              = https://api.github.com
+delivery-branch-prefix = ready
+

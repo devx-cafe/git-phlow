@@ -40,6 +40,7 @@ func Deliver(conf *setting.ProjectSetting) {
 
 	_, err = git.Pull("--rebase")
 	if err != nil {
+		fmt.Println("Error in rebasing: ")
 		fmt.Println(err)
 	}
 
@@ -58,6 +59,7 @@ func Deliver(conf *setting.ProjectSetting) {
 	//git push origin name:ready/name
 	_, err = git.Push(conf.Remote, fmt.Sprintf("%s:%s/%s", branchInfo.Current, conf.DeliveryBranchPrefix, branchInfo.Current))
 	if err != nil {
+		fmt.Println("error in push")
 		fmt.Println(err)
 		return
 	}

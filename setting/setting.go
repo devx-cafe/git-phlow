@@ -6,58 +6,72 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/go-errors/errors"
 	"github.com/go-ini/ini"
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
+	"errors"
 )
 
 //Config git group.name
 const (
-	default_block                 = "phlow"
-	phlow_file_name               = ".phlow"
-	git_config_fileName           = ".gitconfig"
-	config_default_block          = "phlow"
-	config_service                = "service"
-	config_remote                 = "remote"
-	config_service_url            = "service-url"
-	config_pipeline               = "pipeline"
-	config_integration_branch     = "integration-branch"
-	config_delivery_branch_prefix = "delivery-branch-prefix"
+	defaultBlock                    = "phlow"
+	configFileName                  = ".gitconfig"
+	configDefaultBlock              = "phlow"
+	configServiceField              = "service"
+	configRemoteField               = "remote"
+	configIssueURLField             = "issue-url"
+	configPipelineField             = "pipeline"
+	configIntegrationBranchField    = "integration-branch"
+	configDeliveryBranchPrefixField = "delivery-branch-prefix"
 )
 
 //Default configuration
 const (
-	internal_default_service                = "github"
-	internal_default_integration_branch     = "master"
-	internal_default_remote                 = "origin"
-	internal_default_issue_url              = "https://api.github.com"
-	internal_default_delivery_branch_prefix = "ready"
-	internal_default_scope                  = "internal"
-	internal_default_file                   = "none"
-	internal_pipeline_url                   = "none"
+	InternalDefaultService              = "github"
+	InternalDefaultIntegrationBranch    = "master"
+	InternalDefaultRemote               = "origin"
+	InternalDefaultURL                  = "https://api.github.com"
+	InternalDefaultDeliveryBranchPrefix = "ready"
+	InternalDefaultScope                = "internal"
+	InternalDefaultFile                 = "none"
+	InternalDefaultOrigin               = "none"
 )
-
-//Uses git config commandline interface
-//ToolsSetting ...
-type ToolsSetting struct {
-	User    string
-	Token   string
-	AutoAdd bool
-}
 
 //ProjectSetting ...
 type ProjectSetting struct {
 	Service              string `ini:"service"`
-	IntegrationBranch    string `ini:"integration_branch"`
+	IntegrationBranch    string `ini:"integration-branch"`
 	Remote               string `ini:"remote"`
-	IssueURL             string `ini:"issue_url"`
+	IssueURL             string `ini:"issue-url"`
 	PipelineUrl          string `ini:"pipeline"`
-	DeliveryBranchPrefix string `ini:"delivery_branch_prefix"`
+	DeliveryBranchPrefix string `ini:"delivery-branch-prefix"`
 	Scope                string
-	File                 string
 	INIBlock             string
+}
+
+//ToString ...
+func (setting *ProjectSetting) ToString() string {
+	r := reflect.ValueOf(setting).Elem()
+	t := r.Type()
+	msg := ""
+	for i := 0; i < t.NumField(); i++ {
+		msg += t.Field(i).Name + ": " + r.Field(i).String() + "\n"
+	}
+	return msg
+}
+
+type ConfigError struct {
+	errorMessage string
+}
+
+func (ce *ConfigError) Error() string {
+	return ce.errorMessage
+}
+
+func NewConfigError(field, block string) error {
+	return &ConfigError{fmt.Sprintf("Error in configuration\n"+
+		"Non-optional field missing: %s \nIn configuration block: %s \n", field, block)}
 }
 
 //NewProjectStg ...
@@ -70,16 +84,16 @@ func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 
 	//no params have been given, search for default
 	if INIBlock == "" {
-		INIBlock = config_default_block
+		INIBlock = configDefaultBlock
 	}
 
 	//Load all configurations using git config
 	//Errors result in an empty config string, which is git's way to return empty config
-	service, _ := git.Config("--get", fmt.Sprintf("%s.%s", INIBlock, "token"))
-	serviceURL, _ := git.Config("--get", INIBlock+"."+config_service_url)
-	remote, _ := git.Config("--get", INIBlock+"."+config_remote)
-	deliveryBranch, _ := git.Config("--get", INIBlock+"."+config_delivery_branch_prefix)
-	integrationBranch, _ := git.Config("--get", INIBlock+"."+config_integration_branch)
+	service, errS := git.Config("--get", fmt.Sprintf("%s.%s", INIBlock, configServiceField))
+	serviceURL, errSU := git.Config("--get", INIBlock+"."+configIssueURLField)
+	remote, errR := git.Config("--get", INIBlock+"."+configRemoteField)
+	deliveryBranch, errDB := git.Config("--get", INIBlock+"."+configDeliveryBranchPrefixField)
+	integrationBranch, errIB := git.Config("--get", INIBlock+"."+configIntegrationBranchField)
 
 	loadedSetting := ProjectSetting{
 		Service:              service,
@@ -93,22 +107,27 @@ func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 	err := ValidateLoadedSetting(&loadedSetting)
 	if err != nil {
 		//It is the default config, so we will just go to the internal default
-		if INIBlock == config_default_block {
+		if INIBlock == configDefaultBlock {
 			defaultBranch, err := GetDefaultBranchFromInternalDefault()
 			if err != nil || strings.TrimSpace(defaultBranch) == "" {
-				defaultBranch = internal_default_integration_branch
+				defaultBranch = InternalDefaultIntegrationBranch
 			}
 			return &ProjectSetting{
-				Service:              internal_default_service,
+				Service:              InternalDefaultService,
 				IntegrationBranch:    defaultBranch,
-				Remote:               internal_default_remote,
-				IssueURL:             internal_default_issue_url,
-				DeliveryBranchPrefix: internal_default_delivery_branch_prefix,
-				PipelineUrl:          internal_pipeline_url,
-				Scope:                internal_default_scope,
-				File:                 internal_default_file,
+				Remote:               InternalDefaultRemote,
+				IssueURL:             InternalDefaultURL,
+				DeliveryBranchPrefix: InternalDefaultDeliveryBranchPrefix,
+				PipelineUrl:          InternalDefaultOrigin,
+				Scope:                InternalDefaultScope,
 			}
 		}
+		//If all loads fail, we assume that the group does not exists
+		if errS != nil && errSU != nil && errR != nil && errDB != nil && errIB != nil {
+			fmt.Printf("Error: '%s' configuration does not seem to exist in you configuration files.\n", INIBlock)
+			os.Exit(1)
+		}
+		//Only one or more fields are missing, so we print the error
 		fmt.Println(err)
 		os.Exit(1)
 	}
@@ -116,119 +135,23 @@ func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 	return &loadedSetting
 }
 
-//NewToolStg ...
-//Initializes Tool settings from .gitconfig
-func NewToolStg() *ToolsSetting {
-	return LoadToolSettings(executor.RunCommand)
-}
-
-//LoadProjectSettings ...
-func LoadProjectSettings(local, global string, INIBlock string) *ProjectSetting {
-
-	supportedScopes := []string{local, global}
-	supportedConfigFiles := []string{phlow_file_name, git_config_fileName}
-	pathSeparator := os.PathSeparator
-
-	//If params are not set, we use the default config
-	if INIBlock == "" {
-		INIBlock = default_block
-	}
-
-	var configScope, configFile string
-
-	var loadSetting = func() *ini.Section {
-		for _, scope := range supportedScopes {
-			for _, file := range supportedConfigFiles {
-
-				config, err := ini.LooseLoad(scope + string(pathSeparator) + file)
-				if err != nil {
-					panic(err)
-				}
-
-				if sec, _ := config.GetSection(INIBlock); sec != nil {
-					configScope = scope
-					configFile = file
-					return config.Section(INIBlock)
-				}
-			}
-		}
-		return nil
-	}
-
-	loadedSetting := loadSetting()
-	if loadedSetting == nil {
-		if INIBlock != default_block {
-			fmt.Printf("Error: '%s' configuration does not exist in you configuration files. Following paths were searched: \n", INIBlock)
-			for _, scope := range supportedScopes {
-				for _, file := range supportedConfigFiles {
-					fmt.Println("paths: " + scope + string(pathSeparator) + file)
-				}
-			}
-			os.Exit(1)
-		}
-
-		//Try to get default branch otherwise just create the default
-		defaultBranch, err := GetDefaultBranchFromInternalDefault()
-		if err != nil || strings.TrimSpace(defaultBranch) == "" {
-			defaultBranch = internal_default_integration_branch
-		}
-
-		err = BootstrapPhlowConfig(local, defaultBranch)
-		if err != nil {
-			fmt.Println("Could not create a local .phlow config file")
-			os.Exit(1)
-		}
-
-		//return internal default because no other configuration exist and no other is specified by params
-		return &ProjectSetting{
-			Service:              internal_default_service,
-			IntegrationBranch:    defaultBranch,
-			Remote:               internal_default_remote,
-			IssueURL:             internal_default_issue_url,
-			DeliveryBranchPrefix: internal_default_delivery_branch_prefix,
-			PipelineUrl:          internal_pipeline_url,
-			Scope:                internal_default_scope,
-			File:                 internal_default_file,
-		}
-	}
-
-	//Map section into object
-	conf := new(ProjectSetting)
-	err := loadSetting().MapTo(conf)
-	if err != nil {
-		panic(err)
-	}
-
-	//Add configuration origin
-	conf.File = configFile
-	conf.Scope = configScope
-	conf.INIBlock = INIBlock
-
-	if err := ValidateLoadedSetting(conf); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	return conf
-}
-
 //BootstrapPhlowConfig ...
 //Creates a new .phlow ini file on given location
 func BootstrapPhlowConfig(local, integrationBranch string) error {
-	fmt.Println("No .phlow config found")
 	pathSeparator := os.PathSeparator
 	cfg := ini.Empty()
-	sec, _ := cfg.NewSection("default")
-	sec.Key("remote").SetValue(internal_default_remote)
-	sec.Key("service").SetValue(internal_default_service)
-	sec.Key("integration_branch").SetValue(integrationBranch)
-	sec.Key("issue_url").SetValue(internal_default_issue_url)
-	sec.Key("delivery_branch_prefix").SetValue(internal_default_delivery_branch_prefix)
+	sec, _ := cfg.NewSection("phlow")
+	sec.Key(configRemoteField).SetValue(InternalDefaultRemote)
+	sec.Key(configServiceField).SetValue(InternalDefaultService)
+	sec.Key(configIntegrationBranchField).SetValue(integrationBranch)
+	sec.Key(configIssueURLField).SetValue(InternalDefaultURL)
+	sec.Key(configDeliveryBranchPrefixField).SetValue(InternalDefaultDeliveryBranchPrefix)
 
-	err := cfg.SaveTo(local + string(pathSeparator) + phlow_file_name)
+	err := cfg.SaveTo(local + string(pathSeparator) + configFileName)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Bootstrapping new .phlow file")
+	fmt.Println("Bootstrapping new .gitconfig file")
 	return nil
 }
 
@@ -237,67 +160,33 @@ func ValidateLoadedSetting(setting *ProjectSetting) error {
 	r := reflect.ValueOf(setting).Elem()
 	t := r.Type()
 
+	errMsg := ""
 	//Non Optional Field checks..
 	for i := 0; i < t.NumField(); i++ {
 		if t.Field(i).Name == "Service" && (r.Field(i).String() == "") {
-			return errors.New(fmt.Sprintf("Error in configuration\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", "service", setting.INIBlock))
+			errMsg += NewConfigError(configServiceField, setting.INIBlock).Error()
 		}
 
 		if t.Field(i).Name == "IssueURL" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", "issue_url", setting.INIBlock))
+			errMsg += NewConfigError(configIssueURLField, setting.INIBlock).Error()
 		}
 
 		if t.Field(i).Name == "IntegrationBranch" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", "integration_branch", setting.INIBlock))
+			errMsg += NewConfigError(configIntegrationBranchField, setting.INIBlock).Error()
 		}
 
 		if t.Field(i).Name == "Remote" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", "remote", setting.INIBlock))
+			errMsg += NewConfigError(configRemoteField, setting.INIBlock).Error()
 		}
 
 		if t.Field(i).Name == "DeliveryBranchPrefix" && r.Field(i).String() == "" {
-			return errors.New(fmt.Sprintf("Error in configuration\n"+
-				"Non-optional field missing: %s \nIn configuration block: %s \n ", "delivery_branch_prefix", setting.INIBlock))
+			errMsg += NewConfigError(configDeliveryBranchPrefixField, setting.INIBlock).Error()
 		}
 	}
-	return nil
-}
-
-//LoadToolSettings ...
-func LoadToolSettings(run executor.Runner) *ToolsSetting {
-	var set = ToolsSetting{}
-
-	user, err := run("git", "config", "--get", "phlow.user")
-	if err != nil {
-		panic(err)
+	if errMsg == "" {
+		return nil
 	}
-	set.User = strings.Replace(user, "\n", "", -1)
-
-	token, err := run("git", "config", "--global", "phlow.token")
-	if err != nil {
-		panic(err)
-	}
-	set.Token = strings.Replace(token, "\n", "", -1)
-
-	return &set
-}
-
-//GetGlobal ...
-func GetGlobal() string {
-	return os.Getenv("HOME")
-}
-
-//GetLocal ...
-func GetLocal() string {
-	absoluteRepoPath, err := executor.RunCommand("git", "rev-parse", "--show-toplevel")
-	if err != nil {
-		panic(err)
-	}
-	return strings.TrimSpace(absoluteRepoPath)
+	return errors.New(errMsg)
 }
 
 //GetDefaultBranchFromInternalDefault ...
@@ -305,14 +194,14 @@ func GetLocal() string {
 func GetDefaultBranchFromInternalDefault() (string, error) {
 	git := githandler.Git{Run: executor.RunGit}
 
-	remote, err := git.LSRemote("--get-url", internal_default_remote)
+	remote, err := git.LSRemote("--get-url", InternalDefaultRemote)
 	if err != nil {
 		return "", err
 	}
 	orgAndRepo := githandler.OrgAndRepo(remote)
 	token, err := git.Config("--get", "phlow.token")
 
-	branch, err := plugins.DefaultBranchGitHub(internal_default_issue_url, orgAndRepo.Organisation, orgAndRepo.Repository, token)
+	branch, err := plugins.DefaultBranchGitHub(InternalDefaultURL, orgAndRepo.Organisation, orgAndRepo.Repository, token)
 	if err != nil {
 		return "", err
 	}
