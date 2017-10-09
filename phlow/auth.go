@@ -40,7 +40,7 @@ func Auth(INIBlock string, authorization plugins.Authorization, authentication p
 
 	if token != "" && user != "" {
 		fmt.Printf("Checking token validity for %s... \n", service)
-		isAuthenticated, err := authentication(conf.IssueURL, user, token)
+		isAuthenticated, err := authentication(conf.IssueApi, user, token)
 		if !isAuthenticated {
 			fmt.Println("Token test expected HTTP code 200 but received " + err.Error())
 			if ReadInput("Delete local token and reauthenticate? (y/n): ", os.Stdin) == "y" {
@@ -63,7 +63,7 @@ func Auth(INIBlock string, authorization plugins.Authorization, authentication p
 	//Read user input password
 	password := ReadPassword("password: ")
 
-	token, err = authorization(conf.IssueURL, username, password)
+	token, err = authorization(conf.IssueApi, username, password)
 	if err != nil {
 		fmt.Println()
 		fmt.Println(err)

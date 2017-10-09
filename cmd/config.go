@@ -28,11 +28,6 @@ Default configuration:
     service = jira
     issue_url = https://my.jira.instance.com
     delivery_branch_prefix = ready
-
-
-
-
-
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()

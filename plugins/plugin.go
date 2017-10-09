@@ -1,9 +1,10 @@
 package plugins
 
 import (
-	"bytes"
 	"regexp"
 	"strings"
+	"strconv"
+	"github.com/go-errors/errors"
 )
 
 //PhlowLabels ...
@@ -61,18 +62,34 @@ func BranchNameFromIssue(issue string, name string) string {
 	return issue + "-" + result
 }
 
+
+
+type IssueExtractor func(branch string) (string, error)
+
+
 //IssueFromBranchName ...
-//Extracts the issue number from the branch name
-func IssueFromBranchName(branch string) string {
-	return strings.Split(branch, "-")[0]
+//Extracts github issue from the branch name. Will error if no issue ID is identified
+func IssueFromBranchName(branch string) (string, error) {
+	arr := strings.Split(branch, "-")
+	_, err := strconv.Atoi(arr[0])
+	if err != nil {
+		return "", errors.New("Could not extract github issue ID from branch")
+	}
+	return arr[0], nil
 }
 
-//efficientConcatString
-//Concatenate strings in an effective way
-func efficientConcatString(args ...string) string {
-	buffer := bytes.Buffer{}
-	for _, str := range args {
-		buffer.WriteString(str)
+//KeyFromBranchName ...
+//Extracts a Jira key from a branch name. Will error if no key is identified
+func KeyFromBranchName(branch string) (string, error) {
+	parts := strings.Split(branch, "-")
+	//Jira issues must have 3 parts PRJ-123-NAME
+	if len(parts) < 3 {
+		return "", errors.New("Could not get Jira Key from branch name")
 	}
-	return buffer.String()
+
+	if _, err := strconv.Atoi(parts[0]); err != nil && len(parts) > 1 {
+		return parts[0] + "-" + parts[1], nil
+	}
+	return "", errors.New("could not get Jira key from branch name")
+
 }

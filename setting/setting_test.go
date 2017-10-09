@@ -19,7 +19,7 @@ var _ = Describe("Setting", func() {
 				}}
 				conf := setting.LoadSettings("phlow", git)
 				Ω(conf.DeliveryBranchPrefix).Should(Equal(setting.InternalDefaultDeliveryBranchPrefix))
-				Ω(conf.IssueURL).Should(Equal(setting.InternalDefaultURL))
+				Ω(conf.IssueApi).Should(Equal(setting.InternalDefaultApi))
 				Ω(conf.Service).Should(Equal(setting.InternalDefaultService))
 				Ω(conf.IntegrationBranch).Should(Equal(setting.InternalDefaultIntegrationBranch))
 				Ω(conf.Remote).Should(Equal(setting.InternalDefaultRemote))
@@ -48,14 +48,14 @@ var _ = Describe("Setting", func() {
 				IntegrationBranch:    "not empty",
 				DeliveryBranchPrefix: "not empty",
 				Remote:               "not empty",
-				IssueURL:             "not empty",
+				IssueApi:             "not empty",
 				PipelineUrl:          "not empty"}
 
 		})
 
 		Context("With missing IssueUrl", func() {
 			It("Should return error", func() {
-				set.IssueURL = ""
+				set.IssueApi = ""
 				err := setting.ValidateLoadedSetting(&set)
 				Ω(err).ShouldNot(BeNil())
 

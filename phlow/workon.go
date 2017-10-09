@@ -109,20 +109,20 @@ func UpdateJIRAIssue(key string, conf *setting.ProjectSetting) (string, error) {
 	user, _ := git.Config("--get", "phlow.jirauser")
 	token, _ := git.Config("--get", "phlow.jiratoken")
 
-	issue, err := plugins.GetJiraIssue(conf.IssueURL, key, user, token)
+	issue, err := plugins.GetJiraIssue(conf.IssueApi, key, user, token)
 	if err != nil {
 		return "", err
 	}
 
 	var transitionErr error
-	assignErr := plugins.AssignUser(conf.IssueURL, key, user, token)
+	assignErr := plugins.AssignUser(conf.IssueApi, key, user, token)
 
 	//Get transition
-	transition, err := plugins.GetTransitions(conf.IssueURL, key, user, token)
+	transition, err := plugins.GetTransitions(conf.IssueApi, key, user, token)
 	if err == nil {
 		for _, tran := range transition.Transitions {
 			if tran.To.StatusCategory.Name == "In Progress" {
-				transitionErr = plugins.DoTransition(conf.IssueURL, key, user, token, tran.ID)
+				transitionErr = plugins.DoTransition(conf.IssueApi, key, user, token, tran.ID)
 
 				break
 			}
@@ -163,17 +163,17 @@ func UpdateGithubIssue(issue string, conf *setting.ProjectSetting) (string, erro
 
 	oap := githandler.OrgAndRepo(remote)
 
-	issueOb, err := plugins.GetIssueGitHub(conf.IssueURL, oap.Organisation, oap.Repository, issue, token)
+	issueOb, err := plugins.GetIssueGitHub(conf.IssueApi, oap.Organisation, oap.Repository, issue, token)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
 
-	if err := plugins.SetAssigneeGitHub(conf.IssueURL, oap.Organisation, oap.Repository, token, issue, user); err != nil {
+	if err := plugins.SetAssigneeGitHub(conf.IssueApi, oap.Organisation, oap.Repository, token, issue, user); err != nil {
 		fmt.Println(err)
 	}
 
-	if _, err := plugins.SetLabelGitHub(conf.IssueURL, oap.Organisation, oap.Repository, token, plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
+	if _, err := plugins.SetLabelGitHub(conf.IssueApi, oap.Organisation, oap.Repository, token, plugins.PhlowLabels["Status - in progress"].Title, issue); err != nil {
 		fmt.Println(err)
 	}
 

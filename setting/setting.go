@@ -20,7 +20,8 @@ const (
 	configDefaultBlock              = "phlow"
 	configServiceField              = "service"
 	configRemoteField               = "remote"
-	configIssueURLField             = "issue-url"
+	configIssueApi                  = "issue-api"
+	configIssueWeb                  = "issue-web"
 	configPipelineField             = "pipeline"
 	configIntegrationBranchField    = "integration-branch"
 	configDeliveryBranchPrefixField = "delivery-branch-prefix"
@@ -31,10 +32,10 @@ const (
 	InternalDefaultService              = "github"
 	InternalDefaultIntegrationBranch    = "master"
 	InternalDefaultRemote               = "origin"
-	InternalDefaultURL                  = "https://api.github.com"
+	InternalDefaultApi                  = "https://api.github.com"
+	InternalDefaultWeb                  = "https://github.com"
 	InternalDefaultDeliveryBranchPrefix = "ready"
 	InternalDefaultScope                = "internal"
-	InternalDefaultFile                 = "none"
 	InternalDefaultOrigin               = "none"
 )
 
@@ -43,7 +44,8 @@ type ProjectSetting struct {
 	Service              string `ini:"service"`
 	IntegrationBranch    string `ini:"integration-branch"`
 	Remote               string `ini:"remote"`
-	IssueURL             string `ini:"issue-url"`
+	IssueApi             string `ini:"issue-api"`
+	IssueWeb             string `ini:"issue-web"`
 	PipelineUrl          string `ini:"pipeline"`
 	DeliveryBranchPrefix string `ini:"delivery-branch-prefix"`
 	Scope                string
@@ -90,14 +92,16 @@ func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 	//Load all configurations using git config
 	//Errors result in an empty config string, which is git's way to return empty config
 	service, errS := git.Config("--get", fmt.Sprintf("%s.%s", INIBlock, configServiceField))
-	serviceURL, errSU := git.Config("--get", INIBlock+"."+configIssueURLField)
+	issueAPI, errIA := git.Config("--get", INIBlock+"."+configIssueApi)
+	issueWeb, errIW := git.Config("--get", INIBlock+"."+configIssueWeb)
 	remote, errR := git.Config("--get", INIBlock+"."+configRemoteField)
 	deliveryBranch, errDB := git.Config("--get", INIBlock+"."+configDeliveryBranchPrefixField)
 	integrationBranch, errIB := git.Config("--get", INIBlock+"."+configIntegrationBranchField)
 
 	loadedSetting := ProjectSetting{
 		Service:              service,
-		IssueURL:             serviceURL,
+		IssueApi:             issueAPI,
+		IssueWeb:             issueWeb,
 		Remote:               remote,
 		IntegrationBranch:    integrationBranch,
 		DeliveryBranchPrefix: deliveryBranch,
@@ -116,14 +120,15 @@ func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 				Service:              InternalDefaultService,
 				IntegrationBranch:    defaultBranch,
 				Remote:               InternalDefaultRemote,
-				IssueURL:             InternalDefaultURL,
+				IssueApi:             InternalDefaultApi,
+				IssueWeb:             InternalDefaultWeb,
 				DeliveryBranchPrefix: InternalDefaultDeliveryBranchPrefix,
 				PipelineUrl:          InternalDefaultOrigin,
 				Scope:                InternalDefaultScope,
 			}
 		}
 		//If all loads fail, we assume that the group does not exists
-		if errS != nil && errSU != nil && errR != nil && errDB != nil && errIB != nil {
+		if errS != nil && errIA != nil && errIW != nil && errR != nil && errDB != nil && errIB != nil {
 			fmt.Printf("Error: '%s' configuration does not seem to exist in you configuration files.\n", INIBlock)
 			os.Exit(1)
 		}
@@ -144,7 +149,8 @@ func BootstrapPhlowConfig(local, integrationBranch string) error {
 	sec.Key(configRemoteField).SetValue(InternalDefaultRemote)
 	sec.Key(configServiceField).SetValue(InternalDefaultService)
 	sec.Key(configIntegrationBranchField).SetValue(integrationBranch)
-	sec.Key(configIssueURLField).SetValue(InternalDefaultURL)
+	sec.Key(configIssueApi).SetValue(InternalDefaultApi)
+	sec.Key(configIssueWeb).SetValue(InternalDefaultWeb)
 	sec.Key(configDeliveryBranchPrefixField).SetValue(InternalDefaultDeliveryBranchPrefix)
 
 	err := cfg.SaveTo(local + string(pathSeparator) + configFileName)
@@ -167,8 +173,12 @@ func ValidateLoadedSetting(setting *ProjectSetting) error {
 			errMsg += NewConfigError(configServiceField, setting.INIBlock).Error()
 		}
 
-		if t.Field(i).Name == "IssueURL" && r.Field(i).String() == "" {
-			errMsg += NewConfigError(configIssueURLField, setting.INIBlock).Error()
+		if t.Field(i).Name == "IssueApi" && r.Field(i).String() == "" {
+			errMsg += NewConfigError(configIssueApi, setting.INIBlock).Error()
+		}
+
+		if t.Field(i).Name == "IssueWeb" && r.Field(i).String() == "" {
+			errMsg += NewConfigError(configIssueWeb, setting.INIBlock).Error()
 		}
 
 		if t.Field(i).Name == "IntegrationBranch" && r.Field(i).String() == "" {
@@ -201,7 +211,7 @@ func GetDefaultBranchFromInternalDefault() (string, error) {
 	orgAndRepo := githandler.OrgAndRepo(remote)
 	token, err := git.Config("--get", "phlow.token")
 
-	branch, err := plugins.DefaultBranchGitHub(InternalDefaultURL, orgAndRepo.Organisation, orgAndRepo.Repository, token)
+	branch, err := plugins.DefaultBranchGitHub(InternalDefaultApi, orgAndRepo.Organisation, orgAndRepo.Repository, token)
 	if err != nil {
 		return "", err
 	}
