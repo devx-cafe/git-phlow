@@ -20,7 +20,7 @@ var wrapupCmd = &cobra.Command{
 		cmdperm.RequiredCurDirRepository()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		phlow.WrapUp()
+		phlow.WrapUpCaller()
 	},
 }
 
@@ -28,4 +28,6 @@ func init() {
 	RootCmd.AddCommand(wrapupCmd)
 
 	wrapupCmd.Flags().StringVar(&options.GlobalFlagForceMessage, "force", "", "use a custom commit message instead")
+
+	wrapupCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .gitconfig files")
 }
