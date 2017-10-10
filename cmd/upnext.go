@@ -5,10 +5,8 @@ import (
 	"os"
 
 	"github.com/praqma/git-phlow/cmd/cmdperm"
-	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
 )
@@ -27,10 +25,7 @@ When no --prefix flag is set, the default prefix is 'ready/'.
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 
-		defaultBranch, _ := plugins.GitHub.Default()
-		remote := githandler.ConfigBranchRemote(defaultBranch)
-
-		next := phlow.UpNext(remote, options.GlobalFlagPrefixForReady)
+		next := phlow.UpNext(options.GlobalFlagPrefixForReady)
 		fmt.Fprint(os.Stdout, next)
 	},
 }

@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"errors"
 	"strconv"
+	"os"
 )
 
 //AuthorizeGitHub ...
@@ -83,6 +84,30 @@ func DefaultBranchGitHub(URL, org, repo, token string) (defaultBranch string, er
 		return "", err
 	}
 	return re.DefaultBranch, nil
+}
+
+//This should be rewritten
+//createGHPermissions ...
+func createGHPermissions() (string, error) {
+	hostname, err := os.Hostname()
+	if err != nil {
+		return "", err
+	}
+
+	note := "git phlow " + hostname
+	if options.GlobalFlagVerbose {
+		fmt.Println("gh plugin: " + note)
+	}
+
+	perm := GhPermissions{
+		Scopes: []string{"public_repo", "repo", "repo_deployment", "repo:status"},
+		Note:   note,
+	}
+	b2b, err := json.Marshal(&perm)
+	if err != nil {
+		return "", err
+	}
+	return string(b2b), nil
 }
 
 //GetIssueGitHub ...

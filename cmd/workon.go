@@ -12,11 +12,12 @@ import (
 
 // workonCmd represents the workon command
 var workonCmd = &cobra.Command{
-	Use:   "workon [issue number]",
+	Use:   "workon [issue]",
 	Short: "create or change to an issue branch",
 	Long: fmt.Sprintf(`
-%s creates a new branch from an issue number fetched from GitHub.
+%s creates a new branch from an issue.
 A new branch will be created, based on your remote default branch and named after the issue title, e.g. "42-calculate-meaning-of-life".
+Workon can fetch issues from GitHub and Jira
 `, ui.Format.Bold("workon")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

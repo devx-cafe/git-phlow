@@ -10,10 +10,15 @@ import (
 	"github.com/praqma/git-phlow/setting"
 )
 
+//CleanCaller ...
+func CleanCaller(ini string) {
+	conf := setting.NewProjectStg(ini)
+	Clean(conf)
+}
+
 //Clean ...
-func Clean(remoteName string) {
+func Clean(conf *setting.ProjectSetting) {
 	git := githandler.Git{Run: executor.RunGit}
-	conf := setting.NewProjectStg("default")
 
 	out, err := git.Branch("-a")
 	if err != nil {

@@ -48,6 +48,13 @@ type Assignee struct {
 	Assignees []string `json:"assignees"`
 }
 
+//GhPermissions ...
+//data struct for permissions
+type GhPermissions struct {
+	Scopes []string `json:"scopes"`
+	Note   string   `json:"note"`
+}
+
 //ToString ...
 //Formats issue
 func (issue Issue) ToString() string {

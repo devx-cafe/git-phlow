@@ -19,22 +19,6 @@ func verboseOutput(argv ...string) {
 	fmt.Println()
 }
 
-//Commander ...
-//interface for os executions
-type Commander interface {
-	Run() error
-}
-
-//ExecuteCommander ...
-//Run a function with control over stdout and stdin
-func ExecuteCommander(c Commander) error {
-	err := c.Run()
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
 //Runner ...
 //Runner type for git executions
 type Runner func(command string, argv ...string) (string, error)

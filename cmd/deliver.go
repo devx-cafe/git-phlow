@@ -11,7 +11,7 @@ import (
 
 // deliverCmd represents the deliver command
 var deliverCmd = &cobra.Command{
-	Use:   "deliver [test args]",
+	Use:   "deliver [args]",
 	Short: "deliver changes to remote master",
 	Long: fmt.Sprintf(`
 %s pushes your committed changes to the remote repository.

@@ -4,10 +4,8 @@ import (
 	"fmt"
 
 	"github.com/praqma/git-phlow/cmd/cmdperm"
-	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/plugins"
 	"github.com/praqma/git-phlow/ui"
 	"github.com/spf13/cobra"
 )
@@ -24,10 +22,7 @@ It deletes safely by running 'git branch -d'. By default, both local and remote 
 		cmdperm.RequiredCurDirRepository()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		defaultBranch, _ := plugins.GitHub.Default()
-		remote := githandler.ConfigBranchRemote(defaultBranch)
-
-		phlow.Clean(remote)
+		phlow.CleanCaller(options.GlobalFlagTarget)
 	},
 }
 
@@ -39,5 +34,7 @@ func init() {
 
 	//Run clean forcefully
 	cleanCmd.Flags().BoolVarP(&options.GlobalFlagForce, "force", "f", false, "force remove delivered branches")
+
+	cleanCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 
 }

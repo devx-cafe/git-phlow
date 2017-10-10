@@ -15,9 +15,9 @@ import (
 //UpNext ...
 //Returns the next branch ready for integration based on time of creation
 //Oldest branches gets integrated first.
-func UpNext(remote string, prefix string) (name string) {
+func UpNext(prefix string) (name string) {
 	git := githandler.Git{Run: executor.RunGit}
-	conf := setting.NewProjectStg("defaults")
+	conf := setting.NewProjectStg("phlow")
 	if prefix == "" {
 		prefix = "ready/"
 	}
@@ -35,7 +35,7 @@ func UpNext(remote string, prefix string) (name string) {
 			fmt.Println("Found 'ready/' branches on remote")
 		}
 
-		name = getNextBranch(branches, remote)
+		name = getNextBranch(branches, conf.Remote)
 		return
 	}
 

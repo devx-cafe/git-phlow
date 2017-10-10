@@ -57,13 +57,7 @@ func Ready(info *BranchInfo, remote string, prefix string) (remoteBranches []str
 	return
 }
 
-//DEPRECETED SECTION - USE GIT
-//BranchRename ...
-func BranchRename(name string) error {
-	_, err := executor.RunCommand("git", "branch", "-m", name, "delivered/"+name)
-	return err
-}
-
+//Deprecated
 //BranchTime ...
 func BranchTime(name string) (int, error) {
 	output, err := executor.RunCommand("git", "log", "-n 1", name, "--format=format:%ct")

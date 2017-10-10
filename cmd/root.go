@@ -16,6 +16,9 @@ var RootCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s is a git extension that provides an extra set of commands, enabling you to:
 create, work on and deliver tasks.
+
+USAGE: git phlow COMMAND
+
 `, ui.Format.Bold("git-phlow")),
 	Run: func(cmd *cobra.Command, args []string) {
 		if options.GlobalFlagVersion != false {
