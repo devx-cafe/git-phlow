@@ -29,5 +29,5 @@ func init() {
 
 	wrapupCmd.Flags().StringVar(&options.GlobalFlagForceMessage, "force", "", "use a custom commit message instead")
 
-	wrapupCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .gitconfig files")
+	wrapupCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 }

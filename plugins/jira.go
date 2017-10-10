@@ -86,6 +86,53 @@ func GetJiraIssue(URL, key, user, pass string) (*JiraIssue, error) {
 	return &re, err
 }
 
+//QueryIssues ...
+func QueryIssues(URL, user, pass string) ([]Stringer, error) {
+
+	pass = strings.TrimSpace(pass)
+
+	issueURL := "/rest/api/latest/search"
+	req, _ := http.NewRequest("GET", URL+issueURL, nil)
+	req.Header.Set("Content-Type", "application/json")
+	req.SetBasicAuth(user, pass)
+	q := req.URL.Query()
+	q.Add("maxResults", "30")
+	req.URL.RawQuery = q.Encode()
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == 401 {
+		return nil, errors.New("Not Authorized \nVerify that you are authorized by running 'git phlow auth' with the same configuration")
+	}
+
+	if res.StatusCode == 404 {
+		return nil, errors.New("Could not fetch jira issues, returned with 'Not Found'")
+	}
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	re := QueryResult{}
+	if err = json.Unmarshal(body, &re); err != nil {
+		return nil, err
+	}
+
+	iss := make([]Stringer, len(re.Issues))
+	for i, v := range re.Issues {
+		iss[i] = v
+	}
+
+	return iss, err
+}
+
 //GetTranstions ...
 //Retrieve transitions for a specific issue
 func GetTransitions(URL, key, user, pass string) (*Transitions, error) {

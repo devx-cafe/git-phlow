@@ -87,6 +87,58 @@ func DefaultBranchGitHub(URL, org, repo, token string) (defaultBranch string, er
 
 //GetIssueGitHub ...
 //return an issue with from the number of the issue
+func GetIssuesGitHub(URL, org, repo, token string) ([]Stringer, error) {
+
+	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s/issues", org, repo), nil)
+	req.Header.Set("Content-Type", "application/json")
+	q := req.URL.Query()
+	q.Add("access_token", token)
+	q.Add("per_page", "30")
+	req.URL.RawQuery = q.Encode()
+
+	if options.GlobalFlagVerbose {
+		fmt.Println(req.URL)
+	}
+
+	client := http.DefaultClient
+
+	res, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode == 401 {
+		return nil, errors.New("Not Authorized \nVerify that you are authorized by running 'git phlow auth' with the same configuration")
+	}
+
+	if res.StatusCode == 404 && (org == "" || repo == "") {
+		return nil, errors.New("Could not reach GitHub API - Malformed URL \nVerify 'Remote' field is correct in configuration" +
+			"\ntry 'git ls-remote --get <Remote from config>' should return: git@github.com:org/repo.git")
+	}
+
+	if res.StatusCode != 200 {
+		return nil, errors.New("Could not get list of issues ")
+	}
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	re := []Issue{}
+	if err = json.Unmarshal(body, &re); err != nil {
+		return nil, err
+	}
+
+	iss := make([]Stringer, len(re))
+	for i, v := range re {
+		iss[i] = v
+	}
+
+	return iss, nil
+}
+
 func GetIssueGitHub(URL, org, repo, key, token string) (*Issue, error) {
 
 	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s/issues/", org, repo)+key, nil)

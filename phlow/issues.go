@@ -2,96 +2,83 @@ package phlow
 
 import (
 	"fmt"
-	"os"
 	"github.com/praqma/git-phlow/plugins"
-	"os/exec"
-	"strings"
 	"github.com/praqma/git-phlow/executor"
-	"bytes"
-	"github.com/praqma/git-phlow/ui"
-	"runtime"
+	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/githandler"
 )
 
-func Issues() {
-	ui.PhlowSpinner.Start("")
-	issues, err := plugins.GitHub.GetIssues()
+//IssueCaller ...
+//prints issue with given target
+func IssueCaller() {
+	conf := setting.NewProjectStg(options.GlobalFlagTarget)
+
+	if conf.Service == "github" {
+		PrintIssues(conf, FetchGH)
+	}
+
+	if conf.Service == "jira" {
+		PrintIssues(conf, FetchJ)
+	}
+}
+
+//Fetch ...
+//Type for getting issues
+type Fetch func(*setting.ProjectSetting) ([]plugins.Stringer, error)
+
+//Fetch ...
+//Fetch for github
+func FetchGH(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
+	git := githandler.Git{Run: executor.RunGit}
+	remote, err := git.LSRemote("--get-url", conf.Remote)
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := git.Config("--get", "phlow.token")
+	if err != nil {
+		return nil, err
+	}
+
+	oar := githandler.OrgAndRepo(remote)
+
+	list, err := plugins.GetIssuesGitHub(conf.IssueApi, oar.Organisation, oar.Repository, token)
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
+//FetchJ
+//fetch for Jira
+func FetchJ(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
+	git := githandler.Git{Run: executor.RunGit}
+	user, err := git.Config("--get", "phlow.jirauser")
+	if err != nil {
+		return nil, err
+	}
+
+	token, err := git.Config("--get", "phlow.jiratoken")
+	if err != nil {
+		return nil, err
+	}
+	list, err := plugins.QueryIssues(conf.IssueApi, user, token)
+	if err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
+func PrintIssues(conf *setting.ProjectSetting, fetch Fetch) {
+	list, err := fetch(conf)
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(0)
-	}
-	ui.PhlowSpinner.Stop()
-
-	//Collection Issues to a string
-	var buffer bytes.Buffer
-	for _, issue := range issues {
-		buffer.WriteString(issue.ToString())
+		return
 	}
 
-	pager := GetPager()
-
-	if pager == "" {
-		fmt.Println(buffer.String())
-	} else {
-		IssuesInPager("less", buffer.String())
+	for _, iss := range list {
+		fmt.Println(iss.ToString())
 	}
-}
-
-//GetPager ...
-//return the pager if set
-func GetPager() string {
-	pager := os.Getenv("PAGER")
-	if pager != "" {
-		return pager
-	}
-
-	if runtime.GOOS == "windows" {
-		return "more"
-	}
-	return ""
-}
-
-func IssuesInPager(pager, text string) error {
-	cmd := exec.Command(pager)
-	cmd.Stdin = strings.NewReader(text)
-	cmd.Stdout = os.Stdout
-	err := executor.ExecuteCommander(cmd)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-//IssueList ...
-//List open issues from GitHub
-func IssueList() {
-
-	//ui.PhlowSpinner.Start("")
-	//
-	//ui.PhlowSpinner.Stop()
-	//
-	////Nested function for finding user issues
-	//var userIssue = func(issue []plugins.AssigneeIssue) bool {
-	//	user := githandler.ConfigGet("user", "phlow")
-	//	for _, u := range issue {
-	//		if u.Login == user {
-	//			return true
-	//		}
-	//	}
-	//	return false
-	//}
-	//
-	//fmt.Println(ui.Format.MileStone("# Issue"))
-	//
-	//for _, issue := range issues {
-	//	assignees := issue.Assignees
-	//	//If mine is true we print on issues assigned to a user
-	//	if options.GlobalFlagMine {
-	//		if userIssue(assignees) {
-	//			printIssue(issue)
-	//		}
-	//	} else {
-	//		printIssue(issue)
-	//	}
-	//}
 
 }

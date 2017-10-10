@@ -48,15 +48,9 @@ type Assignee struct {
 	Assignees []string `json:"assignees"`
 }
 
-//Stringer ...
-//interface for github formats
-type Stringer interface {
-	ToString() string
-}
-
 //ToString ...
 //Formats issue
-func (issue *Issue) ToString() string {
+func (issue Issue) ToString() string {
 	var buffer bytes.Buffer
 
 	buffer.WriteString(ui.Format.Bold(strconv.Itoa(issue.Number) + ": "))
@@ -70,8 +64,6 @@ func (issue *Issue) ToString() string {
 		buffer.WriteString(" " + ui.Format.Assignee(user.Login))
 	}
 	buffer.WriteString(" " + ui.Format.MileStone(issue.Milestone.Title))
-
-	buffer.WriteString("\n")
 
 	return buffer.String()
 }

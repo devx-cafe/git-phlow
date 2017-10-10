@@ -37,5 +37,5 @@ If no argument is given, it tries to find the issue of the currently checked out
 func init() {
 	RootCmd.AddCommand(webCmd)
 
-	webCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .phlow files")
+	webCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 }

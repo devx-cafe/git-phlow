@@ -1,5 +1,10 @@
 package plugins
 
+import (
+	"bytes"
+	"github.com/praqma/git-phlow/ui"
+)
+
 //JiraIssue ...
 type JiraIssue struct {
 	Key string `json:"key"`
@@ -14,6 +19,10 @@ type JiraIssue struct {
 //transitions ...
 type Transitions struct {
 	Transitions []Transition `json:"transitions"`
+}
+
+type QueryResult struct {
+	Issues []JiraIssue `json:"issues"`
 }
 
 //Transition ...
@@ -36,4 +45,13 @@ type TransitionBody struct {
 	Transition struct {
 		ID string `json:"id"`
 	} `json:"transition"`
+}
+
+//ToString ...
+//Formats issue
+func (issue JiraIssue) ToString() string {
+	var buffer bytes.Buffer
+	buffer.WriteString(ui.Format.Bold(issue.Key + ": "))
+	buffer.WriteString(issue.Fields.Summary)
+	return buffer.String()
 }

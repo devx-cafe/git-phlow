@@ -38,5 +38,5 @@ func init() {
 
 	deliverCmd.Flags().BoolVarP(&options.GlobalFlagShowTestOutput, "showtest", "s", false, "show test output")
 
-	deliverCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .phlow files")
+	deliverCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 }

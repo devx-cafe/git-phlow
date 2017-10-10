@@ -11,3 +11,9 @@ type Authentication func(URL, user, pass string) (authenticated bool, err error)
 //DefaultBranch ...
 //interface for getting the default branch of the external service
 type DefaultBranch func(URL, org, repo, token string) (defaultBranch string, err error)
+
+//Stringer ...
+//interface for github formats
+type Stringer interface {
+	ToString() string
+}

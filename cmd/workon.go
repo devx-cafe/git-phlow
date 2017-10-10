@@ -37,6 +37,6 @@ func init() {
 	RootCmd.AddCommand(workonCmd)
 
 	//Target for configuration
-	workonCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .phlow files")
+	workonCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 
 }

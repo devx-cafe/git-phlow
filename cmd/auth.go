@@ -29,5 +29,5 @@ Auth supports two services:
 func init() {
 	RootCmd.AddCommand(authCmd)
 
-	authCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in your .phlow files")
+	authCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
 }
