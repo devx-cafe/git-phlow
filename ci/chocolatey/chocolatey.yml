@@ -1,0 +1,17 @@
+---
+platform: windows
+
+inputs: 
+  - name: git-phlow
+  - name: gp-version
+  - name: phlow-artifact-windows-s3
+    
+params:
+  token:
+
+run:
+  path: powershell.exe 
+  args:
+  - -File
+  - '.\git-phlow\ci\chocolatey\chocolatey.ps1'
+ 
