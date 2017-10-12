@@ -1,28 +1,25 @@
 ## Changelog
-
+Windows and Jira support is here! Feast on the godness and the docs
 
 #### Features
 
-- deliver is updated to support target configuration, and Jira #230 @groenborg
-you can now deliver work, with settings from the target configuration.. Hurray
+- `phlow web` is updated to support target configuration, and Jira #247 @groenborg
+typing web will open your browser on your issue page or repository.
 
-- wrapup is now support on windows as well #188 @groenborg
-wrapup will now format messages based on GitHub and Jira branches
+- `phlow issues` you can now list jira issues and github issues #246 @groenborg
+phlow issues fetches the 30 most recent issues and prints them in your terminal. Nice
 
-- workon is now updated to support target configuration, and Jira #224 @groenborg
-you can now work on issues located on GitHub and Jira, with settings from the target configuration
+- `wrapup` wrapup now support bitbucket smart commits as well #257 @groenborg
 
+- `config` git phlow now builds upon the gitconfig of git #209 @groenborg
+The .phlow file have been replaced by .gitconfig and the internal of git.
+You can also bootstrap and show your configuration with `git phlow config`
 
 #### Bug Fixes
-- fix configuration for windows #236 @groenborg
-Turns out the config before did not work on windows, however, it does now.
-
-- auth errors are handled when commands using service API are called #240 @groenborg
-a successful bug-hunt resulted in one less error, where the tool basically would explode with errors if commands were executed without authorization
-
+ - git phlow web no longer opens a malformed url #252 @groenborg
 
 #### improvements
-- We removed the beautiful spinner when running `workon` and `deliver` #241 @groenborg
-it might return in future versions, when it no longer messes with the formatting. Never mess with the formatting!
+- we did some spring cleaning this fall and removed a lot of bad code #258 @groenborg
+such deletion, much improvement!
 
-- Error messages have also been improved, from "something happened" to "your hyper drive core melted a super size hole in you spaceship.. Remember to cool it!"
+- we also did some further improvements in the messages that are suppose to help trouble shoot issues!
