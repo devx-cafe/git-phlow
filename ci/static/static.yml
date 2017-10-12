@@ -6,7 +6,12 @@ image_resource:
   source: {repository: golang, tag: "1.8"}
 
 inputs:
+- name: gp-version
 - name: git-phlow
+  path: src/github.com/praqma/git-phlow
+
+params:
+  coverallstoken:   
 
 run:
-  path: git-phlow/ci/scripts/run-coverage.sh
+  path: src/github.com/praqma/git-phlow/ci/static/run-coverage.sh

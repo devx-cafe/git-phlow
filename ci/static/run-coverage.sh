@@ -1,20 +1,17 @@
 #!/bin/bash
 
-mkdir -p $GOPATH/src/github.com/praqma
-cp -R git-phlow/ $GOPATH/src/github.com/praqma
+export GOPATH=$PWD
+export PATH=$PATH:$GOPATH/bin
+
 cd $GOPATH/src/github.com/praqma/git-phlow
 
-go build ci/cover/cover.go
+go build ci/static/cover.go
 
-
-ls
-
-go get -d -t -v ./...
-
-
+go get -d -t ./...
+go get github.com/mattn/goveralls
 
 #Run the coverage
-ci/cover/gencover.sh $(go list ./...)
+ci/static/gencover.sh $(go list ./...)
 
 cat coverfiles/percentage
 ./cover

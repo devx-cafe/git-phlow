@@ -19,9 +19,8 @@ echo "mode: count" > $coveragedir/coverage.cov
 #Apppends all the coverage reports into one file
 grep -h -v "^mode" $coveragedir/*.out >> $coveragedir/coverage.cov
 
-
 push_to_coveralls() {
-    goveralls -service concourse-ci -coverprofile $coveragedir/coverage.out -repotoken $TOKEN
+    goveralls -service concourse-ci -coverprofile $coveragedir/coverage.cov -repotoken $coverallstoken
 }
 
 test_percentage() {
@@ -33,3 +32,5 @@ test_percentage() {
 }
 
 test_percentage
+ls coverfiles/
+push_to_coveralls

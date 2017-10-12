@@ -24,7 +24,7 @@ func main() {
 	percentage, _ := strconv.ParseFloat(strings.TrimSpace(string(data)), 64)
 	fmt.Printf("%g", percentage)
 
-	if percentage >= 40.0 {
+	if percentage >= 25.0 {
 		fmt.Printf("%g above threshold \n", percentage)
 		os.Exit(0)
 	} else {

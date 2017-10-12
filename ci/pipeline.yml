@@ -23,14 +23,6 @@ jobs:
       repository: tollgate
     timeout: 5m
 
-#- name: static-analysis
-#  plan:
-#    - get: git-phlow
-#      passed: [integration-test]
-#   - get: gp-version
-#    - task: static-analysis
-#      file: git-phlow/ci/tasks/static-analysis.yml
-
 - name: heating-engines
   plan: 
     - get: git-phlow
@@ -50,14 +42,26 @@ jobs:
     - task: unix-test
       file: git-phlow/ci/test/test.yml
 
+- name: flightmetrics
+  plan:
+    - get: git-phlow
+      passed: [heating-engines, deploying-flaps]
+      trigger: true
+    - get: gp-version
+      passed: [heating-engines, deploying-flaps]
+    - task: static-analysis
+      file: git-phlow/ci/static/static.yml
+      params:
+        coverallstoken: {{coveralls-token}}
+
 
 #BUILD ARTIFACT
 - name: darwin-pilot-check
   plan:
     - get: gp-version
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
     - get: git-phlow 
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
       trigger: true
     - task: create-release 
       file: git-phlow/ci/build/darwin.yml  
@@ -67,9 +71,9 @@ jobs:
 - name: linux-pilot-check
   plan:
     - get: gp-version
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
     - get: git-phlow 
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
       trigger: true
     - task: create-release 
       file: git-phlow/ci/build/linux.yml
@@ -79,9 +83,9 @@ jobs:
 - name: windows-pilot-check
   plan:
     - get: gp-version
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
     - get: git-phlow 
-      passed: [heating-engines, deploying-flaps]
+      passed: [flightmetrics]
       trigger: true
     - task: create-release 
       file: git-phlow/ci/build/windows.yml
