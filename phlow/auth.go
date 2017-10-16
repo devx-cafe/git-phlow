@@ -1,3 +1,4 @@
+//Package phlow contains all the business logic for the workflow commands
 package phlow
 
 import (
@@ -7,13 +8,14 @@ import (
 	"strings"
 	"syscall"
 
-	"golang.org/x/crypto/ssh/terminal"
 	"io"
-	"github.com/praqma/git-phlow/plugins"
+
 	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/setting"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/setting"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 //AuthCaller
@@ -31,6 +33,7 @@ func AuthCaller() {
 }
 
 //Auth ...
+//Authenticates the desired service
 func Auth(INIBlock string, authorization plugins.Authorization, authentication plugins.Authentication, configUser string, configToken string, service string) {
 	conf := setting.NewProjectStg(INIBlock)
 	git := githandler.Git{Run: executor.RunGit}

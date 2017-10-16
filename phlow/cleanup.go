@@ -3,11 +3,11 @@ package phlow
 import (
 	"fmt"
 
+	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
-	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //CleanCaller ...
@@ -17,6 +17,7 @@ func CleanCaller(ini string) {
 }
 
 //Clean ...
+//deletes all the delivered branches
 func Clean(conf *setting.ProjectSetting) {
 	git := githandler.Git{Run: executor.RunGit}
 

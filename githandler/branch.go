@@ -8,12 +8,14 @@ import (
 )
 
 //BranchInfo ...
+// info for branches
 type BranchInfo struct {
 	Current string
 	List    []string
 }
 
 //AsList ...
+//List all the branches
 func AsList(branchOutput string) *BranchInfo {
 	var info BranchInfo
 

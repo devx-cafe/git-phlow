@@ -1,10 +1,11 @@
 package phlow
 
 import (
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/setting"
 	"fmt"
+
+	"github.com/praqma/git-phlow/executor"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //Bootstrap ...
@@ -23,8 +24,7 @@ func Bootstrap() {
 
 //Show ...
 //Shows the listed configuration
-func
-Show(args []string) {
+func Show(args []string) {
 
 	if len(args) >= 1 {
 		conf := setting.NewProjectStg(args[0])

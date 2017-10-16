@@ -6,11 +6,12 @@ import (
 	"reflect"
 	"strings"
 
+	"errors"
+
 	"github.com/go-ini/ini"
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/plugins"
-	"errors"
 )
 
 //Config git group.name
@@ -53,6 +54,7 @@ type ProjectSetting struct {
 }
 
 //ToString ...
+//String representation of struct
 func (setting *ProjectSetting) ToString() string {
 	r := reflect.ValueOf(setting).Elem()
 	t := r.Type()
@@ -63,14 +65,20 @@ func (setting *ProjectSetting) ToString() string {
 	return msg
 }
 
+//ConfigError ...
+//Error type for settings
 type ConfigError struct {
 	errorMessage string
 }
 
+//Error ...
+//error message generated for config
 func (ce *ConfigError) Error() string {
 	return ce.errorMessage
 }
 
+//NewConfigError ...
+//Create a new configuration error
 func NewConfigError(field, block string) error {
 	return &ConfigError{fmt.Sprintf("Error in configuration\n"+
 		"Non-optional field missing: %s \nIn configuration block: %s \n", field, block)}
@@ -82,6 +90,8 @@ func NewProjectStg(INIBlock string) *ProjectSetting {
 	return LoadSettings(INIBlock, githandler.Git{Run: executor.RunGit})
 }
 
+//LoadSettings ...
+//Loads a new setting
 func LoadSettings(INIBlock string, git githandler.Git) *ProjectSetting {
 
 	//no params have been given, search for default
@@ -162,6 +172,7 @@ func BootstrapPhlowConfig(local, integrationBranch string) error {
 }
 
 //ValidateLoadedSetting ...
+//checks if all required fields have been set
 func ValidateLoadedSetting(setting *ProjectSetting) error {
 	r := reflect.ValueOf(setting).Elem()
 	t := r.Type()

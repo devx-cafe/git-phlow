@@ -2,11 +2,12 @@ package phlow
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/plugins"
+
 	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/setting"
-	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //IssueCaller ...
@@ -27,7 +28,7 @@ func IssueCaller() {
 //Type for getting issues
 type Fetch func(*setting.ProjectSetting) ([]plugins.Stringer, error)
 
-//Fetch ...
+//FetchGH ...
 //Fetch for github
 func FetchGH(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
 	git := githandler.Git{Run: executor.RunGit}
@@ -50,7 +51,7 @@ func FetchGH(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
 	return list, nil
 }
 
-//FetchJ
+//FetchJ ...
 //fetch for Jira
 func FetchJ(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
 	git := githandler.Git{Run: executor.RunGit}

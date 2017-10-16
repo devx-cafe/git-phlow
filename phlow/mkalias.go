@@ -2,9 +2,10 @@ package phlow
 
 import (
 	"fmt"
-	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/githandler"
+
 	"github.com/praqma/git-phlow/executor"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //MakeAliasCaller ...
@@ -13,6 +14,7 @@ func MakeAliasCaller() {
 }
 
 //MakeAlias ...
+//Create alliases for git phlow commands
 func MakeAlias() {
 	git := githandler.Git{Run: executor.RunGit}
 	aliases := make(map[string]string)
