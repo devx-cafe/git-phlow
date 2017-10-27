@@ -57,9 +57,12 @@ wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.
 ```
 
 ### Windows
-Install with [scoop](http://scoop.sh/), a package manager for command line tools. Or download the latest [release]((https://github.com/Praqma/git-phlow/releases))
 
-**Install Scoop**
+On Windows you have the option of using either using [scoop](http://scoop.sh/) or [Chocolatey](https://chocolatey.org/)
+
+**Install using Scoop**
+
+_First install Scoop if you don't have it and add our scoop-bucket_:
 
 Open powershell and get the latest release of scoop
 ```
@@ -70,10 +73,19 @@ Add Praqmas scoop-bucket
 scoop bucket add praqma-tools https://github.com/praqma/scoop-praqma-tools.git
 ```
 
-**Install git-phlow**
+_Then install using scoop_:
 ```
 scoop install git-phlow
 ```
+
+**Install using Chocolatey**
+
+Package is available here, also including installation command: https://chocolatey.org/packages/git-phlow/
+
+You need to have Chocolatey installed, and then just run the following command in powershell:
+
+    choco install git-phlow
+
 
 ##### Compatibility
 - Powershell v5.1+
@@ -90,11 +102,16 @@ brew upgrade git-phlow
 In linux you run the installation again, but this time override the old `git-phlow` binary.
 
 ### Windows
-On windows using scoop, run the update command
+Using either Scoop or Chocolatey you installed from originally run:
 ```
 scoop update git-phlow
 ```
 
+or
+
+    choco upgrade git-phlow
+
+_Please notice Chocolatey packages can wait on approval for being published, so there might be waiting time for latest version._
 
 ## Usage
 - First time, authenticate to GitHub:
