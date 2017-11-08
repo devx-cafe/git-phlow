@@ -6,14 +6,14 @@ import (
 
 	"strconv"
 
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/plugins"
-	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/setting"
-	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/options"
 	"strings"
-	"errors"
+
+	"github.com/praqma/git-phlow/executor"
+	"github.com/praqma/git-phlow/githandler"
+	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //WorkOnUpdate ...
@@ -120,14 +120,13 @@ func UpdateJIRAIssue(key string, conf *setting.ProjectSetting) (string, error) {
 	//Get transition
 	transition, err := plugins.GetTransitions(conf.IssueApi, key, user, token)
 	if err == nil {
+
 		for _, tran := range transition.Transitions {
 			if tran.To.StatusCategory.Name == "In Progress" {
 				transitionErr = plugins.DoTransition(conf.IssueApi, key, user, token, tran.ID)
-
 				break
 			}
 		}
-		transitionErr = errors.New("No 'In Progress' transition ")
 	}
 
 	fmt.Printf("\n-------- Issue %s--------  \n", ui.Format.Issue(issue.Key))
