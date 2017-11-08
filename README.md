@@ -106,12 +106,29 @@ Using either Scoop or Chocolatey you installed from originally run:
 ```
 scoop update git-phlow
 ```
-
 or
-
-    choco upgrade git-phlow
-
+```
+choco upgrade git-phlow
+```
 _Please notice Chocolatey packages can wait on approval for being published, so there might be waiting time for latest version._
+
+## Compatability Matirix
+
+|                | support | version | 
+| -------------- | ------- | ------- |
+| GitHub         | &#x2714;| v3
+| GitHub Premise | &#x2715;| -
+| Jira Cloud     | &#x2715;| -
+| Jira Premise   | &#x2714;| 7.3.0
+|**macOS**       |
+| bash           | &#x2714;| 3.2.57
+| zsh            | &#x2714;| 5.4.2
+| **windows**    |
+| [git bash](https://git-for-windows.github.io)| &#x2714;| 4.4.12 |
+| powershell     | &#x2714;| 5.1.14393  |
+| cmd            | &#x2714;| 10.0.14393 |
+| [cmder](http://cmder.net)| &#x2715;  | - |
+
 
 ## Usage
 - First time, authenticate to GitHub:
