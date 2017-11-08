@@ -66,17 +66,19 @@ A block consists of following fields.
 - `delivery-branch-prefix` The prefix you want your pretested integration system to look for
 
 ##### Supported services
--  `github`
--  `jira`
+git phlow can be used with **jira** and **github**. Only one service can be used per configuration block.
+To configure git-phlow, set the `service` property to either **jira** or **github**
+- `service = jira`
+- `service = github`
 
-##### Example Configuration
+##### Example Configuration with jira
 ```ini
 [phlow]
     remote                 = myfork
-    service                = github
+    service                = jira
     integration-branch     = superintegration
-    issue-api              = https://api.github.com
-    issue-web              = https://github.com
+    issue-api              = https://jira.com
+    issue-web              = https://jira.com
     delivery-branch-prefix = integrate-me-please
 ```
 
