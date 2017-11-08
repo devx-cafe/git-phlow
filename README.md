@@ -50,10 +50,10 @@ brew upgrade git-phlow
 ```
 
 ### Linux
-Install git-phlow by running the following commands. Remember to use the latest version.
+Install git-phlow by running the following commands. Remember to use the latest release.
 
 ```shell
-wget https://github.com/Praqma/git-phlow/releases/download/v2.3.2/git-phlow-2.3.2-linux-amd64.tar.gz && tar -xzf git-phlow-2.3.2-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
+wget https://github.com/Praqma/git-phlow/releases/download/v3.8.2/git-phlow-3.8.2-linux-amd64.tar.gz && tar -xzf git-phlow-3.8.2-linux-amd64.tar.gz && mv git-phlow /usr/local/bin
 ```
 
 ### Windows
@@ -158,7 +158,7 @@ git phlow deliver --local
 
 ### Automation systems
 We use Travis CI, Concourse CI and Jenkins. They can all be configured to follow the phlow and listen for ready branches.
-You can see the Concourse pipeline configured for this project [here](https://concourse.kubernetes.praqma.cloud/teams/main/pipelines/git-phlow)
+You can see the Concourse pipeline configured for this project [here](https://concourse.bosh.praqma.cloud/teams/main/pipelines/git-phlow)
 
 ### git-phlow on Windows
 
