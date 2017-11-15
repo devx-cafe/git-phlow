@@ -28,6 +28,11 @@ func OrgAndRepo(url string) *RemoteInfo {
 		repo := splitURL[len(splitURL)-1]
 		return &RemoteInfo{org, repo}
 	}
+	if strings.Contains(url, "://") {
+		protoExp := regexp.MustCompile(`\w*:\/\/[\w.@]+(?:\:\d+)?\/(\w+)\/(\w+)\.git`)
+		match := protoExp.FindStringSubmatch(url)
+		return &RemoteInfo{match[1], match[2]}
+	}
 
 	//Clone from local repo
 	return &RemoteInfo{}
