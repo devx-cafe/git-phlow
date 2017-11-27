@@ -13,7 +13,7 @@ Coding guidelines [effective go](https://golang.org/doc/effective_go.html)
 - run the project and get to know it
 - `work on` an issue in a feature branch, then `deliver` your branch and make it available for review.
 
-## Workflow options
+## Workflow
 In general, this project runs according to the workflow described in Praqma's blogpost [A pragmatic workflow](http://www.praqma.com/stories/a-pragmatic-workflow/). We call this workflow and branching model "The Phlow".
 
 The super short summary of this workflow is:
