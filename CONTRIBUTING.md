@@ -7,12 +7,12 @@ Hi. We are thrilled that you are interested in Contributing to this project. Goo
 - read godocs and guidelines for writing go code 
 - set up the project
 - run the project and get to know it
-- `workon` an issue in a feature branch, then `deliver` your branch and make it available for review.
+- create a pull request
 
 Coding guidelines [effective go](https://golang.org/doc/effective_go.html) 
 
 ## Workflow options
-In general, this project runs according to the workflow described in Praqma's blogpost [git phlow](https://www.praqma.com/stories/git-phlow/).
+In general, this project runs according to the workflow described in Praqmas blogpost [git-phlow](https://www.praqma.com/stories/git-phlow/).
 
 The super short summary of this workflow is:
 - create a feature branch for your issue. E.g. feature/42-some-issue-title
@@ -38,23 +38,15 @@ Even though this is still a small fledgeling project, we want to make it easily 
 
 Some issues are labelled with `help wanted` or `good first issue`. This label indicates that we believe the issue is of a nature where people unfamiliar with the project, unexperienced in golang or programming in general or just new to contributing to open source repositories, can easily get started. We might not be there quite yet, be will will try to go that extra mile in providing better descriptions and clear scopes for these issues.
 
-Please note: If you do consider yourself the target audience for these *Easy* issues, be awesome and pick some of the slightly harder tasks. It is tempting to quickly grab and complete the easy ones, but this quickly leaves no obvious tasks for newcomers to tackle. 
+Please note: If you do not consider yourself the target audience for these *Easy* issues, be awesome and pick some of the slightly harder tasks. It is tempting to quickly grab and complete the easy ones, but this quickly leaves no obvious tasks for newcomers to tackle. 
 
 Another way that you can help, if you are more experienced in specific areas, is to help **groom** the *Easy* tasks, to make them even easier. Suggest how a given problem might be solved, where in the code base a given bug might probably be found, or mention in the issue that you are willing to provide specific guidance. Any help in grooming the larger issues and splitting them up into beginner friendly chunks is also greatly appreciated.
 
 Most of the people so far involved with the project are all pretty new to Go. If you know little of git or extensions, but are well versed in Go, please keep your eyes open on ongoing issues and offer help where you can. Contributions to an open source project are absolutely not only about getting a code contribution merged. Helping others contribute, writing documentation, grooming tasks, triaging reported bugs and so on are all very valuable contributions and will be greatly appreciated.
 
-If you haven't written go code before, I recommend to take the [go tour](https://tour.golang.org/welcome/1); it will provide great insight in the go programming language. As a reference i recommend [gobyexample](https://gobyexample.com/)
+If you haven't written go code before, we recommend to take the [go tour](https://tour.golang.org/welcome/1); it will provide great insight in the go programming language. As a reference we recommend [gobyexample](https://gobyexample.com/)
 
-**Project dependencies**
-
-The project uses other frameworks and libraries, it is recommend to read about them to get an understanding of what they do, provide and how to use them.
-
-[Cobra](https://github.com/spf13/cobra) is both a library and a CLI, and is the library we use in our CLI. Cobra itself has a CLI, which sets up boiler plate cmd's in the cmd folder. use it by typing `cobra add <name of cmd>`
-
-[Ginkgo](http://onsi.github.io/ginkgo/) is the testing framework we use for unit tests, it provides and BDD expressions in your tests, like the nodejs [mocha](https://mochajs.org/) test framework
-
-### Get you shell configured for git-phlow
+### Configure the shell for git-phlow
 
 Download the latest release for your platform and install it. Follow the [installation guide](/docs/installation.md)
 
