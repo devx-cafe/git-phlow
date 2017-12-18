@@ -1,9 +1,9 @@
 package executor_test
 
 import (
-	. "github.com/praqma/git-phlow/executor"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	. "github.com/praqma/git-phlow/executor"
 )
 
 var _ = Describe("Executor", func() {

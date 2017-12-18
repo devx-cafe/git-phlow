@@ -18,7 +18,7 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-//AuthCaller
+//AuthCaller ...
 //Wraps auth and injects dependencies
 func AuthCaller() {
 	INIBlock := options.GlobalFlagTarget

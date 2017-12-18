@@ -2,8 +2,9 @@ package plugins
 
 import (
 	"regexp"
-	"strings"
 	"strconv"
+	"strings"
+
 	"github.com/go-errors/errors"
 )
 
@@ -80,6 +81,7 @@ func BranchNameFromIssue(issue string, name string) string {
 	return issue + "-" + result
 }
 
+//IssueExtractor ...
 type IssueExtractor func(branch string) (string, error)
 
 //IssueFromBranchName ...

@@ -15,8 +15,10 @@ var cleanCmd = &cobra.Command{
 	Use:   "cleanup",
 	Short: "cleanup removes all delivered branches",
 	Long: fmt.Sprintf(`
-%s removes all branches prefixed with 'delivered/'.
-It deletes safely by running 'git branch -d'. By default, both local and remote branches are deleted.
+%s is for tidying up the git workspace. 
+As you follow the workflow a lot of branches prefixed with 'delivered/' will be in the workspace, and should just be deleted if they have been successfully integrated. 
+Running the command will remove these branches locally and remote as well. A local version of this command is available, and will just remove the local branches.
+Some branches can not be deleted, because git cannot detect if they have been integrated into the integration branch. That can be due to a rebase or squash. Those can be deleted with the 'force' flag. 
 `, ui.Format.Bold("cleanup")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

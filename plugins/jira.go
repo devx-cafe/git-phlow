@@ -1,13 +1,14 @@
 package plugins
 
 import (
-	"net/http"
-	"github.com/go-errors/errors"
-	"encoding/json"
-	"io/ioutil"
-	"fmt"
 	"bytes"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strings"
+
+	"github.com/go-errors/errors"
 )
 
 //AuthenticateJIRA ...
@@ -133,7 +134,7 @@ func QueryIssues(URL, user, pass string) ([]Stringer, error) {
 	return iss, err
 }
 
-//GetTranstions ...
+//GetTransitions ...
 //Retrieve transitions for a specific issue
 func GetTransitions(URL, key, user, pass string) (*Transitions, error) {
 	issueURL := "/rest/api/latest/issue/%s/transitions"
@@ -149,7 +150,7 @@ func GetTransitions(URL, key, user, pass string) (*Transitions, error) {
 	}
 	defer res.Body.Close()
 
-	body, err := ioutil.ReadAll(res.Body);
+	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +164,7 @@ func GetTransitions(URL, key, user, pass string) (*Transitions, error) {
 }
 
 //DoTransition ...
-func DoTransition(URL, key, user, pass, transitionID string) (error) {
+func DoTransition(URL, key, user, pass, transitionID string) error {
 	issueURL := "/rest/api/latest/issue/%s/transitions"
 	transition := TransitionBody{}
 
@@ -191,7 +192,7 @@ func DoTransition(URL, key, user, pass, transitionID string) (error) {
 }
 
 //AssignUser ...
-func AssignUser(URL, key, user, pass string) (error) {
+func AssignUser(URL, key, user, pass string) error {
 	issueURL := "/rest/api/latest/issue/%s/assignee"
 
 	data, err := json.Marshal(AssignBody{Name: user})

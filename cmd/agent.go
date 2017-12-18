@@ -16,7 +16,6 @@ var agentCmd = &cobra.Command{
 	Long: fmt.Sprintf(`
 %s commands are a set of commands available for ci/cd services. They are meant as a way of services to easily be compatible with %s.
 
-These are not meant to used as part of your local workflow.
 `, ui.Format.Bold("agent"), ui.Format.Bold("the praqmatic workflow")),
 }
 

@@ -14,9 +14,9 @@ var wrapupCmd = &cobra.Command{
 	Use:   "wrapup",
 	Short: "Add changes to index and auto commit",
 	Long: fmt.Sprintf(`
-%s adds the files in the workin directory to the index and makes a commit.
-The commit message generated from the branch name and prepends a smart commit function to close the issue.
-The smart commit work with GitHub and Jira.
+%s is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch. 
+The command will add changes from the workspace to the index/staging area of git, and commit with 'smart commit' syntax that will close the mentioned issue when it is integrated on the integration branch.
+The smart commits only works on systems that support it.
 `, ui.Format.Bold("wrapup")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

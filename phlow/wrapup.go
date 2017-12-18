@@ -13,8 +13,8 @@ import (
 
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/setting"
 	"github.com/praqma/git-phlow/options"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //WrapUpCaller ...
@@ -90,6 +90,7 @@ func WrapUp(smartCommitPrefix, force string, extractor plugins.IssueExtractor) {
 	fmt.Println(msg)
 }
 
+//GetJIRAIssue ...
 func GetJIRAIssue(branch string) (string, error) {
 
 	parts := strings.Split(branch, "-")
