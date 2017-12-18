@@ -132,3 +132,34 @@ git branch
 ##### Getting back to your work
 1. A workon _after_ the CI have done the integration should give back your work.
 2. Check out the branch locally will also show your changes, but your are breaking the workflow if you continue the work on the same branch. 
+
+
+### Failed build
+
+##### Experience 
+The issue branch was delivered to the remote repository, but it the CI server failed the integration and now it needs to be fixed manually.
+##### Issue
+If the build fails there is no automatic way to recover, so manual steps are needed. The build can fail for many reasons, unmergable changes, failing tests, etc. 
+
+##### Solution
+1. rename delivered branch
+2. checkout the branch
+3. pull and merge, or pull rebase
+4. delete the remote `ready` branch
+5. deliver again
+
+```sh
+git branch -m delivered/18-ai-is-now-conscious 18-ai-is-now-conscious  #1
+git checkout 18-ai-is-now-conscious  #2
+git pull --rebase  #3
+git push -d origin ready/18-ai-is-now-conscious  #4
+git phlow deliver  #5
+```
+
+### build fails due to outside error, and branch will not re-trigger
+
+##### Experience
+If the CI service pick up the `ready/` branch and starts integration, but an outside error makes the build fail (CI server crash, network issues, etc.). In some cases the branch will not build again because the CI service already picked up the branch once, even though it is not integrated.
+
+##### Solution
+Some CI services has the commit sha stored af the ID for the build, so to make the build re-trigger we need to fake a new ID by changing sha of the commit. Follow the same steps as in [Failed build](#failed-build), but in stead of doing step `#3`, just do a `git commit --amend` and use the same messages. 
