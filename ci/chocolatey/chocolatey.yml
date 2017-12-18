@@ -7,7 +7,7 @@ inputs:
   - name: phlow-artifact-windows-s3
     
 params:
-  token:
+  chocotoken:
 
 run:
   path: powershell.exe 

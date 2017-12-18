@@ -3,9 +3,8 @@ platform: windows
 
 inputs: 
   - name: git-phlow
-
+ 
 run:
-
   path: powershell.exe 
   args:
   - -File

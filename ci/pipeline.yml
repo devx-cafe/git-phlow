@@ -169,6 +169,8 @@ jobs:
       trigger: true
     - task: choco-release
       file: git-phlow/ci/chocolatey/chocolatey.yml
+      params:
+        chocotoken: {{choco-token}}
 
 resource_types:
 #PIP RESOURCE_TYPE
