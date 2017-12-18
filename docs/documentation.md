@@ -11,6 +11,7 @@ Available commands:
 - [`mkalias`](#mkalias)
 - [`cleanup`](#cleanup)
 - [`config` ](#config)
+- [`agent`](#agent)
 - [global flags](#global-flags)
 
 ## Requirements
@@ -66,7 +67,7 @@ git phlow wrapup
 
 **description**
 
-wrapup is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch. The command will add changes from the workspace to the index/staging area of git, and commit with `smart commit`syntax that will close the mentioned issue when it is integrated on the integration branch.
+wrapup is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch. The command will add changes from the workspace to the index/staging area of git, and commit with `smart commit`syntax that will close the mentioned issue when it is integrated on the integration branch. The smart commits only works on systems that support it.
 ```sh
 git status
 # On branch 18-ai-is-now-conscious
@@ -103,8 +104,10 @@ git phlow deliver
 
 **description**
 
-deliver is the command used to hand over the work you just commited with `wrapup`. Checkout the issue branch you need to deliver and run the command. This will push local branch to the repository and prefixed it with `ready/`. On the repository it is ready to be integrated automatically into the integration branch, if a CI server is configured [see workflow]. 
+deliver is the command used to hand over the work you just commited with `wrapup`. Checkout the issue branch you need to deliver and run the command. This will push local branch to the repository and prefixed it with `ready/`. On the repository it is ready to be integrated automatically into the integration branch, if a CI server is configured [see workflow](/docs/workflow.md). 
 When delivered, local branches will be prefixed with `delivered/`
+
+using the `--local` option will integrate the branch locally and push the changes on the integration branch
 ```sh
 git status
 # On branch 18-ai-is-now-conscious
@@ -129,7 +132,7 @@ git phlow auth
 
 **description**
 
-auth will authorize git-phlow with the chosen issue management system. To connect with the issue management systems, it is required to authenticate with a valid account. GitHub requires a personal user.  Jira requires an account, probably created by the administrator. 
+auth authorizes git-phlow towards a chosen issue management system like GitHub Issues and Jira. The auth command uses the .gitconfig file to figure out which service it tries to authorizes against. Support issue management systems right now are: Jira, GitHub
 
 ### issues
 ```
@@ -143,7 +146,8 @@ git phlow issues
 
 **description**
 
-list the first 30 issues connected to the repository. This is only valid for GitHub. Issues on Jira will be taken from every project. 
+issues lists the first 30 issues from the connected issue management system. The are not picked in any specific order, and for Jira they are not picked by any specific project. The command is helpful for getting an overview of the next issues without leaving your terminal. The issue command uses the configuration `issue-api` key-value pair to fetch the issues.
+
 ```sh
 git phlow issues
 #38: testing windows Status - in progress @kryptag 
@@ -163,7 +167,7 @@ git phlow mkalias
 
 **description**
 
-mkalias will create git alias's for phlow commands, so it is no longer necessary to write `phlow` before every command. e.g. `git workon 42`
+mkalias creates aliases for the git phlow commands. This allows you to use 'git workon', rather than 'git phlow workon'. The aliases are added to your global .gitconfig file.
 
 ### web
 ```
@@ -202,8 +206,10 @@ git phlow config
 
 **description**
 
-config is the top-level command for showing and creating git-phlow .gitconfig files. Manipulating the individual key-value pairs is done by using gits build in `git config`. See more in [configuration documentation](/docs/configuration.md)
+config is the top-level command for showing and creating git-phlow .gitconfig files. Manipulating the individual key-value pairs is done by using git's build in `git config`. See more in [configuration documentation](/docs/configuration.md). 
 
+When using a local `.gitconfig` file, you need to tell git that it should also look for configuration in the local workspace folder by adding: 
+`git config --local include.path ../.gitconfig`
 
 ####  show
 ```
@@ -211,9 +217,7 @@ git phlow config show <ini name>
 ```
 **description**
 
-shows the configuration of the specified INI block. If no arguments are passed it will show the default configuration git phlow will use if no `-t` flag is set when a command is executed. This is good to use when debugging. Look for the `scope: internal`, this means that git phlow is using the internal default block, and not one found in a custom .gitconfig file. 
-
-remember to add this `git config --local include.path ../.gitconfig` if you are using a config file in your repo. 
+show shows the configuration of the specified INI block. If no arguments are passed it will show the default configuration git phlow will use if no `-t` flag is set when a command is executed. This is good to use when debugging. Look for the `scope: internal`, this means that git phlow is using the internal default block, and not one found in a custom .gitconfig file.  
 
 #### bootstrap
 ```
@@ -222,7 +226,24 @@ git phlow config bootstrap
 
 **description**
 
-create a new .gitconfig file in the current directory, with the default values of a git phlow configuration. A good way to get started with the configuration file. 
+bootstrap creates a new .gitconfig file in the current directory, with the default values of a git-phlow configuration. This is a good way to get started with the configuration file. 
+
+
+### cleanup
+```
+git phlow agent [cmd] 
+```
+
+**flags**
+
+_none_
+
+**description**
+
+The agent commands are not well supported in these later versions, but will be back on the roadmap. The agent commands are commands which makes the tool able to act as a pretested integration setup. 
+
+They are not recommemded to use right now
+
 
 ## Global flags
 

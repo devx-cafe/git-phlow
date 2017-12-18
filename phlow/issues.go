@@ -71,6 +71,7 @@ func FetchJ(conf *setting.ProjectSetting) ([]plugins.Stringer, error) {
 	return list, nil
 }
 
+//PrintIssues ...
 func PrintIssues(conf *setting.ProjectSetting, fetch Fetch) {
 	list, err := fetch(conf)
 	if err != nil {

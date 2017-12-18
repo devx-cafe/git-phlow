@@ -2,12 +2,13 @@ package phlow
 
 import (
 	"fmt"
+	"runtime"
+
 	"github.com/praqma/git-phlow/executor"
 	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/setting"
 	"github.com/praqma/git-phlow/options"
-	"runtime"
 	"github.com/praqma/git-phlow/plugins"
+	"github.com/praqma/git-phlow/setting"
 )
 
 //WebCaller ...
@@ -97,6 +98,7 @@ func OpenGitHub(issue string, conf *setting.ProjectSetting, extractor plugins.Is
 	LaunchBrowser(conf.IssueWeb+ext+"/issues/"+key, runner)
 }
 
+//LaunchBrowser ...
 func LaunchBrowser(link string, run executor.Runner) {
 
 	if runtime.GOOS == "windows" {

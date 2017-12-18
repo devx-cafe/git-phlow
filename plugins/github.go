@@ -1,15 +1,16 @@
 package plugins
 
 import (
-	"net/http"
 	"bytes"
 	"encoding/json"
-	"fmt"
-	"github.com/praqma/git-phlow/options"
-	"io/ioutil"
 	"errors"
-	"strconv"
+	"fmt"
+	"io/ioutil"
+	"net/http"
 	"os"
+	"strconv"
+
+	"github.com/praqma/git-phlow/options"
 )
 
 //AuthorizeGitHub ...
@@ -39,7 +40,7 @@ func AuthorizeGitHub(githubBaseURL, user, pass string) (token string, err error)
 	return re.Token, nil
 }
 
-//AuthenticateGitHub
+//AuthenticateGitHub ...
 //Checks personal access token validity by requesting private repositories and checking status code
 func AuthenticateGitHub(githubBaseURL string, user, token string) (bool, error) {
 
@@ -110,7 +111,7 @@ func createGHPermissions() (string, error) {
 	return string(b2b), nil
 }
 
-//GetIssueGitHub ...
+//GetIssuesGitHub ...
 //return an issue with from the number of the issue
 func GetIssuesGitHub(URL, org, repo, token string) ([]Stringer, error) {
 
@@ -164,6 +165,8 @@ func GetIssuesGitHub(URL, org, repo, token string) ([]Stringer, error) {
 	return iss, nil
 }
 
+//GetIssueGitHub ...
+//get a single issue from github
 func GetIssueGitHub(URL, org, repo, key, token string) (*Issue, error) {
 
 	req, _ := http.NewRequest("GET", URL+fmt.Sprintf("/repos/%s/%s/issues/", org, repo)+key, nil)
@@ -245,9 +248,9 @@ func SetLabelGitHub(URL, org, repo, token, label, issue string) (labels []Label,
 	return re, nil
 }
 
-//SetAssigneeGitHub
+//SetAssigneeGitHub ...
 //Assigns a user to a github issue
-func SetAssigneeGitHub(URL, org, repo, token, issue, assignee string, ) (err error) {
+func SetAssigneeGitHub(URL, org, repo, token, issue, assignee string) (err error) {
 
 	jsonBytes, _ := json.Marshal(Assignee{Assignees: []string{assignee}})
 

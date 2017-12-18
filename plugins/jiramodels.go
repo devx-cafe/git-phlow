@@ -2,25 +2,27 @@ package plugins
 
 import (
 	"bytes"
+
 	"github.com/praqma/git-phlow/ui"
 )
 
 //JiraIssue ...
 type JiraIssue struct {
-	Key string `json:"key"`
+	Key    string `json:"key"`
 	Fields struct {
 		Summary string `json:"summary"`
-		Status struct {
+		Status  struct {
 			Name string `json:"name"`
 		} `json:"status"`
 	} `json:"fields"`
 }
 
-//transitions ...
+//Transitions ...
 type Transitions struct {
 	Transitions []Transition `json:"transitions"`
 }
 
+//QueryResult ...
 type QueryResult struct {
 	Issues []JiraIssue `json:"issues"`
 }

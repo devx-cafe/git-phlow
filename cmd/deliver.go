@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+
 	"github.com/praqma/git-phlow/cmd/cmdperm"
 	"github.com/praqma/git-phlow/options"
 	"github.com/praqma/git-phlow/phlow"
@@ -14,11 +15,13 @@ var deliverCmd = &cobra.Command{
 	Use:   "deliver [args]",
 	Short: "deliver changes to remote master",
 	Long: fmt.Sprintf(`
-%s pushes your committed changes to the remote repository.
-Deliver only runs if you are located on an issue branch created with workon.
-The delivered branch's name will prefixed 'ready/', so the integration services supporting the workflow can pick up your changes.
+%s is the command used to hand over the work you just commited with 'wrapup'. 
+checkout the issue branch you need to deliver and run the command. This will push local branch to the repository and prefixed it with 'ready/'. 
+On the repository it is ready to be integrated automatically into the integration branch, if a CI server is configured. 
 
-If you deliver with the 'local' option, the issue branch will be merged with your default branch, pushed to your remote's default branch and prefixed with 'delivered/'.
+When delivered, local branches will be prefixed with 'delivered/'
+
+using the '--local' option will integrate the branch locally and push the changes on the integration branch
 `, ui.Format.Bold("deliver")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

@@ -15,8 +15,9 @@ var issueCmd = &cobra.Command{
 	Use:   "issues",
 	Short: "list issues from Task management system",
 	Long: fmt.Sprintf(`
-%s lists the 30 next issues in your management system.
-Uses the configuration to decide target
+%s lists the first 30 issues from the connected issue management system. 
+The are not picked in any specific order, and for Jira they are not picked by any specific project. 
+The command is helpful for getting an overview of the next issues without leaving your terminal. The issue command uses the configuration 'issue-api' key-value pair to fetch the issues.
 `, ui.Format.Bold("issues")),
 	PreRun: func(cmd *cobra.Command, args []string) {
 		cmdperm.RequiredCurDirRepository()

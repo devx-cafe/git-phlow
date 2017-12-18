@@ -1,6 +1,5 @@
-# Documentation
+# Table of contents
 
-Table of contents
 - [Installation](/docs/installation.md)
 - [Workflow](/docs/workflow.md)
 - [Documentation](/docs/documentation.md)
@@ -9,7 +8,7 @@ Table of contents
 - [Trouble shooting](/docs/troubleshooting.md)
 
 
-### Getting started
+## Getting started
 To get started using this git extension we recommend to read the [blogpost](https://www.praqma.com/stories/git-phlow/) about Git-phlow and the entire automated workflow.
 
 The tool is meant to help developers and non-developers abstract away the complexity of git and all the manual work of integrating changes into other branches. 

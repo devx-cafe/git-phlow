@@ -3,6 +3,7 @@ package plugins
 import (
 	"bytes"
 	"strconv"
+
 	"github.com/praqma/git-phlow/ui"
 )
 
@@ -34,6 +35,7 @@ type Label struct {
 	Color string `json:"color"`
 }
 
+//Milestone ...
 type Milestone struct {
 	Title string `json:"title"`
 }

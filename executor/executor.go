@@ -23,7 +23,7 @@ func verboseOutput(argv ...string) {
 //Runner type for git executions
 type Runner func(command string, argv ...string) (string, error)
 
-//Run ...
+//RunCommand ...
 //implemented runner
 func RunCommand(command string, argv ...string) (string, error) {
 	var stdOutBuffer, stdErrBuffer bytes.Buffer
@@ -49,7 +49,7 @@ func RunCommand(command string, argv ...string) (string, error) {
 //GitCommandRunner ...
 type GitCommandRunner func(git string, sub string, argv ...string) (string, error)
 
-//ExecuteCommand ...
+//RunGit ...
 //Executes a single command from strings
 func RunGit(git string, sub string, argv ...string) (string, error) {
 
