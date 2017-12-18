@@ -1,16 +1,16 @@
 # Workflow 
 
-The Praqma workflow - often called The Phlow - is a combination of the Git extension and CI server for automation. In this the CI server is concourse with the git-phlow resource installed.
+The Praqma workflow - called git Phlow - is a combination of the Git extension and CI service for automation. In this the CI server is concourse with the git-phlow resource installed.
 
 ![image](/docs/images/phlowmodel.svg)
 
-The top diagram Shows the steps the entire workflow entails.
+The top diagram shows the steps the entire workflow entails.
 1. You do `git phlow workon` on an issue which has been groomed and is ready to become a feature in your project.
 2. You do `git phlow wrapup` and `git phlow deliver`, to deliver your changes to the remote repository. The branches will be prefixed with `delivery-branch-prefix` from the .gitconfig file.
-3. In the concourse Pipeline we are using the git-phlow tollgate resource, that automate the integration if it passes our toll-gate. It integrate branches prefixed with ready, meaning the job will trigger on such branches and merge the changes with the head of the integration.
+3. In the Concourse pipeline we are using the git-phlow tollgate resource. It will integrate branches prefixed with `ready/`. This means the pipeline triggers on such branches and if success merges the changes with the integration branch.
 4. Now the tollgate tests will run in the job and if they pass, the already merged changes will be pushed to the integration branch. The ready branch will be deleted if everything goes well so it leaves things nice and clean. 
 
-## Example workflow Usage
+## git-phlow usage
 - First time, authenticate to GitHub:
 
 ```git

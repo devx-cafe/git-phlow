@@ -30,7 +30,8 @@ git phlow workon [issue]
 
 **description**
 
-Creates a new local branch from a remote integration branch, based on an issue from the chosen issue management system [[See configuration](/docs/configuration.md)]. 
+workon is the most essential command of git phlow. The command will create a new local branch from a remote integration branch, and base the name on an issue from the chosen issue management system [[See configuration](/docs/configuration.md)].
+If you run workon with unstaged changes in your workspace those changes will follow to the new branch. If you have just committed changes you will experience that those changes will disappear. This is due to the fact that when the branch is based on the remote integration branch, only changes integrated into the the remote integration branch will be available. Deliver the commits with the `deliver` to have them availbe when you do workon. 
 
 ```sh
 git status
@@ -65,7 +66,7 @@ git phlow wrapup
 
 **description**
 
-Add changes from the workspace to the index/staging area and commits with `smart commit`syntax that will close the mentioned issue when it is integrated on the integration branch.
+wrapup is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch. The command will add changes from the workspace to the index/staging area of git, and commit with `smart commit`syntax that will close the mentioned issue when it is integrated on the integration branch.
 ```sh
 git status
 # On branch 18-ai-is-now-conscious
@@ -102,8 +103,8 @@ git phlow deliver
 
 **description**
 
-deliver pushes a branch prefixed with `ready/` to the repository, where it is ready to be integrated automatically into the integration branch, if a CI server is configured [see workflow]. 
-local branch will be prefixed with `delivered/`
+deliver is the command used to hand over the work you just commited with `wrapup`. Checkout the issue branch you need to deliver and run the command. This will push local branch to the repository and prefixed it with `ready/`. On the repository it is ready to be integrated automatically into the integration branch, if a CI server is configured [see workflow]. 
+When delivered, local branches will be prefixed with `delivered/`
 ```sh
 git status
 # On branch 18-ai-is-now-conscious
@@ -128,7 +129,7 @@ git phlow auth
 
 **description**
 
-To connect with the issue management systems, it is required to authenticate with a valid account. GitHub requires a personal user.  Jira requires an account, probably created by the administrator. 
+auth will authorize git-phlow with the chosen issue management system. To connect with the issue management systems, it is required to authenticate with a valid account. GitHub requires a personal user.  Jira requires an account, probably created by the administrator. 
 
 ### issues
 ```
@@ -162,7 +163,7 @@ git phlow mkalias
 
 **description**
 
-creates git alias' for phlow commands, so it is no longer necessary to write `phlow` before every command. e.g. `git workon 42`
+mkalias will create git alias's for phlow commands, so it is no longer necessary to write `phlow` before every command. e.g. `git workon 42`
 
 ### web
 ```
@@ -174,7 +175,7 @@ git phlow web
 
 **description**
 
-extracts the issue id from the current git branch, and opens the default browser on that issue. If no issue id or Jira key can be extracted, another behaviour will be triggered. On Jira the dashboard will be opened. On Github, the repository main page will be opened.
+web will open the default browser on the issue webpage. It does so extracts the issue id from the current git branch, and uses the issue-web url of the configuration. If no issue id or Jira key can be extracted, another behavior will be triggered. On Jira the dashboard will be opened. On Github the repository main page will be opened.
 
 ### cleanup
 ```
@@ -191,13 +192,18 @@ git phlow cleanup
 
 **description**
 
-cleanup will remove the branches prefixed with `delivered/` locally and remove the remote branches as well. A local version is available, and will just remove the local branches.
-Some branches can not be deleted, because git cannot detect if they have been integrated into the integration branch. Those can be deleted with the `force` flag. 
+cleanup is for tidying up the git workspace. As you follow the workflow a lot of branches prefixed with `delivered/` will be in the workspace, and should just be deleted if they have been successfully integrated. Running the command will remove these branches locally and remote as well. A local version of this command is available, and will just remove the local branches.
+Some branches can not be deleted, because git cannot detect if they have been integrated into the integration branch. That can be due to a rebase or squash. Those can be deleted with the `force` flag. 
 
 ### config
 ```
 git phlow config
 ``` 
+
+**description**
+
+config is the top-level command for showing and creating git-phlow .gitconfig files. Manipulating the individual key-value pairs is done by using gits build in `git config`. See more in [configuration documentation](/docs/configuration.md)
+
 
 ####  show
 ```
@@ -209,7 +215,7 @@ shows the configuration of the specified INI block. If no arguments are passed i
 
 remember to add this `git config --local include.path ../.gitconfig` if you are using a config file in your repo. 
 
-#### boostrap
+#### bootstrap
 ```
 git phlow config bootstrap
 ```

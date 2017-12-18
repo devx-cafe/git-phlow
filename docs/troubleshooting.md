@@ -1,6 +1,6 @@
 # Trouble shooting
 
-This section is meant to provide guidance to recover from the most known issues you might run into. 
+git-phlow can be difficult to use if you are not very familiar with the workings of git, therefore have we created a section that will help you troubleshoot some of the more difficult situations to get in. 
 
 ### Did `deliver` but meant `deliver --local`
 read [deliver]() docs to understand the command
