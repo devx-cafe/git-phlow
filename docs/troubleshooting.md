@@ -18,10 +18,39 @@ phlow will not deliver branches prefixed with `delivered` so you cannot re-deliv
 4. delete the remote branch
 
 ```sh
-git branch -m delivered/10-my-issue 10-my-issue #1
-git checkout 10-my-issue    #2
+git deliver # <- MISTAKE
+
+git status
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# nothing to commit, working tree clean
+
+git branch
+#   delivered/18-ai-is-now-conscious            37b0800 [ahead 1] close #18 ai is now conscious
+# * master                                      e5c808d close #12 added some cleverness
+#   remotes/origin/HEAD                         -> origin/master
+#   remotes/origin/master                       e5c808d close #12 added some cleverness
+#   remotes/origin/ready/18-ai-is-now-conscious 37b0800 close #18 ai is now conscious
+
+
+git branch -m delivered/18-ai-is-now-conscious 18-ai-is-now-conscious #1
+git checkout 18-ai-is-now-conscious    #2
 git phlow deliver --local   #3
-git push -d origin ready/10-my-issue #4
+git push -d origin ready/18-ai-is-now-conscious #4
+
+git status
+# On branch master
+# Your branch is up to date with 'origin/master'.
+
+# nothing to commit, working tree clean
+
+
+git branch
+#   delivered/18-ai-is-now-conscious          37b0800 close #18 ai is now conscious
+# * master                                    37b0800 close #18 ai is now conscious
+#   remotes/origin/HEAD                       -> origin/master
+#   remotes/origin/master                     37b0800 close #18 ai is now conscious
 ```
 
 ### Did `deliver` before `wrapup`
@@ -32,22 +61,73 @@ The workspace is still dirty and your changes have not been added.
 `deliver`pushes a branch to GitHub but it is empty because you work was not comitted. phlow will not deliver branches prefixed with `delivered` so you cannot re-deliver it. 
 
 ##### Solution
-1. rename delivred branch
+1. rename delivered branch
 2. checkout the branch
 3. wrapup the work
 4. delete the remote `ready` branch
 5. deliver again
-```
-git branch -m delivered/10-my-issue 10-my-issue #1
-git checkout 10-my-issue    #2
+
+```sh
+git status
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+# 	factorybuilder.go
+#
+# nothing added to commit but untracked files present (use "git add" to track)
+
+git branch
+#   delivered/22-added-nodejs-api-node            37b0800 close #18 ai is now conscious
+# * master                                        37b0800 close #18 ai is now conscious
+#   remotes/origin/HEAD                           -> origin/master
+#   remotes/origin/master                         37b0800 close #18 ai is now conscious
+#   remotes/origin/ready/22-added-nodejs-api-node 37b0800 close #18 ai is now conscious
+
+
+git branch -m delivered/22-added-nodejs-api-node #1
+git checkout 22-added-nodejs-api-node    #2
 git phlow wrapup            #3
-git push -d origin ready/10-my-issue #4
+git push -d origin ready/22-added-nodejs-api-node #4
 git phlow deliver
+
+
+git status
+# On master
+# Your branch is up to date with 'origin/master'.
+#
+# nothing to commit, working tree clean
+
 ```
 
 ### Work disappeared after deliver
 Have no fear, the work is not gone. the `deliver` command switches to the integration branch e.g. `master` after it is done pushing the `ready` branch to the remote repository.
-`master` does not contain the changes that was made on the oter branch. If you try to `fetch` or `pull`and nothing happens then it is probably because the CI server has not integrated the `ready` branch 
+`master` does not contain the changes that was made on the other branch. If you try to `fetch` or `pull`and nothing happens then it is probably because the CI server has not integrated the `ready` branch 
+
+
+
+```sh
+git branch
+# * 11-improved-api-performance-kpi               e5c808d [ahead 1] close #11 improved api performance kpi    <- YOU ARE HERE
+#   master                                        37b0800 close #18 ai is now conscious
+#   remotes/origin/HEAD                           -> origin/master
+#   remotes/origin/master                         37b0800 close #18 ai is now conscious
+
+git deliver
+# delivering...
+# Delivered branch 11-improved-api-performance-kpi 
+
+git branch
+#   delivered/11-improved-api-performance-kpi     e5c808d [ahead 1] close #11 improved api performance kpi    <- THE WORK IS HERE
+# * master                                        37b0800 close #18 ai is now conscious                       <- YOU ARE HERE
+#   remotes/origin/HEAD                           -> origin/master
+#   remotes/origin/master                         37b0800 close #18 ai is now conscious
+#   remotes/origin/ready/22-added-nodejs-api-node 37b0800 close #11 improved api performance kpi
+
+
+```
 
 ##### Getting back to your work
 1. A workon _after_ the CI have done the integration should give back your work.
