@@ -6,6 +6,7 @@
 - [Configuration](/docs/configuration.md)
 - [Contribution guide](/CONTRIBUTING.md)
 - [Trouble shooting](/docs/troubleshooting.md)
+- [Roadmap](/docs/roadmap.md) 
 
 
 ## Getting started
