@@ -213,7 +213,7 @@ config is the top-level command for showing and creating git-phlow .gitconfig fi
 When using a local `.gitconfig` file, you need to tell git that it should also look for configuration in the local workspace folder by adding: 
 `git config --local include.path ../.gitconfig`
 
-####  show
+#####  show
 ```
 git phlow config show <ini name>
 ```
@@ -221,7 +221,7 @@ git phlow config show <ini name>
 
 show shows the configuration of the specified INI block. If no arguments are passed it will show the default configuration git phlow will use if no `-t` flag is set when a command is executed. This is good to use when debugging. Look for the `scope: internal`, this means that git phlow is using the internal default block, and not one found in a custom .gitconfig file.  
 
-#### bootstrap
+##### bootstrap
 ```
 git phlow config bootstrap
 ```
@@ -231,7 +231,7 @@ git phlow config bootstrap
 bootstrap creates a new .gitconfig file in the current directory, with the default values of a git-phlow configuration. This is a good way to get started with the configuration file. 
 
 
-### cleanup
+### agent
 ```
 git phlow agent [cmd] 
 ```
