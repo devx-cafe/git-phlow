@@ -225,9 +225,6 @@ resources:
         url: https://github.com/Praqma/git-phlow.git
         username: {{github-username}}
         password: {{github-password}}
-        datadog_api_key: {{dd_api_key}}
-        datadog_app_key: {{dd_app_key}}
-        metric_name: git_phlow
 
 #VERSION 
     - name: gp-version
