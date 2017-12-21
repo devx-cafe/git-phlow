@@ -7,5 +7,4 @@ inputs:
 run:
   path: powershell.exe 
   args:
-  - -File
   - '.\git-phlow\ci\windows\go-test-windows.ps1'

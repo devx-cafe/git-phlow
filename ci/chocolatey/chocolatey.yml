@@ -12,6 +12,5 @@ params:
 run:
   path: powershell.exe 
   args:
-  - -File
   - '.\git-phlow\ci\chocolatey\chocolatey.ps1'
  

@@ -164,6 +164,8 @@ jobs:
     - get: git-phlow
     - get: phlow-artifact-windows-s3
       passed: [takeoff]
+      params:
+        unpack: true
     - get: gp-version
       passed: [takeoff]
       trigger: true
