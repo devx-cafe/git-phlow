@@ -8,9 +8,10 @@ import (
 	"github.com/praqma/git-phlow/githandler"
 	"github.com/praqma/git-phlow/options"
 
-	"github.com/praqma/git-phlow/ui"
-	"github.com/praqma/git-phlow/setting"
 	"os"
+
+	"github.com/praqma/git-phlow/setting"
+	"github.com/praqma/git-phlow/ui"
 )
 
 //DeliverCaller ...
@@ -106,7 +107,7 @@ func LocalDeliver(conf *setting.ProjectSetting) {
 
 	//Pull rebase latest changes
 
-	_, err = git.Pull("--rebase")
+	_, err = git.Pull()
 	if err != nil {
 		fmt.Println(err)
 		return
