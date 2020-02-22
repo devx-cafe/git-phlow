@@ -38,13 +38,16 @@ jobs:
       run: git rebase
 
     - name: Checkout target branch
-      run: git checkout master --track origin/master
+      run: git checkout master
 
     - name: Pull latest
       run: git pull origin master
 
     - name: Merge
       run: git merge --ff-only
+
+    - name: Show branch
+      run: git branch -vv
 
     - name: Install dependencies
       run: |
