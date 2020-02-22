@@ -11,8 +11,9 @@ jobs:
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
+      
     - name: getfetch
-      run: git fetch
+      run: git pull
     
     - name: setting remote
       env:
