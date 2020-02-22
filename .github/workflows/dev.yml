@@ -38,7 +38,7 @@ jobs:
       run: git rebase
 
     - name: Checkout target branch
-      run: git checkout master
+      run: git checkout master --track origin/master
 
     - name: Pull latest
       run: git pull origin master
