@@ -3,7 +3,7 @@ package plugins
 import (
 	"bytes"
 
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/ui"
 )
 
 //JiraIssue ...

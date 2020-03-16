@@ -3,11 +3,11 @@ package phlow
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/options"
-	"github.com/praqma/git-phlow/setting"
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/githandler"
+	"github.com/code-cafe/git-phlow/options"
+	"github.com/code-cafe/git-phlow/setting"
+	"github.com/code-cafe/git-phlow/ui"
 )
 
 //CleanCaller ...

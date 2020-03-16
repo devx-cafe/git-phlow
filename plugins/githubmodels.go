@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strconv"
 
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/ui"
 )
 
 //Auth ...

@@ -32,7 +32,7 @@ If you are not a collaborator (yet), we suggest that you follow the typical GitH
 - One of the maintainers will then review your contribution and if it is accepted we will simply use the described automated Phlow to integrate it.
 
 ## Finding a task to get you started
-When you have the project up and running, check our [github issues](https://github.com/Praqma/git-phlow/issues) and find one you want to work on or fix.
+When you have the project up and running, check our [github issues](https://github.com/code-cafe/git-phlow/issues) and find one you want to work on or fix.
 
 Even though this is still a small fledgeling project, we want to make it easily accessibly to contribute, whether you are an experienced go-lang and git expert or not. 
 
@@ -64,7 +64,7 @@ export GOBIN=$GOPATH/bin
 export PATH=$PATH:$GOBIN
 ```
 
-Next up is getting our project. Clone the repository into your GOPATH under, src/github.com/praqma/
+Next up is getting our project. Clone the repository into your GOPATH under, src/github.com/code-cafe/
 ```bash
 git clone git@github.com:Praqma/git-phlow.git
 

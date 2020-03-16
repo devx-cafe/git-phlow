@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/praqma/git-phlow/options"
+	"github.com/code-cafe/git-phlow/options"
 )
 
 //pluginWebURL ...

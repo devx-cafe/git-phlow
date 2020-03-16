@@ -3,11 +3,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/cmd/cmdperm"
-	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/cmd/cmdperm"
+	"github.com/code-cafe/git-phlow/phlow"
+	"github.com/code-cafe/git-phlow/setting"
+	"github.com/code-cafe/git-phlow/ui"
 	"github.com/spf13/cobra"
-	"github.com/praqma/git-phlow/setting"
 )
 
 // integrateCmd represents the integrate command

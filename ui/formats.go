@@ -1,8 +1,8 @@
 package ui
 
 import (
+	"github.com/code-cafe/git-phlow/options"
 	"github.com/fatih/color"
-	"github.com/praqma/git-phlow/options"
 )
 
 //Format ...

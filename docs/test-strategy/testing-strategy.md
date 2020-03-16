@@ -48,7 +48,7 @@ Similarly for OS X. With Windows this is not entirely the same, and different wi
 
 None of the above tests should ever be necessary at the higher levels of testing. Furthermore, testing things that are not happy path may be worthwhile here, depending on where bugs showed up in the past, and future. 
 
-An exellent example of this can be found in [gh_test.go](https://github.com/Praqma/git-phlow/blob/master/plugins/gh_test.go) : 
+An exellent example of this can be found in [gh_test.go](https://github.com/code-cafe/git-phlow/blob/master/plugins/gh_test.go) : 
 ```
 func TestAuthorize(t *testing.T) {
 	Convey("Running tests on 'Authorize' request", t, func() {
@@ -76,7 +76,7 @@ func TestAuthorize(t *testing.T) {
 }
 ```
 
-As well as [branch_test.go](https://github.com/Praqma/git-phlow/blob/master/githandler/branch_test.go)
+As well as [branch_test.go](https://github.com/code-cafe/git-phlow/blob/master/githandler/branch_test.go)
 
 ```
 func TestBranch(t *testing.T) {
@@ -108,7 +108,7 @@ These are marked as integration tests since neither of them execute on a singula
 Every method should have a unit test, as it's a straight forward project to run TDD on. However as with most prototypes this is probably not the case, and thus it is necessary to determine which parts of the system are still exploratory. 
 Writing a lot of unit tests for existing methods, which are still being restructured is a waste of productivity. 
 
-Good examples of unit tests would be this method in [plugin_test.go](https://github.com/Praqma/git-phlow/blob/master/plugins/plugin_test.go)
+Good examples of unit tests would be this method in [plugin_test.go](https://github.com/code-cafe/git-phlow/blob/master/plugins/plugin_test.go)
 
 ```
 Describe("Branch name from issue", func() {

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/githandler"
 )
 
 //RequiredCurDirRepository ...

@@ -6,7 +6,7 @@ maintainer: groenborg
 
 | tollgate | build | goreport | coveralls |  
 | ------------- | --- | ----------------- | ----- |
-| ![integration status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/checkin/badge) | ![build status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/takeoff/badge)  |[![Go Report Card](https://goreportcard.com/badge/github.com/Praqma/git-phlow)](https://goreportcard.com/report/github.com/Praqma/git-phlow) | [![Coverage Status](https://coveralls.io/repos/github/Praqma/git-phlow/badge.svg?branch=master)](https://coveralls.io/github/Praqma/git-phlow?branch=master) 
+| ![integration status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/checkin/badge) | ![build status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/takeoff/badge)  |[![Go Report Card](https://goreportcard.com/badge/github.com/code-cafe/git-phlow)](https://goreportcard.com/report/github.com/code-cafe/git-phlow) | [![Coverage Status](https://coveralls.io/repos/github/Praqma/git-phlow/badge.svg?branch=master)](https://coveralls.io/github/Praqma/git-phlow?branch=master) 
 
 Git-phlow (pronounced _"git flow"_), is a CLI extension for git, which provides an extra set of commands to easily use our pragmatic workflow by the same name, **Git phlow**. It provides a branching model which makes collaboration easy. It also provides automatic issue tracking using [GitHub](https://github.com) issues or Jira.
 
@@ -36,7 +36,7 @@ There are known issues with _cmd_ rendering formatted text incorrect, and _git b
 This is the official repository for the git-phlow extension. The project is currently stable at version 3.8.2 for both windows, macOS and linux. 
 
 ### Contribution
-Contributions are welcome! Please read the [contribution guide](https://github.com/Praqma/git-phlow/blob/master/CONTRIBUTING.md)
+Contributions are welcome! Please read the [contribution guide](https://github.com/code-cafe/git-phlow/blob/master/CONTRIBUTING.md)
 
 
 ### Core Team

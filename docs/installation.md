@@ -24,7 +24,7 @@ brew upgrade git-phlow
 Install git-phlow by running the following commands. This will download git-phlow from the GitHub releases, extract it and move in to the /usr/local/bin directory, and enable you to run `git phlow` in the terminal. Remember to use the latest release.
 
 ```shell
-wget https://github.com/Praqma/git-phlow/releases/download/v3.8.2/git-phlow-3.8.2-linux-amd64.tar.gz && tar -xzf git-phlow-3.8.2-linux-amd64.tar.gz
+wget https://github.com/code-cafe/git-phlow/releases/download/v3.8.2/git-phlow-3.8.2-linux-amd64.tar.gz && tar -xzf git-phlow-3.8.2-linux-amd64.tar.gz
 
 mv git-phlow /usr/local/bin
 ```
@@ -49,7 +49,7 @@ iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 ```
 Add Praqmas scoop-bucket
 ```
-scoop bucket add praqma-tools https://github.com/praqma/scoop-praqma-tools.git
+scoop bucket add praqma-tools https://github.com/code-cafe/scoop-praqma-tools.git
 ```
 
 _Then install using scoop_:

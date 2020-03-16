@@ -6,10 +6,10 @@ $GOPATH = $currentPath.Path
 $GOBIN = "$($currentPath.Path)/bin"
 [System.Environment]::SetEnvironmentVariable('GOBIN', $GOBIN, "Machine")
 
-$GITHUB_FAKE = "$($currentPath.Path)/src/github.com/praqma/git-phlow/build"
+$GITHUB_FAKE = "$($currentPath.Path)/src/github.com/code-cafe/git-phlow/build"
 [System.Environment]::SetEnvironmentVariable('GITHUB_FAKE', $GITHUB_FAKE, "Machine")
 
-$TEST_REPO = "$GOPATH/src/github.com/praqma/git-phlow/build/github"
+$TEST_REPO = "$GOPATH/src/github.com/code-cafe/git-phlow/build/github"
 
 New-Item -ItemType directory -Path $TEST_REPO
 Set-Location $TEST_REPO

@@ -2,9 +2,9 @@ package setting_test
 
 import (
 	. "github.com/onsi/ginkgo"
-	"github.com/praqma/git-phlow/setting"
+	"github.com/code-cafe/git-phlow/setting"
 	. "github.com/onsi/gomega"
-	"github.com/praqma/git-phlow/githandler"
+	"github.com/code-cafe/git-phlow/githandler"
 )
 
 var _ = Describe("Setting", func() {
