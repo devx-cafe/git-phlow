@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/praqma/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/executor"
 	"log"
 )
 
@@ -28,7 +28,7 @@ func init() {
 	if len(GoPath) == 0 {
 		log.Panicln("GOPATH NOT SET")
 	}
-	ProjectPath = GoPath + "/src/github.com/praqma/git-phlow"
+	ProjectPath = GoPath + "/src/github.com/code-cafe/git-phlow"
 	Script = ProjectPath + "/testfixture/gen_test_repo.sh"
 	Repo = ProjectPath + "/build/phlow-test-pkg"
 	Target = ProjectPath + "/build"

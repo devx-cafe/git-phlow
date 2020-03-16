@@ -3,10 +3,10 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/cmd/cmdperm"
-	"github.com/praqma/git-phlow/options"
-	"github.com/praqma/git-phlow/phlow"
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/cmd/cmdperm"
+	"github.com/code-cafe/git-phlow/options"
+	"github.com/code-cafe/git-phlow/phlow"
+	"github.com/code-cafe/git-phlow/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +14,7 @@ var wrapupCmd = &cobra.Command{
 	Use:   "wrapup",
 	Short: "Add changes to index and auto commit",
 	Long: fmt.Sprintf(`
-%s is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch. 
+%s is used to collect all the changes just made and put them into a commit, that is ready to be delivered into the integration branch.
 The command will add changes from the workspace to the index/staging area of git, and commit with 'smart commit' syntax that will close the mentioned issue when it is integrated on the integration branch.
 The smart commits only works on systems that support it.
 `, ui.Format.Bold("wrapup")),

@@ -1,7 +1,7 @@
 # Git Phlow Jira support - statement of work
 
 ## Problem
-[git-phlow](https://github.com/Praqma/git-phlow) only supports GitHub issues and Github repositories while a wast number of companies uses Jira for issue tracking in combination with Bitbucket for repositories. Support for Jira combined with Bitbucket would substantially expand the user base of the git-phlow.
+[git-phlow](https://github.com/code-cafe/git-phlow) only supports GitHub issues and Github repositories while a wast number of companies uses Jira for issue tracking in combination with Bitbucket for repositories. Support for Jira combined with Bitbucket would substantially expand the user base of the git-phlow.
 
 ## Solution
 The solution will require you to be compliant in Jira with the [Pragmatic workflow](http://www.praqma.com/stories/a-pragmatic-workflow/) which means that an Jira issues should be able to have the [Jira workflow statuses](https://confluence.atlassian.com/adminjiracloud/working-with-workflows-776636540.html) ‘IN PROGRESS’ and ‘ CLOSED’.

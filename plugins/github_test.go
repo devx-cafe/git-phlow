@@ -1,11 +1,11 @@
 package plugins_test
 
 import (
+	"github.com/code-cafe/git-phlow/plugins"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"net/http/httptest"
 	"net/http"
-	"github.com/praqma/git-phlow/plugins"
+	"net/http/httptest"
 )
 
 var _ = Describe("Github", func() {

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/praqma/git-phlow/options"
+	"github.com/code-cafe/git-phlow/options"
 )
 
 //verboseOutput ...

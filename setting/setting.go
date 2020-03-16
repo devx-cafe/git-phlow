@@ -8,10 +8,10 @@ import (
 
 	"errors"
 
+	"github.com/code-cafe/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/githandler"
+	"github.com/code-cafe/git-phlow/plugins"
 	"github.com/go-ini/ini"
-	"github.com/praqma/git-phlow/executor"
-	"github.com/praqma/git-phlow/githandler"
-	"github.com/praqma/git-phlow/plugins"
 )
 
 //Config git group.name

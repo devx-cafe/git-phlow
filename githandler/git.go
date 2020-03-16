@@ -3,7 +3,7 @@ package githandler
 import (
 	"strings"
 
-	"github.com/praqma/git-phlow/executor"
+	"github.com/code-cafe/git-phlow/executor"
 )
 
 //Git ...

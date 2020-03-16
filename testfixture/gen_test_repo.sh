@@ -2,10 +2,10 @@
 
 
 DIR_NAME=build/github
-GITHUB_FAKE=$GOPATH/src/github.com/praqma/git-phlow/build
+GITHUB_FAKE=$GOPATH/src/github.com/code-cafe/git-phlow/build
 
 #CREATE TEST DIRECTORY
-cd $GOPATH/src/github.com/praqma/git-phlow
+cd $GOPATH/src/github.com/code-cafe/git-phlow
 mkdir -p -m 0755 $DIR_NAME
 cd $DIR_NAME
 

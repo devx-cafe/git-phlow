@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/praqma/git-phlow/ui"
+	"github.com/code-cafe/git-phlow/ui"
 	"github.com/spf13/cobra"
 )
 

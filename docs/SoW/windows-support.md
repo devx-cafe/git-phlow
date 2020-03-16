@@ -1,7 +1,7 @@
 # Git Phlow Windows support - statement of work
 
 ## Problem
-[git-phlow](https://github.com/Praqma/git-phlow) currently doesn’t work on Windows due to the way it executes commands, thus a very large user base on Windows can not benefit from the tool, as well as the tool can not benefit from having many users adding improvements..
+[git-phlow](https://github.com/code-cafe/git-phlow) currently doesn’t work on Windows due to the way it executes commands, thus a very large user base on Windows can not benefit from the tool, as well as the tool can not benefit from having many users adding improvements..
 
 When adding Windows support, we also have to address the issue of installation and updates.
 
@@ -14,7 +14,7 @@ We will provide installation and update support by providing either [MSI](https:
 Git Phlow does git operations by calling the locally installed git on command line instead of git libraries internally. In Go language we found no viable git libraries, and the Git extension with the largest user base called [Git LFS](https://git-lfs.github.com/) is working the same way. We will make our Git extension Windows compliant the same way Git LFS works as this is a proven concept.
 
 ## Deliveries
-A new public release of Git Phlow that supports Windows 7 and 10 versions and distributed like our existing git-phlow package today [through file published on Github](https://github.com/Praqma/git-phlow#alternative). Installers will be unsigned for now.
+A new public release of Git Phlow that supports Windows 7 and 10 versions and distributed like our existing git-phlow package today [through file published on Github](https://github.com/code-cafe/git-phlow#alternative). Installers will be unsigned for now.
 
 Further updated documentation covering installation on Windows and any needed notes on usage.
 

@@ -11,7 +11,7 @@ require (
 	github.com/mattn/go-isatty v0.0.0-20170209175615-281032e84ae0 // indirect
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
-	github.com/praqma/git-phlow v3.8.20+incompatible
+	github.com/code-cafe/git-phlow v3.8.20+incompatible
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/cobra v0.0.0-20170126193219-c29ece4386f7
 	github.com/spf13/pflag v0.0.0-20170125153548-a9a634f3de0a // indirect

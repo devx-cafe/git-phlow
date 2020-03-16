@@ -2,7 +2,7 @@ package phlow_test
 
 import (
 	. "github.com/onsi/ginkgo"
-	"github.com/praqma/git-phlow/phlow"
+	"github.com/code-cafe/git-phlow/phlow"
 	. "github.com/onsi/gomega"
 	"bytes"
 )

@@ -1,8 +1,8 @@
 package githandler
 
 import (
-	"strings"
 	"regexp"
+	"strings"
 )
 
 //RemoteInfo ...

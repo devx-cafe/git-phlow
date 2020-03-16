@@ -1,12 +1,12 @@
 package plugins_test
 
 import (
-	. "github.com/praqma/git-phlow/plugins"
+	. "github.com/code-cafe/git-phlow/plugins"
 
 	. "github.com/onsi/ginkgo"
-	"net/http/httptest"
-	"net/http"
 	. "github.com/onsi/gomega"
+	"net/http"
+	"net/http/httptest"
 )
 
 var _ = Describe("Jira", func() {
