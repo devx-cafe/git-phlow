@@ -1,8 +1,3 @@
----
-maintainer: groenborg
----
-
-# git phlow
 ![image](/docs/images/gitphlow.svg)
 
 ![Test-integration - Build - Test - Deliver](https://github.com/code-cafes/git-phlow/workflows/Test-integration%20-%20Build%20-%20Test%20-%20Deliver/badge.svg)
