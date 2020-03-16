@@ -3,10 +3,9 @@ maintainer: groenborg
 ---
 
 # git phlow
+![image](/docs/images/gitphlow.svg)
 
-| tollgate | build | goreport | coveralls |  
-| ------------- | --- | ----------------- | ----- |
-| ![integration status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/checkin/badge) | ![build status](https://concourse.bosh.praqma.cloud/api/v1/teams/main/pipelines/git-phlow/jobs/takeoff/badge)  |[![Go Report Card](https://goreportcard.com/badge/github.com/code-cafe/git-phlow)](https://goreportcard.com/report/github.com/code-cafe/git-phlow) | [![Coverage Status](https://coveralls.io/repos/github/Praqma/git-phlow/badge.svg?branch=master)](https://coveralls.io/github/Praqma/git-phlow?branch=master) 
+![Test-integration - Build - Test - Deliver](https://github.com/code-cafes/git-phlow/workflows/Test-integration%20-%20Build%20-%20Test%20-%20Deliver/badge.svg)
 
 Git-phlow (pronounced _"git flow"_), is a CLI extension for git, which provides an extra set of commands to easily use our pragmatic workflow by the same name, **Git phlow**. It provides a branching model which makes collaboration easy. It also provides automatic issue tracking using [GitHub](https://github.com) issues or Jira.
 
@@ -38,13 +37,4 @@ This is the official repository for the git-phlow extension. The project is curr
 ### Contribution
 Contributions are welcome! Please read the [contribution guide](https://github.com/code-cafe/git-phlow/blob/master/CONTRIBUTING.md)
 
-
-### Core Team
-| [@groenborg](https://github.com/groenborg) | [@MichaelMadsen](https://github.com/MichaelMadsen)
-|---|---|
-| [![](https://avatars1.githubusercontent.com/u/5576954?s=100&v=4)](https://github.com/groenborg) | [![](https://avatars3.githubusercontent.com/u/657289?s=100&v=4)](https://github.com/MichaelMadsen)
-
-
-### CodeScene Analysis
-[![](https://codescene.io/projects/1345/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/1345/jobs/latest-successful/results)
 
