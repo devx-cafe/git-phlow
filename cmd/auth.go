@@ -20,9 +20,7 @@ The auth command uses the .gitconfig file to figure out which service it tries t
 :: GitHub
 `, ui.Format.Bold("auth")),
 	Run: func(cmd *cobra.Command, args []string) {
-
 		phlow.AuthCaller()
-
 	},
 }
 

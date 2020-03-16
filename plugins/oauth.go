@@ -5,13 +5,24 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
-	"github.com/code-cafe/git-phlow/executor"
 	"io"
 	"io/ioutil"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"os/exec"
+	"runtime"
+	"strings"
+)
+
+const OAuthHost = "github.com"
+
+var (
+	// ClientID for github OAuth app
+	ClientID = "1dd42fc0690c4fa72620"
+	// ClientSecret for Github OAuth app
+	ClientSecret = "a45bac52a29c0f96ed08997d3ff0981cbf92d405"
 )
 
 type OAuthFlow struct {
@@ -32,6 +43,26 @@ func randomString(length int) (string, error) {
 	return hex.EncodeToString(b), nil
 }
 
+// ForOS produces an exec.Cmd to open the web browser for different OS
+func OpenInBrowser(goos, url string) *exec.Cmd {
+	var args []string
+	switch goos {
+	case "darwin":
+		args = []string{"open"}
+	case "windows":
+		args = []string{"cmd", "/c", "start"}
+		r := strings.NewReplacer("&", "^&")
+		url = r.Replace(url)
+	default:
+		args = []string{"xdg-open"}
+	}
+
+	args = append(args, url)
+	cmd := exec.Command(args[0], args[1:]...)
+	cmd.Stderr = os.Stderr
+	return cmd
+}
+
 // ObtainAccessToken guides the user through the browser OAuth flow on GitHub
 // and returns the OAuth access token upon completion.
 func (oa *OAuthFlow) ObtainAccessToken() (accessToken string, err error) {
@@ -47,13 +78,13 @@ func (oa *OAuthFlow) ObtainAccessToken() (accessToken string, err error) {
 	q := url.Values{}
 	q.Set("client_id", oa.ClientID)
 	q.Set("redirect_uri", fmt.Sprintf("http://localhost:%d/callback", port))
-	// TODO: make scopes configurable
+
 	q.Set("scope", "repo")
 	q.Set("state", state)
 
 	startURL := fmt.Sprintf("https://%s/login/oauth/authorize?%s", oa.Hostname, q.Encode())
 	oa.logf("open %s\n", startURL)
-	if err := openInBrowser(startURL); err != nil {
+	if err := OpenInBrowser(runtime.GOOS, startURL).Run(); err != nil {
 		fmt.Fprintf(os.Stderr, "error opening web browser: %s\n", err)
 		fmt.Fprintf(os.Stderr, "Please open the following URL manually:\n%s\n", startURL)
 	}
@@ -119,9 +150,4 @@ func (oa *OAuthFlow) logf(format string, args ...interface{}) {
 		return
 	}
 	fmt.Fprintf(oa.VerboseStream, format, args...)
-}
-
-func openInBrowser(url string) error {
-	_, err := executor.RunCommand("open", url)
-	return err
 }
