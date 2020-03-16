@@ -3,7 +3,7 @@ name: Test-integration - Build - Test - Deliver
 on:
   push:
     branches:
-      - 'ready/**' 
+      - 'ready/**'
 jobs:
   integrate:
     name: Integrate
