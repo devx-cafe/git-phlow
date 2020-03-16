@@ -11,10 +11,10 @@ require (
 	github.com/mattn/go-isatty v0.0.0-20170209175615-281032e84ae0 // indirect
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
-	github.com/code-cafe/git-phlow v3.8.20+incompatible
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/spf13/cobra v0.0.0-20170126193219-c29ece4386f7
 	github.com/spf13/pflag v0.0.0-20170125153548-a9a634f3de0a // indirect
 	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
+	golang.org/x/sys v0.0.0-20200316202146-9a0dfc3c5568 // indirect
 	gopkg.in/ini.v1 v1.52.0 // indirect
 )

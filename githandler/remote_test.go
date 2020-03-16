@@ -14,7 +14,7 @@ var _ = Describe("Remote", func() {
 			It("should return organisation and repository with https url", func() {
 				var https = "https://github.com/code-cafe/phlow-test-strategy.git"
 				info := OrgAndRepo(https)
-				Ω(info.Organisation).Should(Equal("Praqma"))
+				Ω(info.Organisation).Should(Equal("code-cafe"))
 				Ω(info.Repository).Should(Equal("phlow-test-strategy"))
 			})
 
