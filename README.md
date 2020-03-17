@@ -1,7 +1,9 @@
-![image](/docs/images/gitphlow.svg)
+<p align="center"><img src="/docs/images/gitphlow.svg" width="360"></p>
 
 ![Test-integration - Build - Test - Deliver](https://github.com/code-cafes/git-phlow/workflows/Test-integration%20-%20Build%20-%20Test%20-%20Deliver/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/code-cafes/git-phlow)](https://goreportcard.com/report/github.com/code-cafes/git-phlow)
 
+# git phlow
 Git-phlow (pronounced _"git flow"_), is a CLI extension for git, which provides an extra set of commands to easily use our pragmatic workflow by the same name, **Git phlow**. It provides a branching model which makes collaboration easy. It also provides automatic issue tracking using [GitHub](https://github.com) issues or Jira.
 
 git-phlows core features include:
