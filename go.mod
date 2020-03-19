@@ -1,20 +1,19 @@
 module github.com/code-cafe/git-phlow
 
-go 1.13
+go 1.14
 
 require (
+	github.com/AlecAivazis/survey/v2 v2.0.7 // indirect
 	github.com/fatih/color v1.3.0
 	github.com/go-errors/errors v1.0.1
-	github.com/go-ini/ini v1.52.0
+	github.com/go-ini/ini v1.55.0
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
-	github.com/mattn/go-colorable v0.0.8-0.20170210172801-5411d3eea597 // indirect
-	github.com/mattn/go-isatty v0.0.0-20170209175615-281032e84ae0 // indirect
+	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/onsi/ginkgo v1.12.0
 	github.com/onsi/gomega v1.9.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
-	github.com/spf13/cobra v0.0.0-20170126193219-c29ece4386f7
-	github.com/spf13/pflag v0.0.0-20170125153548-a9a634f3de0a // indirect
-	golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2
-	golang.org/x/sys v0.0.0-20200316202146-9a0dfc3c5568 // indirect
+	github.com/spf13/cobra v0.0.6
+	golang.org/x/crypto v0.0.0-20200320181102-891825fb96df
+	golang.org/x/sys v0.0.0-20200320181252-af34d8274f85 // indirect
 	gopkg.in/ini.v1 v1.52.0 // indirect
 )

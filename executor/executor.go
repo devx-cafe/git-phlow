@@ -4,10 +4,24 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os/exec"
 
 	"github.com/code-cafe/git-phlow/options"
 )
+
+// Run a terminal command
+// First argument is the command, the second are flags
+// Run("git","pull")
+func Run(command string, args ...string) (string, error) {
+
+	cmd := exec.Command(command, args...)
+	out, err := cmd.CombinedOutput()
+	if err != nil {
+		log.Fatalf("cmd.Run() failed with %s\n", err)
+	}
+	return string(out), err
+}
 
 //verboseOutput ...
 //prints the commands being run by the program
