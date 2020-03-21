@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/code-cafe/git-phlow/cmd/cmdperm"
+	"github.com/code-cafe/git-phlow/flags"
 	"github.com/code-cafe/git-phlow/options"
 	"github.com/code-cafe/git-phlow/phlow"
 	"github.com/code-cafe/git-phlow/ui"
@@ -31,12 +32,12 @@ Some branches can not be deleted, because git cannot detect if they have been in
 func init() {
 	RootCmd.AddCommand(cleanCmd)
 
-	//Run clean on local branches
-	cleanCmd.Flags().BoolVarP(&options.GlobalFlagLocal, "local", "l", false, "remove local delivered branches only")
+	cleanCmd.Flags().BoolVar(&flags.CleanUpTidy, "tidy", false, "prune remote branches")
 
-	//Run clean forcefully
-	cleanCmd.Flags().BoolVarP(&options.GlobalFlagForce, "force", "f", false, "force remove delivered branches")
+	cleanCmd.Flags().BoolVarP(&flags.CleanupForce, "force", "f", false, "similar to git branch -D to delete an unmerged branch")
 
-	cleanCmd.Flags().StringVarP(&options.GlobalFlagTarget, "target", "t", "", "the name of the INI block in .gitconfig")
+	cleanCmd.Flags().BoolVarP(&flags.CleanUpDryRun, "dry-run", "n", false, "output files that will be deleted in non dry run")
+
+	cleanCmd.Flags().BoolVar(&flags.CleanupDelivered, "delivered", false, "remove delivered branches. No prompt")
 
 }

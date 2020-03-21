@@ -1,9 +1,9 @@
 module github.com/code-cafe/git-phlow
 
-go 1.14
+go 1.13
 
 require (
-	github.com/AlecAivazis/survey/v2 v2.0.7 // indirect
+	github.com/AlecAivazis/survey/v2 v2.0.7
 	github.com/fatih/color v1.3.0
 	github.com/go-errors/errors v1.0.1
 	github.com/go-ini/ini v1.55.0

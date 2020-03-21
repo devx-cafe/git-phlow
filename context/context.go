@@ -1,7 +1,9 @@
 package context
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"regexp"
 	"strings"
 
@@ -30,7 +32,8 @@ func init() {
 	WorkspaceContext.Branches = GetBranches(func() string {
 		out, err := executor.Run("git", "branch")
 		if err != nil {
-			panic(err)
+			fmt.Println(out)
+			os.Exit(1)
 		}
 		return out
 	}())

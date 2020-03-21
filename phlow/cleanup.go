@@ -2,12 +2,13 @@ package phlow
 
 import (
 	"fmt"
-
+	"github.com/AlecAivazis/survey/v2"
+	"github.com/code-cafe/git-phlow/context"
 	"github.com/code-cafe/git-phlow/executor"
-	"github.com/code-cafe/git-phlow/githandler"
-	"github.com/code-cafe/git-phlow/options"
+	"github.com/code-cafe/git-phlow/flags"
 	"github.com/code-cafe/git-phlow/setting"
-	"github.com/code-cafe/git-phlow/ui"
+	"github.com/fatih/color"
+	"log"
 )
 
 //CleanCaller ...
@@ -19,47 +20,59 @@ func CleanCaller(ini string) {
 //Clean ...
 //deletes all the delivered branches
 func Clean(conf *setting.ProjectSetting) {
-	git := githandler.Git{Run: executor.RunGit}
+	var wsc = context.WorkspaceContext
 
-	out, err := git.Branch("-a")
-	if err != nil {
-		fmt.Println(err)
+	if flags.CleanupDelivered {
+		deleteBranches(wsc.DeliveredBranches)
+		return
 	}
 
-	local, remote := githandler.Delivered(githandler.AsList(out), conf.Remote)
+	var selectedAnswers []string
+	prompt := &survey.MultiSelect{
+		Message: "Select branches delete from repository",
+		Options: wsc.Branches,
+	}
 
-	for _, branch := range local {
-		deleteFlag := "-d"
+	if err := survey.AskOne(prompt, &selectedAnswers); err != nil {
+		fmt.Println("aborting ...")
+	}
 
-		if options.GlobalFlagForce {
-			deleteFlag = "-D"
-		}
+	deleteBranches(selectedAnswers)
 
-		_, err = git.Branch(deleteFlag, branch)
+	if flags.CleanUpTidy {
+		out, err := executor.Run("git", "fetch", "--prune")
 		if err != nil {
-			fmt.Printf("Could not delete branch %s \n", branch)
+			fmt.Println(err)
+		}
+		fmt.Println(out)
+	}
+
+}
+
+func deleteBranches(branches []string) {
+	if len(branches) == 0 {
+		fmt.Println("No branches to delete")
+		return
+	}
+
+	for _, branch := range branches {
+		force := "-d"
+
+		if flags.CleanupForce {
+			force = "-D"
+		}
+
+		if flags.CleanUpDryRun {
+
+			fmt.Printf("Will delete branch %s \n", color.New(color.Bold).Sprint(branch))
 		} else {
-			fmt.Printf("Deleted local branch %s \n", ui.Format.Branch(branch))
-		}
-	}
 
-	//Remote branches should be deleted as well
-	if !options.GlobalFlagLocal {
-		for _, branch := range remote {
-			_, err = git.Push(branch, conf.Remote, "--delete", branch)
+			out, err := executor.Run("git", "branch", force, branch)
 			if err != nil {
-				fmt.Printf("Could not delete branch %s \n", branch)
-			} else {
-				fmt.Printf("Deleted remote branch %s \n", ui.Format.Branch(branch))
+				log.Fatal(err)
 			}
-		}
-		git.Fetch("--prune")
-	}
 
-	if options.GlobalFlagLocal {
-		if len(remote) != 0 {
-			fmt.Println("Remote branches ready to be deleted: ")
-			fmt.Println(remote)
+			fmt.Printf("Deleted branch %s", out)
 		}
 	}
 }
