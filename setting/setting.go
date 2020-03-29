@@ -167,7 +167,7 @@ func BootstrapPhlowConfig(local, integrationBranch string) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Bootstrapping new .gitconfig file")
+	fmt.Println("Successfully created a .gitconfig file.")
 	return nil
 }
 

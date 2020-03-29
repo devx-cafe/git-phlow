@@ -54,8 +54,6 @@ git phlow deliver
 | -------------- | ------- | ------- |
 | GitHub         | &#x2714;| v3
 | GitHub Premise | &#x2715;| -
-| Jira Cloud     | &#x2715;| -
-| Jira Premise   | &#x2714;| 7.3.0
 |**macOS**       |
 | bash           | &#x2714;| 3.2.57
 | zsh            | &#x2714;| 5.4.2

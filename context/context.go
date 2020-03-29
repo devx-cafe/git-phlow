@@ -41,6 +41,8 @@ func init() {
 	deliveredChn := make(chan []string, 1)
 	workspaceChn := make(chan []string, 1)
 	orgAndRepoChn := make(chan string, 2)
+	tokenChn := make(chan string, 1)
+	userChn := make(chan string, 1)
 
 	go func() {
 		deliveredChn <- GetDelivered(WorkspaceContext.Branches)
@@ -49,6 +51,14 @@ func init() {
 	go func() {
 		workspaceChn <- GetWorkSpaces(WorkspaceContext.Branches)
 	}()
+
+	go GetToken(tokenChn, func() (s string, err error) {
+		return executor.Run("git", "config", "--get", "phlow.token")
+	})
+
+	go GetUser(userChn, func() (s string, err error) {
+		return executor.Run("git", "config", "--get", "phlow.user")
+	})
 
 	go func() {
 		org, repo := GetOrganizationAndRepository(func() string {
@@ -64,6 +74,8 @@ func init() {
 
 	}()
 
+	WorkspaceContext.Token = <-tokenChn
+	WorkspaceContext.User = <-userChn
 	WorkspaceContext.DeliveredBranches = <-deliveredChn
 	WorkspaceContext.Workspaces = <-workspaceChn
 	WorkspaceContext.Organisation = <-orgAndRepoChn
@@ -129,7 +141,7 @@ func GetCurrent() string {
 }
 
 // GetOrganizationAndRepository ...
-// Get repositroy name and origanization name from remotes
+// Get repository name and organization name from remotes
 func GetOrganizationAndRepository(url string) (string, string) {
 
 	//Extracts repo and org from ssh url format
@@ -160,11 +172,21 @@ func GetOrganizationAndRepository(url string) (string, string) {
 }
 
 // GetUser ...
-func GetUser() {
-	log.Fatalln("not yet implemented")
+// Get the name of the user
+func GetUser(chn chan string, fn func() (string, error)) {
+	str, err := fn()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	chn <- strings.TrimSpace(str)
 }
 
 // GetToken ...
-func GetToken() {
-	log.Fatalln("not yet implemented")
+// get the OAuth token
+func GetToken(chn chan string, fn func() (string, error)) {
+	str, err := fn()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	chn <- strings.TrimSpace(str)
 }
