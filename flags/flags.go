@@ -13,4 +13,6 @@ var (
 	RootInit bool
 	// RootInit ...
 	RootVersion bool
+	// RootMakeAlias ...
+	RootMakeAlias bool
 )
