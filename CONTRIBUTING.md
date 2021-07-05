@@ -72,6 +72,14 @@ git clone git@github.com:Praqma/git-phlow.git
 go get -d -t -v ./...		#resolves all dependencies                               
 ```
 ### Running tests
+You need [ginkgo](https://onsi.github.io/ginkgo/) to run the tests:
+
+```
+go get github.com/onsi/ginkgo/ginkgo
+go get github.com/onsi/gomega/...
+```
+
+
 Go has a great toolset for running rests. As a standard go runs the test from the current directory you are in, if you want to run tests from subdirectories or just all tests, run:
 
 `ginkgo -r -v --trace`  
