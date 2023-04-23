@@ -3,7 +3,7 @@ name: Repo Report
 on:
   push:
     branches:
-      - * 
+      - '*' 
 jobs:
   report:
     name: Report
