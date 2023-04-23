@@ -1,0 +1,21 @@
+name: Repo Report
+
+on:
+  push:
+    branches:
+      - * 
+jobs:
+  report:
+    name: Report
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out
+      uses: actions/checkout@v3
+          
+    - name: Get Repo script
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      run: |
+        mkdir -d /github/lakruzz/reporeport
+        gh clone lakruzz/reporeport --depth /github/lakruzz/reporeport
+        ls -a /github/lakruzz/reporeport
