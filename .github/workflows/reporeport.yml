@@ -18,10 +18,10 @@ jobs:
       run: |
         gh repo clone lakruzz/reporeport ~/.reporeport -- --depth 1
         mkdir -p ~/.reporeport || true
-        report=~/.reporeport/this_repo.md
-        title=${{github.repository}} - status
-        echo _Built by ${{github.event_name}} on ${{github.sha}} > ${report} 
-        ~/.reporeport/reporeport --full_name ${{github.repository}} >> ${report} 
+        report="~/.reporeport/this_repo.md"
+        title="${{github.repository}} - status"
+        echo _Built by ${{github.event_name}} on ${{github.sha}} > "${report}"" 
+        ~/.reporeport/reporeport --full_name ${{github.repository}} >> "${report}"" 
         issueid=$(gh issue list | grep -E "\d+\w+.*${title}.*" | sed -E 's/^([0-9]+).*/\1/')
         cat ${report}
         if [ -z "$issueid" ]; then
