@@ -16,6 +16,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: |
-        mkdir -p /usr/local/reporeport
-        gh clone lakruzz/reporeport --depth 1 /usr/local/reporeport
-        ls -a /usr/local/reporeport
+        mkdir -p ~/lakruzz/reporeport
+        gh clone lakruzz/reporeport --depth 1 ~/lakruzz/reporeport
+        ls -a ~/lakruzz/reporeport
