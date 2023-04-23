@@ -17,12 +17,11 @@ jobs:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: |
         gh repo clone lakruzz/reporeport ~/.reporeport -- --depth 1
-        report="~/.reporeport/this_repo.md"
         title="${{github.repository}} - status"
-        echo _Built by ${{github.event_name}} on ${{github.sha}} > $report 
-        ~/.reporeport/reporeport --full_name ${{github.repository}} >> $report
+        echo _Built by ${{github.event_name}} on ${{github.sha}} > ~/.reporeport/this_repo.md 
+        ~/.reporeport/reporeport --full_name ${{github.repository}} >> ~/.reporeport/this_repo.md
         issueid=$(gh issue list | grep -E "\d+\w+.*${title}.*" | sed -E 's/^([0-9]+).*/\1/')
-        cat $report
+        cat ~/.reporeport/this_repo.md
         if [ -z "$issueid" ]; then
           echo "Issue ID is empty"
         else
