@@ -12,10 +12,9 @@ jobs:
     - name: Check out
       uses: actions/checkout@v3
           
-    - name: Get Repo script
+    - name: Get and run reporeport script
       env:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: |
-        mkdir -p ~/lakruzz/reporeport
-        gh clone lakruzz/reporeport --depth 1 ~/lakruzz/reporeport
-        ls -a ~/lakruzz/reporeport
+        gh repo clone lakruzz/reporeport ~/.reporeport -- --depth 1
+        ~/lakruzz/reporeport/reporeport --full_name ${{github.repository}}
