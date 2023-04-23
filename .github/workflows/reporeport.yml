@@ -17,4 +17,4 @@ jobs:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       run: |
         gh repo clone lakruzz/reporeport ~/.reporeport -- --depth 1
-        ~/lakruzz/reporeport/reporeport --full_name ${{github.repository}}
+        ~/.reporeport --full_name ${{github.repository}}
